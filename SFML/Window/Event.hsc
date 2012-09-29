@@ -95,67 +95,66 @@ instance Storable SFEvent where
     alignment _ = alignment (undefined :: CInt)
     
     peek ptr' =
-        let ptr = castPtr ptr' :: Ptr CInt
+        let ptr'' = castPtr ptr' :: Ptr CInt
         in do
-            eventType <- peek ptr
+            let ptr = castPtr ptr''
+            eventType <- peek ptr''
             case eventType of
                 0  -> return SFEvtClosed
                 1  -> do
-                    w <- peekByteOff ptr sizeInt
-                    h <- peekByteOff ptr $ 2*sizeInt
+                    w <- #{peek struct sfSizeEvent, width} ptr
+                    h <- #{peek struct sfSizeEvent, height} ptr
                     return $ SFEvtResized w h
                 2  -> return SFEvtLostFocus
                 3  -> return SFEvtGainedFocus
                 4  -> peekCAString (plusPtr ptr sizeInt) >>= return . SFEvtTextEntered
                 5  -> do
-                    keycode <- peekByteOff ptr sizeInt
-                    let ptrChar = castPtr (advancePtr ptr 2) :: Ptr CChar
-                    alt     <- peekByteOff ptrChar $ 0
-                    ctrl    <- peekByteOff ptrChar $ sizeChar
-                    shift   <- peekByteOff ptrChar $ 2*sizeChar
-                    sys     <- peekByteOff ptrChar $ 3*sizeChar
-                    return $ SFEvtKeyPressed keycode alt ctrl shift sys
+                    code  <- #{peek struct sfKeyEvent, code} ptr
+                    alt   <- #{peek struct sfKeyEvent, alt} ptr
+                    ctrl  <- #{peek struct sfKeyEvent, control} ptr
+                    shift <- #{peek struct sfKeyEvent, shift} ptr
+                    sys   <- #{peek struct sfKeyEvent, system} ptr
+                    return $ SFEvtKeyPressed code alt ctrl shift sys
                 6  -> do
-                    keycode <- peekByteOff ptr sizeInt
-                    let ptrChar = castPtr (advancePtr ptr 2) :: Ptr CChar
-                    alt     <- peekByteOff ptrChar $ 0
-                    ctrl    <- peekByteOff ptrChar $ sizeChar
-                    shift   <- peekByteOff ptrChar $ 2*sizeChar
-                    sys     <- peekByteOff ptrChar $ 3*sizeChar
-                    return $ SFEvtKeyReleased keycode alt ctrl shift sys
+                    code  <- #{peek struct sfKeyEvent, code} ptr
+                    alt   <- #{peek struct sfKeyEvent, alt} ptr
+                    ctrl  <- #{peek struct sfKeyEvent, control} ptr
+                    shift <- #{peek struct sfKeyEvent, shift} ptr
+                    sys   <- #{peek struct sfKeyEvent, system} ptr
+                    return $ SFEvtKeyReleased code alt ctrl shift sys
                 7  -> do
-                    delta <- peekByteOff ptr sizeInt
-                    x     <- peekByteOff ptr $ 2*sizeInt
-                    y     <- peekByteOff ptr $ 3*sizeInt
+                    delta <- #{peek struct sfMouseWheelEvent, delta} ptr
+                    x     <- #{peek struct sfMouseWheelEvent, x} ptr
+                    y     <- #{peek struct sfMouseWheelEvent, y} ptr
                     return $ SFEvtMouseWheelMoved delta x y
                 8  -> do
-                    button <- peekByteOff ptr sizeInt
-                    x      <- peekByteOff ptr $ 2*sizeInt
-                    y      <- peekByteOff ptr $ 3*sizeInt
+                    button <- #{peek struct sfMouseButtonEvent, button} ptr
+                    x      <- #{peek struct sfMouseButtonEvent, x} ptr
+                    y      <- #{peek struct sfMouseButtonEvent, y} ptr
                     return $ SFEvtMouseButtonPressed button x y
                 9  -> do
-                    button <- peekByteOff ptr sizeInt
-                    x      <- peekByteOff ptr $ 2*sizeInt
-                    y      <- peekByteOff ptr $ 3*sizeInt
+                    button <- #{peek struct sfMouseButtonEvent, button} ptr
+                    x      <- #{peek struct sfMouseButtonEvent, x} ptr
+                    y      <- #{peek struct sfMouseButtonEvent, y} ptr
                     return $ SFEvtMouseButtonReleased button x y
                 10 -> do
-                    x <- peekByteOff ptr sizeInt
-                    y <- peekByteOff ptr $ 2*sizeInt
+                    x <- #{peek struct sfMouseMoveEvent, x} ptr
+                    y <- #{peek struct sfMouseMoveEvent, y} ptr
                     return $ SFEvtMouseMoved x y
                 11 -> return SFEvtMouseEntered
                 12 -> return SFEvtMouseLeft
                 13 -> do
-                    j  <- peekByteOff ptr sizeInt
-                    bt <- peekByteOff ptr $ 2*sizeInt
+                    j  <- #{peek struct sfJoystickButtonEvent, joystickId} ptr
+                    bt <- #{peek struct sfJoystickButtonEvent, button} ptr
                     return $ SFEvtJoystickButtonPressed j bt
                 14 -> do
-                    j  <- peekByteOff ptr sizeInt
-                    bt <- peekByteOff ptr $ 2*sizeInt
+                    j  <- #{peek struct sfJoystickButtonEvent, joystickId} ptr
+                    bt <- #{peek struct sfJoystickButtonEvent, button} ptr
                     return $ SFEvtJoystickButtonReleased j bt
                 15 -> do
-                    j    <- peekByteOff ptr sizeInt
-                    axis <- fmap toEnum $ peekByteOff ptr $ 2*sizeInt
-                    pos  <- peekByteOff ptr $ 3*sizeInt
+                    j    <- #{peek struct sfJoystickMoveEvent, joystickId} ptr
+                    axis <- #{peek struct sfJoystickMoveEvent, axis} ptr
+                    pos  <- #{peek struct sfJoystickMoveEvent, position} ptr
                     return $ SFEvtJoystickMoved j axis pos
                 16 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickConnected
                 17 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickDisconnected
