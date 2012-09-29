@@ -1,7 +1,7 @@
 SFML
 ====
 
-Haskell bindings for SFML
+Haskell bindings for SFML 2.x
 
 ### Haddocks
 http://shellblade.net/docs/SFML/index.html
