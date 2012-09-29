@@ -14,6 +14,8 @@ where
 
 
 import Foreign.C.Types
+import Foreign.Storable
+import Foreign.Ptr (castPtr)
 
 
 -- | Global joysticks capabilities
@@ -46,6 +48,17 @@ data SFJoystickAxis
     | SFJoystickPovX -- ^ The X axis of the point-of-view hat
     | SFJoystickPovY -- ^ The Y axis of the point-of-view hat
     deriving (Eq, Enum, Bounded, Show)
+
+
+sizeInt = #{size int}
+
+
+instance Storable SFJoystickAxis where
+    sizeOf _ = sizeInt
+    alignment _ = alignment (undefined :: CInt)
+    
+    peek ptr = peek (castPtr ptr) >>= return . toEnum
+    poke ptr bt = poke (castPtr ptr) (fromEnum bt)
 
 
 -- | Check if a joystick is connected.
