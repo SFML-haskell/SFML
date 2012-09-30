@@ -15,8 +15,10 @@ where
 
 
 import Data.Int (Int64)
+import Foreign.Marshal.Alloc (alloca)
 import Foreign.Ptr
 import Foreign.Storable
+import System.IO.Unsafe (unsafePerformIO)
 
 #include <SFML/Config.h>
 
@@ -39,10 +41,10 @@ instance Storable SFTime where
 
 -- | Predefined "zero" time value.
 timeZero :: SFTime
-timeZero = SFTime sfTime_Zero
+timeZero = unsafePerformIO $ alloca $ \ptr -> sfTime_Zero_helper ptr >> peek ptr
 
-foreign import ccall "sfTime_Zero"
-    sfTime_Zero :: Timeval
+foreign import ccall "sfTime_Zero_helper"
+    sfTime_Zero_helper :: Ptr SFTime -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfTime_Zero;
 
@@ -81,10 +83,10 @@ foreign import ccall "sfTime_asMicroseconds"
 seconds
     :: Float -- ^ Number of seconds
     -> SFTime
-seconds = SFTime . sfSeconds
+seconds t = unsafePerformIO $ alloca $ \ptr -> sfSeconds_helper t ptr >> peek ptr
 
-foreign import ccall "sfSeconds"
-    sfSeconds :: Float -> Timeval
+foreign import ccall "sfSeconds_helper"
+    sfSeconds_helper :: Float -> Ptr SFTime -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfSeconds(float amount);
 
@@ -93,10 +95,10 @@ foreign import ccall "sfSeconds"
 milliseconds
     :: Float -- ^ Number of milliseconds
     -> SFTime
-milliseconds = SFTime . sfMilliseconds
+milliseconds t = unsafePerformIO $ alloca $ \ptr -> sfMilliseconds_helper t ptr >> peek ptr
 
-foreign import ccall "sfMilliseconds"
-    sfMilliseconds :: Float -> Timeval
+foreign import ccall "sfMilliseconds_helper"
+    sfMilliseconds_helper :: Float -> Ptr SFTime -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfMilliseconds(sfInt32 amount);
 
@@ -105,10 +107,10 @@ foreign import ccall "sfMilliseconds"
 microseconds
     :: Float -- ^ Number of microseconds
     -> SFTime
-microseconds = SFTime . sfMicroseconds
+microseconds t = unsafePerformIO $ alloca $ \ptr -> sfMicroseconds_helper t ptr >> peek ptr
 
-foreign import ccall "sfMicroseconds"
-    sfMicroseconds :: Float -> Timeval
+foreign import ccall "sfMicroseconds_helper"
+    sfMicroseconds_helper :: Float -> Ptr SFTime -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfMicroseconds(sfTimeval amount);
 
