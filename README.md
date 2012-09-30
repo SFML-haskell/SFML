@@ -20,3 +20,23 @@ http://shellblade.net/docs/SFML/index.html
 ### Where it's been tested:
 
 * Arch Linux 32-bit
+
+### Installation
+
+Install SFML and CSFML on your system.
+
+Make sure your compiler can find CSFML's headers.
+
+Run the following:
+
+```
+$ git clone https://github.com/jeannekamikaze/SFML.git
+$ cd SFML
+$ cabal install
+```
+
+### Linking
+
+Binaries must be explicitly linked with whatever CSFML libraries they require (-lcsfml-system etc).
+
+Check the cabal file inside the demos/ directory for an example.
