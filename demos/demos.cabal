@@ -10,9 +10,18 @@ author: Marc Sunet
 data-dir: ""
  
 executable window
-    hs-source-dirs:    window
-    build-depends:     base, SFML
-    main-is:           main.hs
-    buildable:         True
-    extra-libraries:   csfml-window
+    hs-source-dirs:     window
+    build-depends:      base, SFML
+    main-is:            main.hs
+    buildable:          True
+    ghc-options:        -debug
+    extra-libraries:    csfml-window csfml-system
+
+executable time
+    hs-source-dirs:     time
+    build-depends:      base, SFML
+    main-is:            main.hs
+    buildable:          True
+    ghc-options:        -debug
+    extra-libraries:    csfml-system
 
