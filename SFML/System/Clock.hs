@@ -13,11 +13,11 @@ where
 
 import SFML.System.Time
 
+import Foreign.C.Types (CInt)
 import Foreign.Ptr (Ptr)
 
 
---newtype SFClock = SFClock (Ptr SFClock)
-newtype SFClock = SFClock Int deriving Show
+newtype SFClock = SFClock (Ptr SFClock) deriving Show
 
 
 -- | Create a new clock and start it.
