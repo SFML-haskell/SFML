@@ -16,12 +16,13 @@ cabal-version:       >=1.8
 
 library
   exposed-modules:     SFML.Window SFML.System
-                       SFML.System.Clock SFML.System.Time SFML.System.Vector2 SFML.System.Vector3
+                       SFML.System.Clock SFML.System.Sleep  SFML.System.Time SFML.System.Vector2 SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
                        SFML.Window.Mouse SFML.Window.Types SFML.Window.VideoMode SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
-  c-sources:           SFML/System/helper/Clock_helper.c
+  c-sources:           SFML/System/helper/Clock_helper.c SFML/System/helper/Time_helper.c
+                       SFML/System/helper/Sleep_helper.c
                        SFML/Window/helper/Mouse_helper.c SFML/Window/helper/VideoMode_helper.c
                        SFML/Window/helper/Window_helper.c
   build-depends:       base ==4.5.*
