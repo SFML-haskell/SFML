@@ -13,10 +13,12 @@ where
 
 import SFML.System.Time
 
+import Foreign.Marshal.Alloc (alloca)
 import Foreign.Ptr
+import Foreign.Storable (peek)
 
 
-newtype SFClock = SFClock (Ptr SFClock) deriving Show
+newtype SFClock = SFClock (Ptr SFClock)
 
 
 -- | Create a new clock and start it.
@@ -56,10 +58,10 @@ foreign import ccall unsafe "sfClock_destroy"
 -- sfClock_restart has not been called).
 
 getElapsedTime :: SFClock -> IO SFTime
-getElapsedTime = fmap SFTime . sfClock_getElapsedTime
+getElapsedTime clock = alloca $ \ptr -> sfClock_getElapsedTime_helper clock ptr >> peek ptr
 
-foreign import ccall unsafe "sfClock_getElapsedTime"
-    sfClock_getElapsedTime :: SFClock -> IO Timeval
+foreign import ccall unsafe "sfClock_getElapsedTime_helper"
+    sfClock_getElapsedTime_helper :: SFClock -> Ptr SFTime -> IO Timeval
 
 --CSFML_SYSTEM_API sfTime sfClock_getElapsedTime(const sfClock* clock);
 
@@ -69,11 +71,11 @@ foreign import ccall unsafe "sfClock_getElapsedTime"
 -- This function puts the time counter back to zero.
 -- It also returns the time elapsed since the clock was started.
 
-restartClock :: SFClock -> IO ()
-restartClock = sfClock_restart
+restartClock :: SFClock -> IO SFTime
+restartClock clock = alloca $ \ptr -> sfClock_restart_helper clock ptr >> peek ptr
 
-foreign import ccall unsafe "sfClock_restart"
-    sfClock_restart :: SFClock -> IO ()
+foreign import ccall unsafe "sfClock_restart_helper"
+    sfClock_restart_helper :: SFClock -> Ptr SFTime -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfClock_restart(sfClock* clock);
 

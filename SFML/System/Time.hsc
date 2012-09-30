@@ -15,12 +15,26 @@ where
 
 
 import Data.Int (Int64)
+import Foreign.Ptr
+import Foreign.Storable
 
+#include <SFML/Config.h>
+
+sizeInt64 = #{size sfInt64}
 
 type Timeval = Int64
 
 -- | Represents a time value
 data SFTime = SFTime {-# UNPACK #-} !Timeval
+
+
+instance Storable SFTime where
+    sizeOf _ = sizeInt64
+    alignment _ = alignment (undefined :: Int64)
+    
+    peek ptr = fmap SFTime $ peek (castPtr ptr)
+    
+    poke ptr (SFTime val) = poke (castPtr ptr) val
 
 
 -- | Predefined "zero" time value.

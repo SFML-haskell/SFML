@@ -3,7 +3,6 @@ import SFML.System
 
 main = do
     clock <- createClock
-    putStrLn $ "Clock at: " ++ show clock
     loop clock 3
     destroyClock clock
 

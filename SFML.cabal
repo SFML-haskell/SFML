@@ -21,7 +21,8 @@ library
                        SFML.Window.Mouse SFML.Window.Types SFML.Window.VideoMode SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
-  c-sources:           SFML/Window/helper/Mouse_helper.c SFML/Window/helper/VideoMode_helper.c
+  c-sources:           SFML/System/helper/Clock_helper.c
+                       SFML/Window/helper/Mouse_helper.c SFML/Window/helper/VideoMode_helper.c
                        SFML/Window/helper/Window_helper.c
   build-depends:       base ==4.5.*
   build-tools:         hsc2hs -any

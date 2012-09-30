@@ -15,7 +15,7 @@ executable window
     main-is:            main.hs
     buildable:          True
     ghc-options:        -debug
-    extra-libraries:    csfml-window csfml-system
+    extra-libraries:    csfml-window-d csfml-system-d
 
 executable time
     hs-source-dirs:     time
@@ -23,5 +23,5 @@ executable time
     main-is:            main.hs
     buildable:          True
     ghc-options:        -debug
-    extra-libraries:    csfml-system
+    extra-libraries:    csfml-system-d
 
