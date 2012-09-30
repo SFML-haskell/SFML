@@ -13,8 +13,7 @@ where
 
 import SFML.System.Time
 
-import Foreign.C.Types (CInt)
-import Foreign.Ptr (Ptr)
+import Foreign.Ptr
 
 
 newtype SFClock = SFClock (Ptr SFClock) deriving Show
@@ -24,7 +23,7 @@ newtype SFClock = SFClock (Ptr SFClock) deriving Show
 createClock :: IO SFClock
 createClock = sfClock_create
 
-foreign import ccall "sfClock_create"
+foreign import ccall unsafe "sfClock_create"
     sfClock_create :: IO SFClock
 
 --CSFML_SYSTEM_API sfClock* sfClock_create(void);
@@ -34,7 +33,7 @@ foreign import ccall "sfClock_create"
 copyClock :: SFClock -> IO SFClock
 copyClock = sfClock_copy
 
-foreign import ccall "sfClock_copy"
+foreign import ccall unsafe "sfClock_copy"
     sfClock_copy :: SFClock -> IO SFClock
 
 --CSFML_SYSTEM_API sfClock* sfClock_copy(sfClock* clock);
@@ -44,7 +43,7 @@ foreign import ccall "sfClock_copy"
 destroyClock :: SFClock -> IO ()
 destroyClock = sfClock_destroy
 
-foreign import ccall "sfClock_destroy"
+foreign import ccall unsafe "sfClock_destroy"
     sfClock_destroy :: SFClock -> IO ()
 
 --CSFML_SYSTEM_API void sfClock_destroy(sfClock* clock);
@@ -59,7 +58,7 @@ foreign import ccall "sfClock_destroy"
 getElapsedTime :: SFClock -> IO SFTime
 getElapsedTime = fmap SFTime . sfClock_getElapsedTime
 
-foreign import ccall "sfClock_getElapsedTime"
+foreign import ccall unsafe "sfClock_getElapsedTime"
     sfClock_getElapsedTime :: SFClock -> IO Timeval
 
 --CSFML_SYSTEM_API sfTime sfClock_getElapsedTime(const sfClock* clock);
@@ -73,7 +72,7 @@ foreign import ccall "sfClock_getElapsedTime"
 restartClock :: SFClock -> IO ()
 restartClock = sfClock_restart
 
-foreign import ccall "sfClock_restart"
+foreign import ccall unsafe "sfClock_restart"
     sfClock_restart :: SFClock -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfClock_restart(sfClock* clock);
