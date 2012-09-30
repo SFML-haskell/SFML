@@ -80,11 +80,11 @@ instance Enum SFStyle where
 
 
 data SFContextSettings = SFContextSettings
-    { depthBits          :: Int
-    , stencilBits        :: Int
-    , antialisatingLevel :: Int
-    , majorVersion       :: Int
-    , minorVersion       :: Int
+    { depthBits         :: Int
+    , stencilBits       :: Int
+    , antialiasingLevel :: Int
+    , majorVersion      :: Int
+    , minorVersion      :: Int
     }
     deriving (Show)
 
