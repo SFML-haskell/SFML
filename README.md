@@ -25,7 +25,7 @@ http://shellblade.net/docs/SFML/index.html
 
 Install SFML and CSFML on your system.
 
-Make sure your compiler can find CSFML's headers.
+Make sure your compiler can find SFML's and CSFML's headers.
 
 Run the following:
 
