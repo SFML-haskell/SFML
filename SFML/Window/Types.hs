@@ -1,6 +1,6 @@
 module SFML.Window.Types
 (
-    SFContext(..)
+    Context(..)
 ,   SFWindow(..)
 )
 where
@@ -9,6 +9,6 @@ where
 import Foreign.Ptr
 
 
-newtype SFContext = SFContext (Ptr SFContext)
+newtype Context = Context (Ptr Context)
 newtype SFWindow  = SFWindow  (Ptr SFWindow)
 
