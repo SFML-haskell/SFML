@@ -20,14 +20,14 @@ sizeIntRect = #{size sfIntRect}
 -- | Describes a glyph (a visual character).
 data Glyph = Glyph
     { advance     :: Int       -- ^ Offset to move horizontically to the next character
-    , bounds      :: SFIntRect -- ^ Bounding rectangle of the glyph, in coordinates relative to the baseline
-    , textureRect :: SFIntRect -- ^ Texture coordinates of the glyph inside the font's image
+    , bounds      :: IntRect -- ^ Bounding rectangle of the glyph, in coordinates relative to the baseline
+    , textureRect :: IntRect -- ^ Texture coordinates of the glyph inside the font's image
     }
 
 
 instance Storable Glyph where
     sizeOf _ = sizeInt + 2*sizeIntRect
-    alignment _ = alignment (undefined :: SFIntRect)
+    alignment _ = alignment (undefined :: IntRect)
     
     peek ptr = do
         advance <- #{peek sfGlyph, advance} ptr
