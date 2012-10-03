@@ -5,6 +5,7 @@ module SFML.Graphics
 where
 
 
+import SFML.Graphics.Font as Graphics
 import SFML.Graphics.Glyph as Graphics
 import SFML.Graphics.Rect as Graphics
 import SFML.Graphics.Types as Graphics
