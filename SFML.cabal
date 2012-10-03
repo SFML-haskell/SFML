@@ -16,14 +16,15 @@ cabal-version:       >=1.8
 
 library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
-                       SFML.Graphics.Font SFML.Graphics.Glyph SFML.Graphics.Rect SFML.Graphics.Types
+                       SFML.Graphics.Font SFML.Graphics.Glyph SFML.Graphics.Rect SFML.Graphics.Texture
+                       SFML.Graphics.Types
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
                        SFML.Window.Mouse SFML.Window.Types SFML.Window.VideoMode SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
-  c-sources:           SFML/Graphics/helper/Font_helper.c
+  c-sources:           SFML/Graphics/helper/Font_helper.c SFML/Graphics/helper/Texture_helper.c
                        SFML/System/helper/Clock_helper.c SFML/System/helper/Time_helper.c
                        SFML/System/helper/Sleep_helper.c
                        SFML/Window/helper/Mouse_helper.c SFML/Window/helper/VideoMode_helper.c
