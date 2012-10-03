@@ -15,7 +15,8 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  exposed-modules:     SFML.Window SFML.System
+  exposed-modules:     SFML.Graphics SFML.System SFML.Window
+                       SFML.Graphics.Glyph SFML.Graphics.Rect
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
