@@ -17,11 +17,11 @@ import Foreign.Ptr (Ptr)
 -- sfSleep is the best way to block a program or one of its
 -- threads, as it doesn't consume any CPU power.
 
-sfSleep :: SFTime -> IO ()
+sfSleep :: Time -> IO ()
 sfSleep t = with t sfSleep_helper
 
 foreign import ccall "sfSleep_helper"
-    sfSleep_helper :: Ptr SFTime -> IO ()
+    sfSleep_helper :: Ptr Time -> IO ()
 
 --CSFML_SYSTEM_API void sfSleep(sfTime duration);
 

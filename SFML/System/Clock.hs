@@ -57,11 +57,11 @@ foreign import ccall unsafe "sfClock_destroy"
 -- to sfClock_restart (or the construction of the object if
 -- sfClock_restart has not been called).
 
-getElapsedTime :: Clock -> IO SFTime
+getElapsedTime :: Clock -> IO Time
 getElapsedTime clock = alloca $ \ptr -> sfClock_getElapsedTime_helper clock ptr >> peek ptr
 
 foreign import ccall unsafe "sfClock_getElapsedTime_helper"
-    sfClock_getElapsedTime_helper :: Clock -> Ptr SFTime -> IO Timeval
+    sfClock_getElapsedTime_helper :: Clock -> Ptr Time -> IO Timeval
 
 --CSFML_SYSTEM_API sfTime sfClock_getElapsedTime(const sfClock* clock);
 
@@ -71,11 +71,11 @@ foreign import ccall unsafe "sfClock_getElapsedTime_helper"
 -- This function puts the time counter back to zero.
 -- It also returns the time elapsed since the clock was started.
 
-restartClock :: Clock -> IO SFTime
+restartClock :: Clock -> IO Time
 restartClock clock = alloca $ \ptr -> sfClock_restart_helper clock ptr >> peek ptr
 
 foreign import ccall unsafe "sfClock_restart_helper"
-    sfClock_restart_helper :: Clock -> Ptr SFTime -> IO ()
+    sfClock_restart_helper :: Clock -> Ptr Time -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfClock_restart(sfClock* clock);
 
