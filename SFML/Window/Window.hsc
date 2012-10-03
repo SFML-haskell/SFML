@@ -2,8 +2,8 @@
 module SFML.Window.Window
 (
     module SFML.Window.WindowHandle
-,   SFStyle(..)
-,   SFContextSettings(..)
+,   Style(..)
+,   ContextSettings(..)
 ,   createWindow
 ,   createWindowFromHandle
 ,   destroyWindow
@@ -52,7 +52,7 @@ import Foreign.Storable
 sizeInt = #{size int}
 
 
-data SFStyle
+data Style
     = SFNone         -- ^ No border / title bar (this flag and all others are mutually exclusive)
     | SFTitlebar     -- ^ Title bar + fixed border
     | SFResize       -- ^ Titlebar + resizable border + maximize button
@@ -62,7 +62,7 @@ data SFStyle
     deriving (Eq, Bounded, Show)
 
 
-instance Enum SFStyle where
+instance Enum Style where
     
     fromEnum SFNone         = 0
     fromEnum SFTitlebar     = 1
@@ -79,7 +79,7 @@ instance Enum SFStyle where
     toEnum 7 = SFDefaultStyle
 
 
-data SFContextSettings = SFContextSettings
+data ContextSettings = ContextSettings
     { depthBits         :: Int
     , stencilBits       :: Int
     , antialiasingLevel :: Int
@@ -89,7 +89,7 @@ data SFContextSettings = SFContextSettings
     deriving (Show)
 
 
-instance Storable SFContextSettings where
+instance Storable ContextSettings where
     sizeOf _ = 5*sizeInt
     alignment _ = alignment (undefined :: CUInt)
     
@@ -99,9 +99,9 @@ instance Storable SFContextSettings where
         al <- #{peek sfContextSettings, antialiasingLevel} ptr
         ma <- #{peek sfContextSettings, majorVersion} ptr
         mi <- #{peek sfContextSettings, minorVersion} ptr
-        return $ SFContextSettings db sb al ma mi
+        return $ ContextSettings db sb al ma mi
     
-    poke ptr (SFContextSettings db sb al ma mi) = do
+    poke ptr (ContextSettings db sb al ma mi) = do
         #{poke sfContextSettings, depthBits} ptr db
         #{poke sfContextSettings, stencilBits} ptr sb
         #{poke sfContextSettings, antialiasingLevel} ptr al
@@ -124,8 +124,8 @@ instance Storable SFContextSettings where
 createWindow
     :: VideoMode -- ^ Video mode to use (defines the width, height and depth of the rendering area of the window)
     -> String -- ^ Window title
-    -> [SFStyle] -- ^ Window style
-    -> SFContextSettings -- ^ Additional settings for the underlying OpenGL context
+    -> [Style] -- ^ Window style
+    -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
     -> IO SFWindow
 
 createWindow vm title styles ctxSettings =
@@ -136,7 +136,7 @@ createWindow vm title styles ctxSettings =
     in sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) ptrCtxSettings
 
 foreign import ccall "sfWindow_create_helper"
-    sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr SFContextSettings -> IO SFWindow
+    sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr ContextSettings -> IO SFWindow
 
 --CSFML_WINDOW_API sfWindow* sfWindow_create(sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings);
 
@@ -152,14 +152,14 @@ foreign import ccall "sfWindow_create_helper"
 
 createWindowFromHandle
     :: SFWindowHandle -- ^ Platform-specific handle of the control
-    -> SFContextSettings -- ^ Additional settings for the underlying OpenGL context
+    -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
     -> IO SFWindow
 
 createWindowFromHandle hwnd ctxSettings = do
     with ctxSettings $ \ptrCtxSettings -> sfWindow_createFromHandle hwnd ptrCtxSettings
 
 foreign import ccall "sfWindow_createFromHandle"
-    sfWindow_createFromHandle :: SFWindowHandle -> Ptr SFContextSettings -> IO SFWindow
+    sfWindow_createFromHandle :: SFWindowHandle -> Ptr ContextSettings -> IO SFWindow
 
 --CSFML_WINDOW_API sfWindow* sfWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
 
@@ -213,14 +213,14 @@ foreign import ccall "sfWindow_isOpen"
 -- if one or more settings were not supported. In this case,
 -- SFML chose the closest match.
 
-getWindowSettings :: SFWindow -> IO SFContextSettings
+getWindowSettings :: SFWindow -> IO ContextSettings
 getWindowSettings wnd =
     alloca $ \ptrCtxSettings -> do
     sfWindow_getSettings_helper wnd ptrCtxSettings
     peek ptrCtxSettings
 
 foreign import ccall "sfWindow_getSettings_helper"
-    sfWindow_getSettings_helper :: SFWindow -> Ptr SFContextSettings -> IO ()
+    sfWindow_getSettings_helper :: SFWindow -> Ptr ContextSettings -> IO ()
 
 --CSFML_WINDOW_API sfContextSettings sfWindow_getSettings(const sfWindow* window);
 
