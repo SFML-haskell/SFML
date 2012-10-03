@@ -16,7 +16,8 @@ cabal-version:       >=1.8
 
 library
   exposed-modules:     SFML.Window SFML.System
-                       SFML.System.Clock SFML.System.Sleep  SFML.System.Time SFML.System.Vector2 SFML.System.Vector3
+                       SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
+                       SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
                        SFML.Window.Mouse SFML.Window.Types SFML.Window.VideoMode SFML.Window.Window
                        SFML.Window.WindowHandle
