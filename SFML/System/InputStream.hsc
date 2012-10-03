@@ -1,11 +1,11 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface, ExistentialQuantification #-}
 module SFML.System.InputStream
 (
-    SFInputStreamReadFunc
-,   SFInputStreamSeekFunc
-,   SFInputStreamTellFunc
-,   SFInputStreamGetSizeFunc
-,   SFInputStream(..)
+    InputStreamReadFunc
+,   InputStreamSeekFunc
+,   InputStreamTellFunc
+,   InputStreamGetSizeFunc
+,   InputStream(..)
 )
 where
 
@@ -20,39 +20,39 @@ import Foreign.Storable
 
 
 -- | Function to read data from the stream.
-type SFInputStreamReadFunc a
+type InputStreamReadFunc a
     =  Ptr Char  -- ^ Buffer where to copy the read data
     -> Word64    -- ^ Desired number of bytes to read
     -> Ptr a     -- ^ User data
     -> IO Word64 -- ^ The number of bytes actually read
 
 -- | Function to set the current read position.
-type SFInputStreamSeekFunc a
+type InputStreamSeekFunc a
     =  Word64    -- ^ The position to seek to, from the beginning
     -> Ptr a     -- ^ User data
     -> IO Word64 -- ^ The position actually sought to, or -1 on error
 
 -- | Function to get the current read position.
-type SFInputStreamTellFunc a
+type InputStreamTellFunc a
     =  Ptr a     -- ^ User data
     -> IO Word64 -- ^ The current position, or -1 on error
 
 -- | Function to get the total number of bytes in the stream.
-type SFInputStreamGetSizeFunc a
+type InputStreamGetSizeFunc a
     =  Ptr a     -- ^ User data
     -> IO Word64 -- ^ The total number of bytes available in the stream, or -1 on error
 
 
 -- | Set of callbacks that allow users to define custom file streams.
-data SFInputStream = forall a. SFInputStream
-    { read       :: Ptr (SFInputStreamReadFunc a)
-    , seek       :: Ptr (SFInputStreamSeekFunc a)
-    , tell       :: Ptr (SFInputStreamTellFunc a)
-    , getSize    :: Ptr (SFInputStreamGetSizeFunc a)
+data InputStream = forall a. InputStream
+    { read       :: Ptr (InputStreamReadFunc a)
+    , seek       :: Ptr (InputStreamSeekFunc a)
+    , tell       :: Ptr (InputStreamTellFunc a)
+    , getSize    :: Ptr (InputStreamGetSizeFunc a)
     , userData   :: Ptr a
     }
 
-instance Storable SFInputStream where
+instance Storable InputStream where
     sizeOf _ = size_InputStream
     alignment _ = alignment (undefined :: CInt)
     
@@ -62,9 +62,9 @@ instance Storable SFInputStream where
         tell  <- #{peek sfInputStream, tell} ptr
         gets  <- #{peek sfInputStream, getSize} ptr
         udata <- #{peek sfInputStream, userData} ptr
-        return $ SFInputStream read seek tell gets udata
+        return $ InputStream read seek tell gets udata
     
-    poke ptr (SFInputStream read seek tell gets udata) = do
+    poke ptr (InputStream read seek tell gets udata) = do
         #{poke sfInputStream, read} ptr read
         #{poke sfInputStream, seek} ptr seek
         #{poke sfInputStream, tell} ptr tell
