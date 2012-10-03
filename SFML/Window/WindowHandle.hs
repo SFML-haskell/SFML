@@ -1,6 +1,6 @@
 module SFML.Window.WindowHandle
 (
-    SFWindowHandle(..)
+    WindowHandle(..)
 )
 where
 
@@ -8,5 +8,5 @@ where
 import Foreign.Ptr (Ptr)
 
 
-newtype SFWindowHandle = SFWindowHandle (Ptr SFWindowHandle)
+newtype WindowHandle = WindowHandle (Ptr WindowHandle)
 

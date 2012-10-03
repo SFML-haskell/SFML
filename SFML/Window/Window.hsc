@@ -151,7 +151,7 @@ foreign import ccall "sfWindow_create_helper"
 -- depth-buffer bits, etc.
 
 createWindowFromHandle
-    :: SFWindowHandle -- ^ Platform-specific handle of the control
+    :: WindowHandle -- ^ Platform-specific handle of the control
     -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
     -> IO SFWindow
 
@@ -159,7 +159,7 @@ createWindowFromHandle hwnd ctxSettings = do
     with ctxSettings $ \ptrCtxSettings -> sfWindow_createFromHandle hwnd ptrCtxSettings
 
 foreign import ccall "sfWindow_createFromHandle"
-    sfWindow_createFromHandle :: SFWindowHandle -> Ptr ContextSettings -> IO SFWindow
+    sfWindow_createFromHandle :: WindowHandle -> Ptr ContextSettings -> IO SFWindow
 
 --CSFML_WINDOW_API sfWindow* sfWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
 
@@ -477,11 +477,11 @@ foreign import ccall "sfWindow_setJoystickThreshold"
 -- very specific stuff to implement that SFML doesn't support,
 -- or implement a temporary workaround until a bug is fixed.
 
-getSystemHandle :: SFWindow -> SFWindowHandle
+getSystemHandle :: SFWindow -> WindowHandle
 getSystemHandle = sfWindow_getSystemHandle
 
 foreign import ccall "sfWindow_getSystemHandle"
-    sfWindow_getSystemHandle :: SFWindow -> SFWindowHandle
+    sfWindow_getSystemHandle :: SFWindow -> WindowHandle
 
 --CSFML_WINDOW_API sfWindowHandle sfWindow_getSystemHandle(const sfWindow* window);
 
