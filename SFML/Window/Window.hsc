@@ -122,7 +122,7 @@ instance Storable SFContextSettings where
 -- depth-buffer bits, etc.
 
 createWindow
-    :: SFVideoMode -- ^ Video mode to use (defines the width, height and depth of the rendering area of the window)
+    :: VideoMode -- ^ Video mode to use (defines the width, height and depth of the rendering area of the window)
     -> String -- ^ Window title
     -> [SFStyle] -- ^ Window style
     -> SFContextSettings -- ^ Additional settings for the underlying OpenGL context
@@ -136,7 +136,7 @@ createWindow vm title styles ctxSettings =
     in sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) ptrCtxSettings
 
 foreign import ccall "sfWindow_create_helper"
-    sfWindow_create_helper :: Ptr SFVideoMode -> CString -> CUInt -> Ptr SFContextSettings -> IO SFWindow
+    sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr SFContextSettings -> IO SFWindow
 
 --CSFML_WINDOW_API sfWindow* sfWindow_create(sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings);
 
