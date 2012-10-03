@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.Graphics.Glyph
 (
-    SFGlyph(..)
+    Glyph(..)
 )
 where
 
@@ -18,14 +18,14 @@ sizeIntRect = #{size sfIntRect}
 
 
 -- | Describes a glyph (a visual character).
-data SFGlyph = SFGlyph
+data Glyph = Glyph
     { advance     :: Int       -- ^ Offset to move horizontically to the next character
     , bounds      :: SFIntRect -- ^ Bounding rectangle of the glyph, in coordinates relative to the baseline
     , textureRect :: SFIntRect -- ^ Texture coordinates of the glyph inside the font's image
     }
 
 
-instance Storable SFGlyph where
+instance Storable Glyph where
     sizeOf _ = sizeInt + 2*sizeIntRect
     alignment _ = alignment (undefined :: SFIntRect)
     
@@ -33,9 +33,9 @@ instance Storable SFGlyph where
         advance <- #{peek sfGlyph, advance} ptr
         bounds  <- #{peek sfGlyph, bounds} ptr
         rect    <- #{peek sfGlyph, textureRect} ptr
-        return $ SFGlyph advance bounds rect
+        return $ Glyph advance bounds rect
     
-    poke ptr (SFGlyph advance bounds rect) = do
+    poke ptr (Glyph advance bounds rect) = do
         #{poke sfGlyph, advance} ptr advance
         #{poke sfGlyph, bounds} ptr bounds
         #{poke sfGlyph, textureRect} ptr rect
