@@ -31,14 +31,14 @@ data SFEvent
     { text :: String
     }
     | SFEvtKeyPressed
-    { code  :: SFKeyCode
+    { code  :: KeyCode
     , alt   :: Bool
     , ctrl  :: Bool
     , shift :: Bool
     , sys   :: Bool
     }
     | SFEvtKeyReleased
-    { code  :: SFKeyCode
+    { code  :: KeyCode
     , alt   :: Bool
     , ctrl  :: Bool
     , shift :: Bool
