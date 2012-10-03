@@ -52,11 +52,11 @@ foreign import ccall "sfMouse_isButtonPressed"
 --
 -- This function returns the current position of the mouse
 -- cursor relative to the given window, or desktop if NULL is passed.
-getMousePosition :: SFWindow -> IO Vec2i
+getMousePosition :: Window -> IO Vec2i
 getMousePosition wnd = alloca $ \ptr -> sfMouse_getPosition_helper wnd ptr >> peek ptr
 
 foreign import ccall "sfMouse_getPosition_helper"
-    sfMouse_getPosition_helper :: SFWindow -> Ptr Vec2i -> IO ()
+    sfMouse_getPosition_helper :: Window -> Ptr Vec2i -> IO ()
 
 --CSFML_WINDOW_API sfVector2i sfMouse_getPosition(const sfWindow* relativeTo);
 
@@ -65,11 +65,11 @@ foreign import ccall "sfMouse_getPosition_helper"
 --
 -- This function sets the current position of the mouse
 -- cursor relative to the given window, or desktop if NULL is passed.
-setMousePosition :: SFWindow -> IO ()
+setMousePosition :: Window -> IO ()
 setMousePosition wnd = alloca $ \ptr -> sfMouse_setPosition_helper ptr wnd
 
 foreign import ccall "sfMouse_setPosition_helper"
-    sfMouse_setPosition_helper :: Ptr Vec2i -> SFWindow -> IO ()
+    sfMouse_setPosition_helper :: Ptr Vec2i -> Window -> IO ()
 
 --CSFML_WINDOW_API void sfMouse_setPosition(sfVector2i position, const sfWindow* relativeTo);
 

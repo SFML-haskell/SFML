@@ -126,7 +126,7 @@ createWindow
     -> String -- ^ Window title
     -> [Style] -- ^ Window style
     -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
-    -> IO SFWindow
+    -> IO Window
 
 createWindow vm title styles ctxSettings =
     with vm $ \ptrVM ->
@@ -136,7 +136,7 @@ createWindow vm title styles ctxSettings =
     in sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) ptrCtxSettings
 
 foreign import ccall "sfWindow_create_helper"
-    sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr ContextSettings -> IO SFWindow
+    sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr ContextSettings -> IO Window
 
 --CSFML_WINDOW_API sfWindow* sfWindow_create(sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings);
 
@@ -153,13 +153,13 @@ foreign import ccall "sfWindow_create_helper"
 createWindowFromHandle
     :: WindowHandle -- ^ Platform-specific handle of the control
     -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
-    -> IO SFWindow
+    -> IO Window
 
 createWindowFromHandle hwnd ctxSettings = do
     with ctxSettings $ \ptrCtxSettings -> sfWindow_createFromHandle hwnd ptrCtxSettings
 
 foreign import ccall "sfWindow_createFromHandle"
-    sfWindow_createFromHandle :: WindowHandle -> Ptr ContextSettings -> IO SFWindow
+    sfWindow_createFromHandle :: WindowHandle -> Ptr ContextSettings -> IO Window
 
 --CSFML_WINDOW_API sfWindow* sfWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
 
@@ -168,7 +168,7 @@ foreign import ccall "sfWindow_createFromHandle"
 destroyWindow = sfWindow_destroy
 
 foreign import ccall "sfWindow_destroy"
-    sfWindow_destroy :: SFWindow -> IO ()
+    sfWindow_destroy :: Window -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_destroy(sfWindow* window);
 
@@ -185,7 +185,7 @@ foreign import ccall "sfWindow_destroy"
 closeWindow = sfWindow_close
 
 foreign import ccall "sfWindow_close"
-    sfWindow_close :: SFWindow -> IO ()
+    sfWindow_close :: Window -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_close(sfWindow* window);
 
@@ -197,11 +197,11 @@ foreign import ccall "sfWindow_close"
 -- Note that a hidden window (sfWindow_setVisible(sfFalse)) will return
 -- sfTrue.
 
-isWindowOpen :: SFWindow -> IO Bool
+isWindowOpen :: Window -> IO Bool
 isWindowOpen wnd = sfWindow_isOpen wnd >>= return . (/=0)
 
 foreign import ccall "sfWindow_isOpen"
-    sfWindow_isOpen :: SFWindow -> IO CChar
+    sfWindow_isOpen :: Window -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfWindow_isOpen(const sfWindow* window);
 
@@ -213,14 +213,14 @@ foreign import ccall "sfWindow_isOpen"
 -- if one or more settings were not supported. In this case,
 -- SFML chose the closest match.
 
-getWindowSettings :: SFWindow -> IO ContextSettings
+getWindowSettings :: Window -> IO ContextSettings
 getWindowSettings wnd =
     alloca $ \ptrCtxSettings -> do
     sfWindow_getSettings_helper wnd ptrCtxSettings
     peek ptrCtxSettings
 
 foreign import ccall "sfWindow_getSettings_helper"
-    sfWindow_getSettings_helper :: SFWindow -> Ptr ContextSettings -> IO ()
+    sfWindow_getSettings_helper :: Window -> Ptr ContextSettings -> IO ()
 
 --CSFML_WINDOW_API sfContextSettings sfWindow_getSettings(const sfWindow* window);
 
@@ -233,7 +233,7 @@ foreign import ccall "sfWindow_getSettings_helper"
 -- thus you should always call this function in a loop
 -- to make sure that you process every pending event.
 
-pollEvent :: SFWindow -> IO (Maybe SFEvent)
+pollEvent :: Window -> IO (Maybe SFEvent)
 pollEvent wnd =
     alloca $ \ptrEvt -> do
     result <- return . (/=0) =<< sfWindow_pollEvent wnd ptrEvt
@@ -242,7 +242,7 @@ pollEvent wnd =
         False -> return Nothing
 
 foreign import ccall "sfWindow_pollEvent"
-    sfWindow_pollEvent :: SFWindow -> Ptr SFEvent -> IO CChar
+    sfWindow_pollEvent :: Window -> Ptr SFEvent -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfWindow_pollEvent(sfWindow* window, sfEvent* event);
 
@@ -259,24 +259,24 @@ foreign import ccall "sfWindow_pollEvent"
 -- is dedicated to events handling: you want to make this thread
 -- sleep as long as no new event is received.
 
-waitEvent :: SFWindow -> IO SFEvent
+waitEvent :: Window -> IO SFEvent
 waitEvent wnd =
     alloca $ \ptrEvt -> do
     sfWindow_waitEvent wnd ptrEvt
     peek ptrEvt
 
 foreign import ccall "sfWindow_waitEvent"
-    sfWindow_waitEvent :: SFWindow -> Ptr SFEvent -> IO ()
+    sfWindow_waitEvent :: Window -> Ptr SFEvent -> IO ()
 
 --CSFML_WINDOW_API sfBool sfWindow_waitEvent(sfWindow* window, sfEvent* event);
 
 
 -- | Get the position of a window.
-getWindowPosition :: SFWindow -> IO Vec2i
+getWindowPosition :: Window -> IO Vec2i
 getWindowPosition wnd = alloca $ \vecPtr -> sfWindow_getPosition_helper wnd vecPtr >> peek vecPtr
 
 foreign import ccall "sfWindow_getPosition_helper"
-    sfWindow_getPosition_helper :: SFWindow -> Ptr Vec2i -> IO ()
+    sfWindow_getPosition_helper :: Window -> Ptr Vec2i -> IO ()
 
 --CSFML_WINDOW_API sfVector2i sfWindow_getPosition(const sfWindow* window);
 
@@ -287,11 +287,11 @@ foreign import ccall "sfWindow_getPosition_helper"
 -- (i.e. it will be ignored for windows created from
 -- the handle of a child window/control).
 
-setWindowPosition :: SFWindow -> Vec2i -> IO ()
+setWindowPosition :: Window -> Vec2i -> IO ()
 setWindowPosition wnd pos = with pos $ \posPtr -> sfWindow_setPosition_helper wnd posPtr
 
 foreign import ccall "sfWindow_setPosition_helper"
-    sfWindow_setPosition_helper :: SFWindow -> Ptr Vec2i -> IO ()
+    sfWindow_setPosition_helper :: Window -> Ptr Vec2i -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setPosition(sfWindow* window, sfVector2i position);
 
@@ -301,31 +301,31 @@ foreign import ccall "sfWindow_setPosition_helper"
 -- The size doesn't include the titlebar and borders
 -- of the window.
 
-getWindowSize :: SFWindow -> IO Vec2u
+getWindowSize :: Window -> IO Vec2u
 getWindowSize wnd = alloca $ \vecPtr -> sfWindow_getSize_helper wnd vecPtr >> peek vecPtr
 
 foreign import ccall "sfWindow_getSize_helper"
-    sfWindow_getSize_helper :: SFWindow -> Ptr Vec2u -> IO ()
+    sfWindow_getSize_helper :: Window -> Ptr Vec2u -> IO ()
 
 --CSFML_WINDOW_API sfVector2u sfWindow_getSize(const sfWindow* window);
 
 
 -- | Change the size of the rendering region of a window.
-setWindowSize :: SFWindow -> Vec2u -> IO ()
+setWindowSize :: Window -> Vec2u -> IO ()
 setWindowSize wnd size = with size $ \ptrSize -> sfWindow_setSize_helper wnd ptrSize
 
 foreign import ccall "sfWindow_setSize_helper"
-    sfWindow_setSize_helper :: SFWindow -> Ptr Vec2u -> IO ()
+    sfWindow_setSize_helper :: Window -> Ptr Vec2u -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setSize(sfWindow* window, sfVector2u size);
 
 
 -- | Change the title of a window.
-setWindowTitle :: SFWindow -> String -> IO ()
+setWindowTitle :: Window -> String -> IO ()
 setWindowTitle wnd title = withCAString title $ \ptrTitle -> sfWindow_setTitle wnd ptrTitle
 
 foreign import ccall "sfWindow_setTitle"
-    sfWindow_setTitle :: SFWindow -> CString -> IO ()
+    sfWindow_setTitle :: Window -> CString -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setTitle(sfWindow* window, const char* title);
 
@@ -339,7 +339,7 @@ type Pixels = Ptr Int
 -- in 32-bits RGBA format.
 
 setWindowIcon
-    :: SFWindow
+    :: Window
     -> Int -- ^ Icon's width, in pixels
     -> Int -- ^ Icon's height, in pixels
     -> Pixels
@@ -348,27 +348,27 @@ setWindowIcon
 setWindowIcon = sfWindow_setIcon
 
 foreign import ccall "sfWindow_setIcon"
-    sfWindow_setIcon :: SFWindow -> Int -> Int -> Pixels -> IO ()
+    sfWindow_setIcon :: Window -> Int -> Int -> Pixels -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setIcon(sfWindow* window, unsigned int width, unsigned int height, const sfUint8* pixels);
 
 
 -- | Show or hide a window.
-setWindowVisible :: SFWindow -> Bool -> IO ()
+setWindowVisible :: Window -> Bool -> IO ()
 setWindowVisible wnd val = sfWindow_setVisible wnd (fromIntegral . fromEnum $ val)
 
 foreign import ccall "sfWindow_setVisible"
-    sfWindow_setVisible :: SFWindow -> CChar -> IO ()
+    sfWindow_setVisible :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setVisible(sfWindow* window, sfBool visible);
 
 
 -- | Show or hide the mouse cursor.
-setMouseCursorVisible :: SFWindow -> Bool -> IO ()
+setMouseCursorVisible :: Window -> Bool -> IO ()
 setMouseCursorVisible wnd val = sfWindow_setMouseCursorVisible wnd (fromIntegral . fromEnum $ val)
 
 foreign import ccall "sfWindow_setMouseCursorVisible"
-    sfWindow_setMouseCursorVisible :: SFWindow -> CChar -> IO ()
+    sfWindow_setMouseCursorVisible :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setMouseCursorVisible(sfWindow* window, sfBool visible);
 
@@ -380,11 +380,11 @@ foreign import ccall "sfWindow_setMouseCursorVisible"
 -- This can avoid some visual artifacts, and limit the framerate
 -- to a good value (but not constant across different computers).
 
-setVerticalSyncEnabled :: SFWindow -> Bool -> IO ()
+setVerticalSyncEnabled :: Window -> Bool -> IO ()
 setVerticalSyncEnabled wnd val = sfWindow_setVerticalSyncEnabled wnd (fromIntegral . fromEnum $ val)
 
 foreign import ccall "sfWindow_setVerticalSyncEnabled"
-    sfWindow_setVerticalSyncEnabled :: SFWindow -> CChar -> IO ()
+    sfWindow_setVerticalSyncEnabled :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setVerticalSyncEnabled(sfWindow* window, sfBool enabled);
 
@@ -397,11 +397,11 @@ foreign import ccall "sfWindow_setVerticalSyncEnabled"
 --
 -- Key repeat is enabled by default.
 
-setKeyRepeatEnabled :: SFWindow -> Bool -> IO ()
+setKeyRepeatEnabled :: Window -> Bool -> IO ()
 setKeyRepeatEnabled wnd val = sfWindow_setKeyRepeatEnabled wnd (fromIntegral . fromEnum $ val)
 
 foreign import ccall "sfWindow_setKeyRepeatEnabled"
-    sfWindow_setKeyRepeatEnabled :: SFWindow -> CChar -> IO ()
+    sfWindow_setKeyRepeatEnabled :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setKeyRepeatEnabled(sfWindow* window, sfBool enabled);
 
@@ -415,11 +415,11 @@ foreign import ccall "sfWindow_setKeyRepeatEnabled"
 -- Only one window can be active on a thread at a time, thus
 -- the window previously active (if any) automatically gets deactivated.
 
-setWindowActive :: SFWindow -> Bool -> IO ()
+setWindowActive :: Window -> Bool -> IO ()
 setWindowActive wnd val = sfWindow_setActive wnd (fromIntegral . fromEnum $ val)
 
 foreign import ccall "sfWindow_setActive"
-    sfWindow_setActive :: SFWindow -> CChar -> IO ()
+    sfWindow_setActive :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API sfBool sfWindow_setActive(sfWindow* window, sfBool active);
 
@@ -430,11 +430,11 @@ foreign import ccall "sfWindow_setActive"
 -- has been done for the current frame, in order to show
 -- it on screen.
 
-display :: SFWindow -> IO ()
+display :: Window -> IO ()
 display = sfWindow_display
 
 foreign import ccall "sfWindow_display"
-    sfWindow_display :: SFWindow -> IO ()
+    sfWindow_display :: Window -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_display(sfWindow* window);
 
@@ -445,11 +445,11 @@ foreign import ccall "sfWindow_display"
 -- each call to sfWindow_display to ensure that the current frame
 -- lasted long enough to match the framerate limit.
 
-setFramerateLimit :: SFWindow -> Int -> IO ()
+setFramerateLimit :: Window -> Int -> IO ()
 setFramerateLimit wnd val = sfWindow_setFramerateLimit wnd (fromIntegral val)
 
 foreign import ccall "sfWindow_setFramerateLimit"
-    sfWindow_setFramerateLimit :: SFWindow -> CUInt -> IO ()
+    sfWindow_setFramerateLimit :: Window -> CUInt -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setFramerateLimit(sfWindow* window, unsigned int limit);
 
@@ -459,11 +459,11 @@ foreign import ccall "sfWindow_setFramerateLimit"
 -- The joystick threshold is the value below which
 -- no JoyMoved event will be generated.
 
-setJoystickThreshold :: SFWindow -> Float -> IO ()
+setJoystickThreshold :: Window -> Float -> IO ()
 setJoystickThreshold = sfWindow_setJoystickThreshold
 
 foreign import ccall "sfWindow_setJoystickThreshold"
-    sfWindow_setJoystickThreshold :: SFWindow -> Float -> IO ()
+    sfWindow_setJoystickThreshold :: Window -> Float -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setJoystickThreshold(sfWindow* window, float threshold);
 
@@ -477,11 +477,11 @@ foreign import ccall "sfWindow_setJoystickThreshold"
 -- very specific stuff to implement that SFML doesn't support,
 -- or implement a temporary workaround until a bug is fixed.
 
-getSystemHandle :: SFWindow -> WindowHandle
+getSystemHandle :: Window -> WindowHandle
 getSystemHandle = sfWindow_getSystemHandle
 
 foreign import ccall "sfWindow_getSystemHandle"
-    sfWindow_getSystemHandle :: SFWindow -> WindowHandle
+    sfWindow_getSystemHandle :: Window -> WindowHandle
 
 --CSFML_WINDOW_API sfWindowHandle sfWindow_getSystemHandle(const sfWindow* window);
 
