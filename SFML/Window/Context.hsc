@@ -34,5 +34,5 @@ setActiveContext :: Context -> Bool -> IO ()
 setActiveContext ctx val = sfContext_setActive ctx (fromIntegral . fromEnum $ val)
 
 foreign import ccall "sfContext_setActive"
-    sfContext_setActive :: Context -> CChar -> IO ()
+    sfContext_setActive :: Context -> CInt -> IO ()
 
