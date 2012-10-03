@@ -16,7 +16,7 @@ cabal-version:       >=1.8
 
 library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
-                       SFML.Graphics.Glyph SFML.Graphics.Rect
+                       SFML.Graphics.Glyph SFML.Graphics.Rect SFML.Graphics.Types
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
@@ -29,5 +29,5 @@ library
                        SFML/Window/helper/Window_helper.c
   build-depends:       base ==4.5.*
   build-tools:         hsc2hs -any
-  extensions:          CPP, ForeignFunctionInterface
+  extensions:          CPP, ForeignFunctionInterface, EmptyDataDecls
 
