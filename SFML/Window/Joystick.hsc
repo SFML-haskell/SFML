@@ -1,8 +1,8 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.Window.Joystick
 (
-    SFJoystickCap(..)
-,   SFJoystickAxis(..)
+    JoystickCap(..)
+,   JoystickAxis(..)
 ,   isJoystickConnected
 ,   getButtonCount
 ,   hasAxis
@@ -19,41 +19,41 @@ import Foreign.Ptr (castPtr)
 
 
 -- | Global joysticks capabilities
-data SFJoystickCap
-    = SFJoystickCount
-    | SFJoystickButtonCount
-    | SFJoystickAxisCount
+data JoystickCap
+    = JoystickCount
+    | JoystickButtonCount
+    | JoystickAxisCount
     deriving (Eq, Bounded, Show)
 
 
-instance Enum SFJoystickCap where
+instance Enum JoystickCap where
     
-    fromEnum SFJoystickCount       = 8
-    fromEnum SFJoystickButtonCount = 32
-    fromEnum SFJoystickAxisCount   = 8
+    fromEnum JoystickCount       = 8
+    fromEnum JoystickButtonCount = 32
+    fromEnum JoystickAxisCount   = 8
     
-    toEnum 8  = SFJoystickCount
-    toEnum 32 = SFJoystickButtonCount
-    --toEnum 8  = SFJoystickAxisCount
+    toEnum 8  = JoystickCount
+    toEnum 32 = JoystickButtonCount
+    --toEnum 8  = JoystickAxisCount
 
 
 -- | Axes supported by SFML joysticks
-data SFJoystickAxis
-    = SFJoystickX    -- ^ The X axis
-    | SFJoystickY    -- ^ The Y axis
-    | SFJoystickZ    -- ^ The Z axis
-    | SFJoystickR    -- ^ The R axis
-    | SFJoystickU    -- ^ The U axis
-    | SFJoystickV    -- ^ The V axis
-    | SFJoystickPovX -- ^ The X axis of the point-of-view hat
-    | SFJoystickPovY -- ^ The Y axis of the point-of-view hat
+data JoystickAxis
+    = JoystickX    -- ^ The X axis
+    | JoystickY    -- ^ The Y axis
+    | JoystickZ    -- ^ The Z axis
+    | JoystickR    -- ^ The R axis
+    | JoystickU    -- ^ The U axis
+    | JoystickV    -- ^ The V axis
+    | JoystickPovX -- ^ The X axis of the point-of-view hat
+    | JoystickPovY -- ^ The Y axis of the point-of-view hat
     deriving (Eq, Enum, Bounded, Show)
 
 
 sizeInt = #{size int}
 
 
-instance Storable SFJoystickAxis where
+instance Storable JoystickAxis where
     sizeOf _ = sizeInt
     alignment _ = alignment (undefined :: CInt)
     

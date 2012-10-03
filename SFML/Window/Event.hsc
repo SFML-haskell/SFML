@@ -75,7 +75,7 @@ data SFEvent
     }
     | SFEvtJoystickMoved
     { joystickId   :: Int
-    , joystickAxis :: SFJoystickAxis
+    , joystickAxis :: JoystickAxis
     , position     :: Float
     }
     | SFEvtJoystickConnected
