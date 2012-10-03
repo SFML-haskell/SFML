@@ -50,12 +50,12 @@ data SFEvent
     , y     :: Int
     }
     | SFEvtMouseButtonPressed
-    { button :: SFMouseButton
+    { button :: MouseButton
     , x      :: Int
     , y      :: Int
     }
     | SFEvtMouseButtonReleased
-    { button :: SFMouseButton
+    { button :: MouseButton
     , x      :: Int
     , y      :: Int
     }

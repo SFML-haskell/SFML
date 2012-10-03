@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.Window.Mouse
 (
-    SFMouseButton(..)
+    MouseButton(..)
 ,   isMouseButtonPressed
 ,   getMousePosition
 ,   setMousePosition
@@ -18,19 +18,19 @@ import Foreign.Ptr
 import Foreign.Storable
 
 
-data SFMouseButton
-    = SFMouseLeft
-    | SFMouseRight
-    | SFMouseMiddle
-    | SFMouseXButton1
-    | SFMouseXButton2
+data MouseButton
+    = MouseLeft
+    | MouseRight
+    | MouseMiddle
+    | MouseXButton1
+    | MouseXButton2
     deriving (Eq, Enum, Bounded, Show)
 
 
 sizeInt = #{size int}
 
 
-instance Storable SFMouseButton where
+instance Storable MouseButton where
     sizeOf _ = sizeInt
     alignment _ = alignment (undefined :: CInt)
     
@@ -39,7 +39,7 @@ instance Storable SFMouseButton where
 
 
 -- | Check if a mouse button is pressed.
-isMouseButtonPressed :: SFMouseButton -> IO Bool
+isMouseButtonPressed :: MouseButton -> IO Bool
 isMouseButtonPressed bt = sfMouse_isButtonPressed (fromEnum bt) >>= return . (/=0)
 
 foreign import ccall "sfMouse_isButtonPressed"
