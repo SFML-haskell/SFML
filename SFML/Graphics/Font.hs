@@ -62,7 +62,7 @@ foreign import ccall unsafe "sfFont_createFromMemory"
 fontFromStream :: InputStream -> IO Font
 fontFromStream stream = with stream sfFont_createFromStream
 
-foreign import ccall unsafe "sfFont_createFromStream"
+foreign import ccall "sfFont_createFromStream"
     sfFont_createFromStream :: Ptr InputStream -> IO Font
 
 --CSFML_GRAPHICS_API sfFont* sfFont_createFromStream(sfInputStream* stream);
