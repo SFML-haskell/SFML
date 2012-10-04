@@ -91,7 +91,7 @@ textureFromStream stream rect =
         Nothing -> sfTexture_createFromStream streamPtr nullPtr
         Just r  -> with r $ sfTexture_createFromStream streamPtr
 
-foreign import ccall unsafe "sfTexture_createFromStream"
+foreign import ccall "sfTexture_createFromStream"
      sfTexture_createFromStream :: Ptr InputStream -> Ptr IntRect -> IO Texture
 
 --CSFML_GRAPHICS_API sfTexture* sfTexture_createFromStream(sfInputStream* stream, const sfIntRect* area);
