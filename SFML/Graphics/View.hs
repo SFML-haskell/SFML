@@ -111,7 +111,7 @@ foreign import ccall unsafe "sfView_setRotation"
 --CSFML_GRAPHICS_API void sfView_setRotation(sfView* view, float angle);
 
 
- -- | Set the target viewport of a view
+-- | Set the target viewport of a view
 --
 -- The viewport is the rectangle into which the contents of the
 -- view are displayed, expressed as a factor (between 0 and 1)
