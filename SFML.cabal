@@ -18,6 +18,7 @@ library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
                        SFML.Graphics.Color SFML.Graphics.Font SFML.Graphics.Glyph SFML.Graphics.Image
                        SFML.Graphics.Rect SFML.Graphics.Texture SFML.Graphics.Transform SFML.Graphics.Types
+                       SFML.Graphics.Vertex
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard

@@ -7,6 +7,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.Texture
 ,   module SFML.Graphics.Transform
 ,   module SFML.Graphics.Types
+,   module SFML.Graphics.Vertex
 )
 where
 
@@ -18,4 +19,5 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Texture
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
+import SFML.Graphics.Vertex
 
