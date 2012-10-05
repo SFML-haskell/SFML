@@ -10,8 +10,6 @@ import Foreign.C.Types (CInt)
 import Foreign.Ptr
 import Foreign.Storable
 
-#include <SFML/Graphics/BlendMode.h>
-
 
 -- | Available blending modes for drawing.
 data BlendMode
@@ -23,14 +21,11 @@ data BlendMode
 
 
 instance Storable BlendMode where
-    sizeOf _ = sizeInt
+    sizeOf _ = size (undefined :: CInt)
     alignment _ = alignment (undefined :: CInt)
     
     peek ptr = fmap (toEnum . fromIntegral) $ peek (castPtr ptr :: Ptr CInt)
     poke ptr bm = poke (castPtr ptr :: Ptr CInt) (fromIntegral . fromEnum $ bm)
-
-
-sizeInt = #{size int}
 
 {-typedef enum 
 {
