@@ -2,7 +2,7 @@
 module SFML.Window.Window
 (
     module SFML.Window.WindowHandle
-,   Style(..)
+,   WindowStyle(..)
 ,   ContextSettings(..)
 ,   createWindow
 ,   createWindowFromHandle
@@ -52,7 +52,7 @@ import Foreign.Storable
 sizeInt = #{size int}
 
 
-data Style
+data WindowStyle
     = SFNone         -- ^ No border / title bar (this flag and all others are mutually exclusive)
     | SFTitlebar     -- ^ Title bar + fixed border
     | SFResize       -- ^ Titlebar + resizable border + maximize button
@@ -62,7 +62,7 @@ data Style
     deriving (Eq, Bounded, Show)
 
 
-instance Enum Style where
+instance Enum WindowStyle where
     
     fromEnum SFNone         = 0
     fromEnum SFTitlebar     = 1
@@ -124,7 +124,7 @@ instance Storable ContextSettings where
 createWindow
     :: VideoMode -- ^ Video mode to use (defines the width, height and depth of the rendering area of the window)
     -> String -- ^ Window title
-    -> [Style] -- ^ Window style
+    -> [WindowStyle] -- ^ Window style
     -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
     -> IO Window
 
