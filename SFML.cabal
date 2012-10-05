@@ -17,8 +17,8 @@ cabal-version:       >=1.8
 library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
                        SFML.Graphics.BlendMode SFML.Graphics.Color SFML.Graphics.Font SFML.Graphics.Glyph
-                       SFML.Graphics.Image
-                       SFML.Graphics.Rect SFML.Graphics.Texture SFML.Graphics.Transform SFML.Graphics.Types
+                       SFML.Graphics.Image SFML.Graphics.Rect SFML.Graphics.RenderStates
+                       SFML.Graphics.Texture SFML.Graphics.Transform SFML.Graphics.Types
                        SFML.Graphics.Vertex
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
