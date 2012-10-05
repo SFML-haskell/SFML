@@ -1,5 +1,24 @@
 module SFML.Graphics.Texture
 (
+    createTexture
+,   textureFromFile
+,   textureFromMemory
+,   textureFromStream
+,   textureFromImage
+,   copyTexture
+,   destroyTexture
+,   textureSize
+,   copyTextureToImage
+,   updateTextureFromPixels
+,   updateTextureFromImage
+,   updateTextureFromWindow
+,   updateTextureFromRenderWindow
+,   bindTexture
+,   setSmooth
+,   isSmooth
+,   setRepeated
+,   isRepeated
+,   textureMaxSize
 )
 where
 
