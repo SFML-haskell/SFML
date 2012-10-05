@@ -20,7 +20,7 @@ library
                        SFML.Graphics.Image SFML.Graphics.PrimitiveType SFML.Graphics.Rect SFML.Graphics.RenderStates
                        SFML.Graphics.RenderWindow
                        SFML.Graphics.Texture SFML.Graphics.Transform SFML.Graphics.Types
-                       SFML.Graphics.Vertex
+                       SFML.Graphics.Vertex SFML.Graphics.View
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
                        SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
@@ -29,7 +29,7 @@ library
   -- other-modules:       
   c-sources:           SFML/Graphics/helper/Font_helper.c SFML/Graphics/helper/Image_helper.c
                        SFML/Graphics/helper/RenderWindow_helper.c
-                       SFML/Graphics/helper/Texture_helper.c
+                       SFML/Graphics/helper/Texture_helper.c SFML/Graphics/helper/View_helper.c
                        SFML/System/helper/Clock_helper.c SFML/System/helper/Time_helper.c
                        SFML/System/helper/Sleep_helper.c
                        SFML/Window/helper/Mouse_helper.c SFML/Window/helper/VideoMode_helper.c

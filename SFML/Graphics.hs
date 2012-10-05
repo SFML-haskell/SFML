@@ -13,6 +13,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.Transform
 ,   module SFML.Graphics.Types
 ,   module SFML.Graphics.Vertex
+,   module SFML.Graphics.View
 )
 where
 
@@ -30,4 +31,5 @@ import SFML.Graphics.Texture
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
 import SFML.Graphics.Vertex
+import SFML.Graphics.View
 
