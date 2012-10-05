@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.Graphics.Vertex
 (
+    Vertex(..)
 )
 where
 
