@@ -1,6 +1,7 @@
 module SFML.Graphics
 (
-    module SFML.Graphics.Font
+    module SFML.Graphics.BlendMode
+,   module SFML.Graphics.Font
 ,   module SFML.Graphics.Glyph
 ,   module SFML.Graphics.Image
 ,   module SFML.Graphics.Rect
@@ -12,6 +13,7 @@ module SFML.Graphics
 where
 
 
+import SFML.Graphics.BlendMode
 import SFML.Graphics.Font
 import SFML.Graphics.Glyph
 import SFML.Graphics.Image
