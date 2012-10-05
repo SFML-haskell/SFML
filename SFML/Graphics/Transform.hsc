@@ -5,7 +5,7 @@ module SFML.Graphics.Transform
 ,   m00, m10, m20
 ,   m01, m11, m21
 ,   m02, m12, m22
-,   transform
+,   createTransform
 ,   idTransform
 ,   translate
 ,   rotate
@@ -108,7 +108,7 @@ instance Num Transform where
 
 
 -- | Create a new transform from a matrix.
-transform
+createTransform
     :: Float -- ^ Element (0, 0) of the matrix
     -> Float -- ^ Element (0, 1) of the matrix
     -> Float -- ^ Element (0, 2) of the matrix
@@ -120,7 +120,7 @@ transform
     -> Float -- ^ Element (2, 2) of the matrix
     -> Transform
 
-transform = Transform
+createTransform = Transform
 
 
 -- | Identity transform.
