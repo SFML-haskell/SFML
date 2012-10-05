@@ -5,6 +5,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.Font
 ,   module SFML.Graphics.Glyph
 ,   module SFML.Graphics.Image
+,   module SFML.Graphics.PrimitiveType
 ,   module SFML.Graphics.Rect
 ,   module SFML.Graphics.RenderStates
 ,   module SFML.Graphics.Texture
@@ -20,6 +21,7 @@ import SFML.Graphics.Color
 import SFML.Graphics.Font
 import SFML.Graphics.Glyph
 import SFML.Graphics.Image
+import SFML.Graphics.PrimitiveType
 import SFML.Graphics.Rect
 import SFML.Graphics.RenderStates
 import SFML.Graphics.Texture
