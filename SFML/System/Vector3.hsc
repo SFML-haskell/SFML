@@ -15,7 +15,7 @@ import Foreign.Storable
 sizeFloat = #{size float}
 
 
-data Vec3f = Vec3f {-# UNPACK #-} !Float {-# UNPACK #-} !Float {-# UNPACK #-} !Float
+data Vec3f = Vec3f {-# UNPACK #-} !Float {-# UNPACK #-} !Float {-# UNPACK #-} !Float deriving Show
 
 
 instance Storable Vec3f where

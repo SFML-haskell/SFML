@@ -18,7 +18,7 @@ sizeFloat = #{size float}
 sizeInt   = #{size int}
 
 
-data Vec2i = Vec2i {-# UNPACK #-} !Int {-# UNPACK #-} !Int
+data Vec2i = Vec2i {-# UNPACK #-} !Int {-# UNPACK #-} !Int deriving Show
 
 
 instance Storable Vec2i where
@@ -36,7 +36,7 @@ instance Storable Vec2i where
 
 
 
-data Vec2u = Vec2u {-# UNPACK #-} !CUInt {-# UNPACK #-} !CUInt
+data Vec2u = Vec2u {-# UNPACK #-} !CUInt {-# UNPACK #-} !CUInt deriving Show
 
 
 instance Storable Vec2u where
@@ -54,7 +54,7 @@ instance Storable Vec2u where
 
 
 
-data Vec2f = Vec2f {-# UNPACK #-} !Float {-# UNPACK #-} !Float
+data Vec2f = Vec2f {-# UNPACK #-} !Float {-# UNPACK #-} !Float deriving Show
 
 
 instance Storable Vec2f where
