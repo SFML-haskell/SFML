@@ -430,13 +430,14 @@ foreign import ccall unsafe "sfRenderWindow_getViewport_helper"
 convertCoords
     :: RenderWindow -- ^ Render window object
     -> Vec2i -- ^ Point to convert, relative to the window
-    -> View  -- ^ Target view to convert the point to (pass NULL to use the current view)
+    -> Maybe View  -- ^ Target view to convert the point to ('Nothing' to use the current view)
     -> IO Vec2f
 
 convertCoords wnd p view =
     alloca $ \ptr ->
-    with p $ \posPtr ->
-    sfRenderWindow_convertCoords_helper wnd posPtr view ptr >> peek ptr
+    with p $ \posPtr -> case view of
+        Nothing -> sfRenderWindow_convertCoords_helper wnd posPtr (View nullPtr) ptr >> peek ptr
+        Just v  -> sfRenderWindow_convertCoords_helper wnd posPtr v ptr >> peek ptr
 
 foreign import ccall unsafe "sfRenderWindow_convertCoords_helper"
     sfRenderWindow_convertCoords_helper :: RenderWindow -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()
