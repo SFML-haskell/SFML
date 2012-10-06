@@ -4,15 +4,22 @@
 name:                SFML
 version:             0.1.0.0
 synopsis:            SFML bindings
--- description:         
+description:
+    Low level bindings for SFML 2.0.
 license:             MIT
 license-file:        LICENSE
 author:              Marc Sunet
 maintainer:          jeannekamikaze@gmail.com
+homepage:            https://github.com/jeannekamikaze/SFML
+bug-reports:         https://github.com/jeannekamikaze/SFML/issues
 -- copyright:           
 category:            Game
 build-type:          Simple
 cabal-version:       >=1.8
+
+source-repository:   head
+    type: git
+    location: https://github.com/jeannekamikaze/SFML
 
 library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
