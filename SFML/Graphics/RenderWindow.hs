@@ -52,6 +52,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
+import SFML.Graphics.RenderTarget
 import SFML.Graphics.Vertex
 import SFML.Window.Event
 import SFML.Window.VideoMode
@@ -447,208 +448,101 @@ foreign import ccall unsafe "sfRenderWindow_convertCoords_helper"
 --CSFML_GRAPHICS_API sfVector2f sfRenderWindow_convertCoords(const sfRenderWindow* renderWindow, sfVector2i point, const sfView* targetView);
 
 
--- | Draw a sprite to the render-target.
-drawSprite
-    :: RenderWindow -- ^ Render window object
-    -> Sprite -- ^ Sprite to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
+instance RenderTarget RenderWindow where
+    
+    drawSprite wnd sprite Nothing   = sfRenderWindow_drawSprite wnd sprite nullPtr
+    drawSprite wnd sprite (Just rs) = with rs $ sfRenderWindow_drawSprite wnd sprite
+    
+    drawText wnd text Nothing   = sfRenderWindow_drawText wnd text nullPtr
+    drawText wnd text (Just rs) = with rs $ sfRenderWindow_drawText wnd text
+    
+    drawShape wnd shape Nothing   = sfRenderWindow_drawShape wnd shape nullPtr
+    drawShape wnd shape (Just rs) = with rs $ sfRenderWindow_drawShape wnd shape
+    
+    drawCircle wnd circle Nothing   = sfRenderWindow_drawCircleShape wnd circle nullPtr
+    drawCircle wnd circle (Just rs) = with rs $ sfRenderWindow_drawCircleShape wnd circle
+    
+    drawConvexShape wnd shape Nothing   = sfRenderWindow_drawConvexShape wnd shape nullPtr
+    drawConvexShape wnd shape (Just rs) = with rs $ sfRenderWindow_drawConvexShape wnd shape
+    
+    drawRectangle wnd rect Nothing   = sfRenderWindow_drawRectangleShape wnd rect nullPtr
+    drawRectangle wnd rect (Just rs) = with rs $ sfRenderWindow_drawRectangleShape wnd rect
+    
+    drawVertexArray wnd va Nothing   = sfRenderWindow_drawVertexArray wnd va nullPtr
+    drawVertexArray wnd va (Just rs) = with rs $ sfRenderWindow_drawVertexArray wnd va
+    
+    drawPrimitives wnd verts prim Nothing =
+        let n = length verts
+        in withArray verts $ \ptr ->
+            sfRenderWindow_drawPrimitives wnd ptr (fromIntegral n) (fromIntegral . fromEnum $ prim) nullPtr
+    
+    drawPrimitives wnd verts prim (Just r) =
+        let n = length verts
+        in withArray verts $ \ptr ->
+            with r $ sfRenderWindow_drawPrimitives wnd ptr (fromIntegral n) (fromIntegral . fromEnum $ prim)
+    
+    drawPrimitives' wnd verts n prim Nothing =
+        sfRenderWindow_drawPrimitives wnd verts (fromIntegral n) (fromIntegral . fromEnum $ prim) nullPtr
+    
+    drawPrimitives' wnd verts n prim (Just r) =
+        with r $ sfRenderWindow_drawPrimitives wnd verts (fromIntegral n) (fromIntegral . fromEnum $ prim)
+    
+    pushGLStates = sfRenderWindow_pushGLStates
+    
+    popGLStates = sfRenderWindow_popGLStates
+    
+    resetGLStates = sfRenderWindow_resetGLStates
 
-drawSprite wnd sprite Nothing   = sfRenderWindow_drawSprite wnd sprite nullPtr
-drawSprite wnd sprite (Just rs) = with rs $ sfRenderWindow_drawSprite wnd sprite
 
 foreign import ccall unsafe "sfRenderWindow_drawSprite"
     sfRenderWindow_drawSprite :: RenderWindow -> Sprite -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawSprite(sfRenderWindow* renderWindow, const sfSprite* object, const sfRenderStates* states);
 
-
--- | Draw text to the render-target.
-drawText
-    :: RenderWindow -- ^ Render window object
-    -> Text -- ^ Text to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawText wnd text Nothing   = sfRenderWindow_drawText wnd text nullPtr
-drawText wnd text (Just rs) = with rs $ sfRenderWindow_drawText wnd text
-
 foreign import ccall unsafe "sfRenderWindow_drawText"
     sfRenderWindow_drawText :: RenderWindow -> Text -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawText(sfRenderWindow* renderWindow, const sfText* object, const sfRenderStates* states);
-
-
--- | Draw a shape to the render-target.
-drawShape
-    :: RenderWindow -- ^ Render window object
-    -> Shape -- ^ Shape to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawShape wnd shape Nothing   = sfRenderWindow_drawShape wnd shape nullPtr
-drawShape wnd shape (Just rs) = with rs $ sfRenderWindow_drawShape wnd shape
 
 foreign import ccall unsafe "sfRenderWindow_drawShape"
     sfRenderWindow_drawShape :: RenderWindow -> Shape -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawShape(sfRenderWindow* renderWindow, const sfShape* object, const sfRenderStates* states);
 
-
--- | Draw a circle to the render-target.
-drawCircle
-    :: RenderWindow -- ^ Render window object
-    -> CircleShape -- ^ Circle to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawCircle wnd circle Nothing   = sfRenderWindow_drawCircleShape wnd circle nullPtr
-drawCircle wnd circle (Just rs) = with rs $ sfRenderWindow_drawCircleShape wnd circle
-
 foreign import ccall unsafe "sfRenderWindow_drawCircleShape"
     sfRenderWindow_drawCircleShape :: RenderWindow -> CircleShape -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawCircleShape(sfRenderWindow* renderWindow, const sfCircleShape* object, const sfRenderStates* states);
-
-
--- | Draw a convex shape to the render-target.
-drawConvexShape
-    :: RenderWindow -- ^ Render window object
-    -> ConvexShape -- ^ Convex shape to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawConvexShape wnd shape Nothing   = sfRenderWindow_drawConvexShape wnd shape nullPtr
-drawConvexShape wnd shape (Just rs) = with rs $ sfRenderWindow_drawConvexShape wnd shape
 
 foreign import ccall unsafe "sfRenderWindow_drawConvexShape"
     sfRenderWindow_drawConvexShape :: RenderWindow -> ConvexShape -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawConvexShape(sfRenderWindow* renderWindow, const sfConvexShape* object, const sfRenderStates* states);
 
-
--- | Draw a rectangle to the render-target.
-drawRectangle
-    :: RenderWindow -- ^ Render window object
-    -> RectangleShape -- ^ Rectangle to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawRectangle wnd rect Nothing   = sfRenderWindow_drawRectangleShape wnd rect nullPtr
-drawRectangle wnd rect (Just rs) = with rs $ sfRenderWindow_drawRectangleShape wnd rect
-
 foreign import ccall unsafe "sfRenderWindow_drawRectangleShape"
     sfRenderWindow_drawRectangleShape :: RenderWindow -> RectangleShape -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawRectangleShape(sfRenderWindow* renderWindow, const sfRectangleShape* object, const sfRenderStates* states);
-
-
--- | Draw a vertex array to the render-target.
-drawVertexArray
-    :: RenderWindow -- ^ Render window object
-    -> VertexArray  -- ^ Vertex array to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawVertexArray wnd va Nothing   = sfRenderWindow_drawVertexArray wnd va nullPtr
-drawVertexArray wnd va (Just rs) = with rs $ sfRenderWindow_drawVertexArray wnd va
 
 foreign import ccall unsafe "sfRenderWindow_drawVertexArray"
     sfRenderWindow_drawVertexArray :: RenderWindow -> VertexArray -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawVertexArray(sfRenderWindow* renderWindow, const sfVertexArray* object, const sfRenderStates* states);
 
-
--- | Draw primitives defined by a list of vertices to a render window.
-drawPrimitives
-    :: RenderWindow  -- ^ Render window object
-    -> [Vertex]      -- ^ Vertices
-    -> PrimitiveType -- ^ Type of primitives to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawPrimitives wnd verts prim Nothing =
-    let n = length verts
-    in withArray verts $ \ptr ->
-        sfRenderWindow_drawPrimitives wnd ptr (fromIntegral n) (fromIntegral . fromEnum $ prim) nullPtr
-
-
-drawPrimitives wnd verts prim (Just r) =
-    let n = length verts
-    in withArray verts $ \ptr ->
-        with r $ sfRenderWindow_drawPrimitives wnd ptr (fromIntegral n) (fromIntegral . fromEnum $ prim)
-
-
--- | Draw primitives defined by an array of vertices to a render window.
-drawPrimitives'
-    :: RenderWindow  -- ^ Render window object
-    -> Ptr Vertex    -- ^ Pointer to the vertices
-    -> Int           -- ^ Number of vertices in the array
-    -> PrimitiveType -- ^ Type of primitives to draw
-    -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
-    -> IO ()
-
-drawPrimitives' wnd verts n prim Nothing =
-    sfRenderWindow_drawPrimitives wnd verts (fromIntegral n) (fromIntegral . fromEnum $ prim) nullPtr
-
-drawPrimitives' wnd verts n prim (Just r) =
-    with r $ sfRenderWindow_drawPrimitives wnd verts (fromIntegral n) (fromIntegral . fromEnum $ prim)
-
 foreign import ccall unsafe "sfRenderWindow_drawPrimitives"
     sfRenderWindow_drawPrimitives :: RenderWindow -> Ptr Vertex -> CUInt -> CInt -> Ptr RenderStates -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_drawPrimitives(sfRenderWindow* renderWindow, const sfVertex* vertices, unsigned int vertexCount, sfPrimitiveType type, const sfRenderStates* states);
-
-
--- | Save the current OpenGL render states and matrices.
---
--- This function can be used when you mix SFML drawing
--- and direct OpenGL rendering. Combined with popGLStates,
--- it ensures that:
---
--- * SFML's internal states are not messed up by your OpenGL code
---
--- * Your OpenGL states are not modified by a call to a SFML function
---
--- Note that this function is quite expensive: it saves all the
--- possible OpenGL states and matrices, even the ones you
--- don't care about. Therefore it should be used wisely.
--- It is provided for convenience, but the best results will
--- be achieved if you handle OpenGL states yourself (because
--- you know which states have really changed, and need to be
--- saved and restored). Take a look at the resetGLStates
--- function if you do so.
-pushGLStates :: RenderWindow -> IO ()
-pushGLStates = sfRenderWindow_pushGLStates
 
 foreign import ccall unsafe "sfRenderWindow_pushGLStates"
     sfRenderWindow_pushGLStates :: RenderWindow -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_pushGLStates(sfRenderWindow* renderWindow);
 
-
--- | Restore the previously saved OpenGL render states and matrices.
---
--- See the description of pushGLStates to get a detailed
--- description of these functions.
-popGLStates :: RenderWindow -> IO ()
-popGLStates = sfRenderWindow_popGLStates
-
 foreign import ccall unsafe "sfRenderWindow_popGLStates"
     sfRenderWindow_popGLStates :: RenderWindow -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_popGLStates(sfRenderWindow* renderWindow);
-
-
--- |  Reset the internal OpenGL states so that the target is ready for drawing.
---
--- This function can be used when you mix SFML drawing
--- and direct OpenGL rendering, if you choose not to use
--- pushGLStates/popGLStates. It makes sure that all OpenGL
--- states needed by SFML are set, so that subsequent sfRenderWindow_draw*()
--- calls will work as expected.
-resetGLStates :: RenderWindow -> IO ()
-resetGLStates = sfRenderWindow_resetGLStates
 
 foreign import ccall unsafe "sfRenderWindow_resetGLStates"
     sfRenderWindow_resetGLStates :: RenderWindow -> IO ()

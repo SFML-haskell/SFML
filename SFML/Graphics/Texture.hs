@@ -24,6 +24,7 @@ where
 
 
 import SFML.Graphics.Rect
+import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Types
 import SFML.Window.Types
 import SFML.System.InputStream
@@ -253,20 +254,16 @@ foreign import ccall unsafe "sfTexture_bind"
 --CSFML_GRAPHICS_API void sfTexture_bind(const sfTexture* texture);
 
 
--- | Enable or disable the smooth filter on a texture.
-setSmooth :: Texture -> Bool -> IO ()
-setSmooth tex True  = sfTexture_setSmooth tex 1
-setSmooth tex False = sfTexture_setSmooth tex 0
+instance SmoothTexture Texture where
+    
+    setSmooth tex val  = sfTexture_setSmooth tex (fromIntegral . fromEnum $ val)
+    
+    isSmooth = fmap (/=0) . sfTexture_isSmooth
 
 foreign import ccall unsafe "sfTexture_setSmooth"
     sfTexture_setSmooth :: Texture -> CInt -> IO ()
 
 --CSFML_GRAPHICS_API void sfTexture_setSmooth(sfTexture* texture, sfBool smooth);
-
-
--- | Tell whether the smooth filter is enabled or not for a texture.
-isSmooth :: Texture -> IO Bool
-isSmooth = fmap (/=0) . sfTexture_isSmooth
 
 foreign import ccall unsafe "sfTexture_isSmooth"
     sfTexture_isSmooth :: Texture -> IO CInt

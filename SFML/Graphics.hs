@@ -8,7 +8,9 @@ module SFML.Graphics
 ,   module SFML.Graphics.PrimitiveType
 ,   module SFML.Graphics.Rect
 ,   module SFML.Graphics.RenderStates
+,   module SFML.Graphics.RenderTexture
 ,   module SFML.Graphics.RenderWindow
+,   module SFML.Graphics.SmoothTexture
 ,   module SFML.Graphics.Texture
 ,   module SFML.Graphics.Transform
 ,   module SFML.Graphics.Types
@@ -26,7 +28,9 @@ import SFML.Graphics.Image
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.Rect
 import SFML.Graphics.RenderStates
+import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
+import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Texture
 import SFML.Graphics.Transform
 import SFML.Graphics.Types

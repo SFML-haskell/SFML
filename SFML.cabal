@@ -18,7 +18,8 @@ library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
                        SFML.Graphics.BlendMode SFML.Graphics.Color SFML.Graphics.Font SFML.Graphics.Glyph
                        SFML.Graphics.Image SFML.Graphics.PrimitiveType SFML.Graphics.Rect SFML.Graphics.RenderStates
-                       SFML.Graphics.RenderWindow
+                       SFML.Graphics.RenderTarget SFML.Graphics.RenderTexture SFML.Graphics.RenderWindow
+                       SFML.Graphics.SmoothTexture
                        SFML.Graphics.Texture SFML.Graphics.Transform SFML.Graphics.Types
                        SFML.Graphics.Vertex SFML.Graphics.View
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
@@ -28,6 +29,7 @@ library
                        SFML.Window.WindowHandle
   -- other-modules:       
   c-sources:           SFML/Graphics/helper/Font_helper.c SFML/Graphics/helper/Image_helper.c
+                       SFML/Graphics/helper/RenderTexture_helper.c
                        SFML/Graphics/helper/RenderWindow_helper.c
                        SFML/Graphics/helper/Texture_helper.c SFML/Graphics/helper/View_helper.c
                        SFML/System/helper/Clock_helper.c SFML/System/helper/Time_helper.c
