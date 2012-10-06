@@ -8,7 +8,7 @@ module SFML.Graphics.Font
 ,   getGlyph
 ,   getKerning
 ,   getLineSpacing
-,   getTexture
+,   getFontTexture
 )
 where
 
@@ -140,12 +140,12 @@ foreign import ccall unsafe "sfFont_getLineSpacing"
 
 
 -- | Get the texture containing the glyphs of a given size in a font.
-getTexture
+getFontTexture
     :: Font -- ^ Source font
     -> Int    -- ^ Character size, in pixels
     -> IO Texture
 
-getTexture font size = sfFont_getTexture font (fromIntegral size)
+getFontTexture font size = sfFont_getTexture font (fromIntegral size)
 
 foreign import ccall unsafe "sfFont_getTexture"
     sfFont_getTexture :: Font -> CUInt -> IO Texture
