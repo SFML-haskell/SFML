@@ -23,7 +23,7 @@ http://shellblade.net/docs/SFML/index.html
 
 ### Installation
 
-Install SFML and CSFML on your system.
+Install SFML and CSFML on your system. You have to install them off the git repositories; the 2.0 RC snapshot won't work.
 
 Make sure your compiler can find SFML's and CSFML's headers.
 
