@@ -4,6 +4,7 @@ module SFML.Window.Window
     module SFML.Window.WindowHandle
 ,   WindowStyle(..)
 ,   ContextSettings(..)
+,   Pixels
 ,   createWindow
 ,   createWindowFromHandle
 ,   destroyWindow
@@ -338,7 +339,7 @@ type Pixels = Ptr Int
 
 -- | Change a window's icon.
 --
--- Pixels must be an array of \a width x \a height pixels
+-- Pixels must be an array of width x height pixels
 -- in 32-bits RGBA format.
 
 setWindowIcon
