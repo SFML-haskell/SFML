@@ -23,7 +23,7 @@ module SFML.Graphics.RenderTexture
 ,   pushGLStates
 ,   popGLStates
 ,   resetGLStates
-,   getTexture
+,   getRenderTexture
 ,   setSmooth
 ,   isSmooth
 )
@@ -304,8 +304,8 @@ foreign import ccall unsafe "resetGLStates"
 
 
 -- | Get the target texture of a render texture.
-getTexture :: RenderTexture -> IO Texture
-getTexture = sfRenderTexture_getTexture
+getRenderTexture :: RenderTexture -> IO Texture
+getRenderTexture = sfRenderTexture_getTexture
 
 foreign import ccall unsafe "sfRenderTexture_getTexture"
     sfRenderTexture_getTexture :: RenderTexture -> IO Texture
