@@ -3,9 +3,9 @@ import SFML.Graphics.Transform
 
 main = do
     let
-        t = translate 10 10
-        r = rotate 45
-        s = scale 2 4
+        t = translation 10 10
+        r = rotation 45
+        s = scaling 2 4
     
     printmat' "Translation:" t
     printmat' "Rotation:" r
