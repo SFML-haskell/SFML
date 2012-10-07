@@ -38,7 +38,7 @@ import SFML.System.Vector2
 import SFML.Window.WindowHandle
 
 import Data.Bits ((.|.))
-import Data.List (foldl1')
+import Data.List (foldl')
 import Foreign.C.String (CString, withCAString)
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
@@ -131,7 +131,7 @@ createWindow
 createWindow vm title styles ctxSettings =
     with vm $ \ptrVM ->
     withCAString title $ \ptrTitle ->
-    let style = foldl1' (.|.) $ fmap fromEnum styles
+    let style = foldl' (.|.) 0 $ fmap fromEnum styles
     in case ctxSettings of
         Nothing  -> sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) nullPtr
         Just ctx -> with ctx $ sfWindow_create_helper ptrVM ptrTitle (fromIntegral style)
