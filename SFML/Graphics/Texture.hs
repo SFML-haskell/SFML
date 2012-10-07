@@ -178,8 +178,8 @@ foreign import ccall unsafe "sfTexture_copyToImage"
 updateTextureFromPixels
     :: Texture -- ^ Texture to update
     -> Ptr a   -- ^ Array of pixels to copy to the texture
-    -> Int     -- ^ Width of the pixel region contained in \a pixels
-    -> Int     -- ^ Height of the pixel region contained in \a pixels
+    -> Int     -- ^ Width of the pixel region contained in the pixels array
+    -> Int     -- ^ Height of the pixel region contained in the pixels array
     -> Int     -- ^ X offset in the texture where to copy the source pixels
     -> Int     -- ^ Y offset in the texture where to copy the source pixels
     -> IO ()
