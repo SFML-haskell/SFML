@@ -11,7 +11,9 @@ module SFML.Graphics
 ,   module SFML.Graphics.RenderTexture
 ,   module SFML.Graphics.RenderWindow
 ,   module SFML.Graphics.SmoothTexture
+,   module SFML.Graphics.Sprite
 ,   module SFML.Graphics.Texture
+,   module SFML.Graphics.Texturable
 ,   module SFML.Graphics.Transform
 ,   module SFML.Graphics.Types
 ,   module SFML.Graphics.Vertex
@@ -31,7 +33,9 @@ import SFML.Graphics.RenderStates
 import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
 import SFML.Graphics.SmoothTexture
+import SFML.Graphics.Sprite
 import SFML.Graphics.Texture
+import SFML.Graphics.Texturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
 import SFML.Graphics.Vertex

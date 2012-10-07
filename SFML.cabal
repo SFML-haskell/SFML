@@ -17,17 +17,15 @@ category:            Game
 build-type:          Simple
 cabal-version:       >=1.8
 
-source-repository:   head
-    type: git
-    location: https://github.com/jeannekamikaze/SFML
-
 library
   exposed-modules:     SFML.Graphics SFML.System SFML.Window
                        SFML.Graphics.BlendMode SFML.Graphics.Color SFML.Graphics.Font SFML.Graphics.Glyph
                        SFML.Graphics.Image SFML.Graphics.PrimitiveType SFML.Graphics.Rect SFML.Graphics.RenderStates
                        SFML.Graphics.RenderTarget SFML.Graphics.RenderTexture SFML.Graphics.RenderWindow
-                       SFML.Graphics.SmoothTexture
-                       SFML.Graphics.Texture SFML.Graphics.Transform SFML.Graphics.Types
+                       SFML.Graphics.SmoothTexture SFML.Graphics.Sprite
+                       SFML.Graphics.Texture
+                       SFML.Graphics.Texturable
+                       SFML.Graphics.Transform SFML.Graphics.Transformable SFML.Graphics.Types
                        SFML.Graphics.Vertex SFML.Graphics.View
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
@@ -35,13 +33,18 @@ library
                        SFML.Window.Mouse SFML.Window.Types SFML.Window.VideoMode SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
-  c-sources:           SFML/Graphics/helper/Font_helper.c SFML/Graphics/helper/Image_helper.c
+  c-sources:           SFML/Graphics/helper/Font_helper.c
+                       SFML/Graphics/helper/Image_helper.c
                        SFML/Graphics/helper/RenderTexture_helper.c
                        SFML/Graphics/helper/RenderWindow_helper.c
-                       SFML/Graphics/helper/Texture_helper.c SFML/Graphics/helper/View_helper.c
-                       SFML/System/helper/Clock_helper.c SFML/System/helper/Time_helper.c
+                       SFML/Graphics/helper/Sprite_helper.c
+                       SFML/Graphics/helper/Texture_helper.c
+                       SFML/Graphics/helper/View_helper.c
+                       SFML/System/helper/Clock_helper.c
+                       SFML/System/helper/Time_helper.c
                        SFML/System/helper/Sleep_helper.c
-                       SFML/Window/helper/Mouse_helper.c SFML/Window/helper/VideoMode_helper.c
+                       SFML/Window/helper/Mouse_helper.c
+                       SFML/Window/helper/VideoMode_helper.c
                        SFML/Window/helper/Window_helper.c
   build-depends:       base ==4.5.*
   build-tools:         hsc2hs -any
