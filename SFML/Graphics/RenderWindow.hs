@@ -61,7 +61,7 @@ import SFML.Window.Window
 import SFML.System.Vector2
 
 import Data.Bits ((.|.))
-import Data.List (foldl1')
+import Data.List (foldl')
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
@@ -82,7 +82,7 @@ createRenderWindow
 createRenderWindow vm title styles ctx =
     withCAString title $ \ctitle ->
     with vm $ \ptrVM ->
-    let style = foldl1' (.|.) $ fmap fromEnum styles
+    let style = foldl' (.|.) 0 $ fmap fromEnum styles
     in case ctx of
         Nothing -> sfRenderWindow_create_helper ptrVM ctitle (fromIntegral . fromEnum $ style) nullPtr
         Just c  -> with c $ sfRenderWindow_create_helper ptrVM ctitle (fromIntegral . fromEnum $ style)
