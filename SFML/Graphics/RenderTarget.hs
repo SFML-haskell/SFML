@@ -2,9 +2,9 @@ module SFML.Graphics.RenderTarget
 where
 
 
-import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
+import SFML.Graphics.Types
 import SFML.Graphics.Vertex
 
 import Foreign.Ptr (Ptr)
