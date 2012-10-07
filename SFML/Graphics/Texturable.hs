@@ -12,15 +12,15 @@ class Texturable a where
     -- | Change the source texture of a Texturable.
     --
     -- The texture argument refers to a texture that must
-    -- exist as long as the sprite uses it. Indeed, the sprite
+    -- exist as long as the texturable uses it. Indeed, the texturable
     -- doesn't store its own copy of the texture, but rather keeps
     -- a pointer to the one that you passed to this function.
     --
-    -- If the source texture is destroyed and the sprite tries to
+    -- If the source texture is destroyed and the texturable tries to
     -- use it, the behaviour is undefined.
     --
     -- If resetRect is 'True', the TextureRect property of
-    -- the sprite is automatically adjusted to the size of the new
+    -- the texturable is automatically adjusted to the size of the new
     -- texture. If it is false, the texture rect is left unchanged.
     setTexture
         :: a
@@ -41,7 +41,7 @@ class Texturable a where
     
     -- | Get the source texture of a texturable.
     --
-    -- If the sprite has no source texture, 'Nothing' is returned.
+    -- If the texturable has no source texture, 'Nothing' is returned.
     --
     -- The returned pointer is const, which means that you can't
     -- modify the texture when you retrieve it with this function.
