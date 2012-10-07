@@ -125,15 +125,16 @@ createWindow
     :: VideoMode -- ^ Video mode to use (defines the width, height and depth of the rendering area of the window)
     -> String -- ^ Window title
     -> [WindowStyle] -- ^ Window style
-    -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
+    -> Maybe ContextSettings -- ^ Additional settings for the underlying OpenGL context
     -> IO Window
 
 createWindow vm title styles ctxSettings =
     with vm $ \ptrVM ->
     withCAString title $ \ptrTitle ->
-    with ctxSettings $ \ptrCtxSettings ->
     let style = foldl1' (.|.) $ fmap fromEnum styles
-    in sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) ptrCtxSettings
+    in case ctxSettings of
+        Nothing  -> sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) nullPtr
+        Just ctx -> with ctx $ sfWindow_create_helper ptrVM ptrTitle (fromIntegral style)
 
 foreign import ccall "sfWindow_create_helper"
     sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr ContextSettings -> IO Window
@@ -152,11 +153,13 @@ foreign import ccall "sfWindow_create_helper"
 
 createWindowFromHandle
     :: WindowHandle -- ^ Platform-specific handle of the control
-    -> ContextSettings -- ^ Additional settings for the underlying OpenGL context
+    -> Maybe ContextSettings -- ^ Additional settings for the underlying OpenGL context
     -> IO Window
 
-createWindowFromHandle hwnd ctxSettings = do
-    with ctxSettings $ \ptrCtxSettings -> sfWindow_createFromHandle hwnd ptrCtxSettings
+createWindowFromHandle hwnd ctxSettings =
+    case ctxSettings of
+        Nothing  -> sfWindow_createFromHandle hwnd nullPtr
+        Just ctx -> with ctx $ sfWindow_createFromHandle hwnd
 
 foreign import ccall "sfWindow_createFromHandle"
     sfWindow_createFromHandle :: WindowHandle -> Ptr ContextSettings -> IO Window
