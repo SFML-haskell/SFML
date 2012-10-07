@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.Graphics.BlendMode
 (
     BlendMode(..)
@@ -21,7 +20,7 @@ data BlendMode
 
 
 instance Storable BlendMode where
-    sizeOf _ = size (undefined :: CInt)
+    sizeOf _ = sizeOf (undefined :: CInt)
     alignment _ = alignment (undefined :: CInt)
     
     peek ptr = fmap (toEnum . fromIntegral) $ peek (castPtr ptr :: Ptr CInt)
