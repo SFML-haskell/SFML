@@ -19,7 +19,6 @@ newtype Shape = Shape (Ptr Shape)
 newtype Sprite = Sprite (Ptr Sprite)
 newtype Text = Text (Ptr Text)
 newtype Texture = Texture (Ptr Texture)
-newtype Transformable = Transformable (Ptr Transformable)
 newtype VertexArray = VertexArray (Ptr VertexArray)
 newtype View = View (Ptr View)
 
