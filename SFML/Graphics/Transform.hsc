@@ -7,11 +7,11 @@ module SFML.Graphics.Transform
 ,   m02, m12, m22
 ,   createTransform
 ,   idTransform
-,   translate
-,   rotate
-,   rotateWithCenter
-,   scale
-,   scaleWithCenter
+,   translation
+,   rotation
+,   rotationWithCenter
+,   scaling
+,   scalingWithCenter
 ,   inverse
 ,   fastInverse
 ,   transformPoint
@@ -129,22 +129,22 @@ idTransform = Transform 1 0 0 0 1 0 0 0 1
 
 
 -- | Create a translation.
-translate
+translation
     :: Float -- ^ Offset to apply on X axis
     -> Float -- ^ Offset to apply on Y axis
     -> Transform
 
-translate x y = Transform
+translation x y = Transform
     1 0 x
     0 1 y
     0 0 1
 
 -- | Create a rotation.
-rotate
+rotation
     :: Float -- ^ Rotation angle in degrees
     -> Transform
 
-rotate deg =
+rotation deg =
     let rad = deg * pi / 180
         sa  = sin rad
         ca  = cos rad
@@ -159,13 +159,13 @@ rotate deg =
 -- argument, so that you can build rotations around arbitrary points
 -- more easily (and efficiently) than the usual
 -- [translate(-center), rotate(angle), translate(center)].
-rotateWithCenter
+rotationWithCenter
     :: Float -- ^ Rotation angle, in degrees
     -> Float -- ^ X coordinate of the center of rotation
     -> Float -- ^ Y coordinate of the center of rotation
     -> Transform
 
-rotateWithCenter deg x y =
+rotationWithCenter deg x y =
     let rad = deg * pi / 180
         ca  = cos rad
         sa  = sin rad
@@ -176,12 +176,12 @@ rotateWithCenter deg x y =
 
 
 -- | Create a scaling.
-scale
+scaling
     :: Float -- ^ Scaling factor on the X axis
     -> Float -- ^ Scaling factor on the Y axis
     -> Transform
 
-scale x y = Transform
+scaling x y = Transform
     x 0 0
     0 y 0
     0 0 1
@@ -193,14 +193,14 @@ scale x y = Transform
 -- argument, so that you can build scaling around arbitrary points
 -- more easily (and efficiently) than the usual
 -- [translate(-center), scale(factors), translate(center)]
-scaleWithCenter
+scalingWithCenter
     :: Float -- ^ Scaling factor on X axis
     -> Float -- ^ Scaling factor on Y axis
     -> Float -- ^ X coordinate of the center of scaling
     -> Float -- ^ Y coordinate of the center of scaling
     -> Transform
 
-scaleWithCenter sx sy cx cy = Transform
+scalingWithCenter sx sy cx cy = Transform
     sx 0  (cx * (1 - sx))
     0  sy (cy * (1 - sy))
     0  0   1
