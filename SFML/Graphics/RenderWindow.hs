@@ -60,6 +60,8 @@ import SFML.Window.WindowHandle
 import SFML.Window.Window
 import SFML.System.Vector2
 
+import Data.Bits ((.|.))
+import Data.List (foldl1')
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
@@ -71,16 +73,17 @@ import Foreign.Storable
 
 -- | Construct a new render window.
 createRenderWindow
-    :: VideoMode   -- ^ Video mode to use
-    -> String      -- ^ Window title
-    -> WindowStyle -- ^ Window style
+    :: VideoMode     -- ^ Video mode to use
+    -> String        -- ^ Window title
+    -> [WindowStyle] -- ^ Window style
     -> Maybe ContextSettings -- ^ Creation settings ('Nothing' to use default values)
     -> IO RenderWindow
 
-createRenderWindow vm title style ctx =
+createRenderWindow vm title styles ctx =
     withCAString title $ \ctitle ->
     with vm $ \ptrVM ->
-    case ctx of
+    let style = foldl1' (.|.) $ fmap fromEnum styles
+    in case ctx of
         Nothing -> sfRenderWindow_create_helper ptrVM ctitle (fromIntegral . fromEnum $ style) nullPtr
         Just c  -> with c $ sfRenderWindow_create_helper ptrVM ctitle (fromIntegral . fromEnum $ style)
 
