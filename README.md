@@ -39,4 +39,6 @@ $ cabal install
 
 Binaries must be explicitly linked with whatever CSFML libraries they require (-lcsfml-system etc).
 
-Check the cabal file inside the demos/ directory for an example.
+Check the [cabal file][0] inside the demos/ directory for an example.
+
+[0]: https://github.com/jeannekamikaze/SFML/blob/master/demos/demos.cabal
