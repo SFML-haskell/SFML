@@ -33,3 +33,11 @@ executable transform
     ghc-options:        -debug
     extra-libraries:    csfml-system-d csfml-graphics-d
 
+executable hello
+    hs-source-dirs:     hello
+    build-depends:      base, SFML
+    main-is:            main.hs
+    buildable:          True
+    ghc-options:        -debug
+    extra-libraries:    csfml-graphics-d csfml-window-d csfml-system-d
+

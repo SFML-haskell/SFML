@@ -12,6 +12,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.RenderWindow
 ,   module SFML.Graphics.SmoothTexture
 ,   module SFML.Graphics.Sprite
+,   module SFML.Graphics.Text
 ,   module SFML.Graphics.Texture
 ,   module SFML.Graphics.Texturable
 ,   module SFML.Graphics.Transform
@@ -34,6 +35,7 @@ import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
 import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Sprite
+import SFML.Graphics.Text
 import SFML.Graphics.Texture
 import SFML.Graphics.Texturable
 import SFML.Graphics.Transform
