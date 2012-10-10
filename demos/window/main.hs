@@ -21,6 +21,6 @@ loop :: Window -> IO ()
 loop wnd = do
     evt <- waitEvent wnd
     case evt of
-        SFEvtClosed -> return ()
+        Just SFEvtClosed -> return ()
         _ -> loop wnd
 
