@@ -18,6 +18,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.Transform
 ,   module SFML.Graphics.Types
 ,   module SFML.Graphics.Vertex
+,   module SFML.Graphics.VertexArray
 ,   module SFML.Graphics.View
 )
 where
@@ -41,5 +42,6 @@ import SFML.Graphics.Texturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
 import SFML.Graphics.Vertex
+import SFML.Graphics.VertexArray
 import SFML.Graphics.View
 

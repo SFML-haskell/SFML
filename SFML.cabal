@@ -40,6 +40,7 @@ library
                        SFML.Graphics.Transform
                        SFML.Graphics.Transformable SFML.Graphics.Types
                        SFML.Graphics.Vertex
+                       SFML.Graphics.VertexArray
                        SFML.Graphics.View
                        SFML.System.Clock
                        SFML.System.InputStream
@@ -66,6 +67,7 @@ library
                        SFML/Graphics/helper/Sprite_helper.c
                        SFML/Graphics/helper/Text_helper.c
                        SFML/Graphics/helper/Texture_helper.c
+                       SFML/Graphics/helper/VertexArray_helper.c
                        SFML/Graphics/helper/View_helper.c
                        SFML/System/helper/Clock_helper.c
                        SFML/System/helper/Time_helper.c
