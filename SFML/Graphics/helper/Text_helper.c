@@ -1,92 +1,92 @@
 #include <SFML/Graphics/Text.h>
 
 
-void sfText_setPosition (sfText* text, sfVector2f position)
+void sfText_setPosition_helper (sfText* text, sfVector2f* position)
 {
-    
+    sfText_setPosition (text, *position);
 }
 
 
-void sfText_setScale (sfText* text, sfVector2f scale)
+void sfText_setScale_helper (sfText* text, sfVector2f* scale)
 {
-    
+    sfText_setScale (text, *scale);
 }
 
 
-void sfText_setOrigin (sfText* text, sfVector2f origin)
+void sfText_setOrigin_helper (sfText* text, sfVector2f* origin)
 {
-    
+    sfText_setOrigin (text, *origin);
 }
 
 
-sfVector2f sfText_getPosition (const sfText* text)
+void sfText_getPosition_helper (const sfText* text, sfVector2f* position)
 {
-    
+    *position = sfText_getPosition (text);
 }
 
 
-sfVector2f sfText_getScale (const sfText* text)
+void sfText_getScale_helper (const sfText* text, sfVector2f* scale)
 {
-    
+    *scale = sfText_getScale (text);
 }
 
 
-sfVector2f sfText_getOrigin (const sfText* text)
+void sfText_getOrigin_helper (const sfText* text, sfVector2f* origin)
 {
-    
+    *origin = sfText_getOrigin (text);
 }
 
 
-void sfText_move (sfText* text, sfVector2f offset)
+void sfText_move_helper (sfText* text, sfVector2f* offset)
 {
-    
+    sfText_move (text, *offset);
 }
 
 
-void sfText_scale (sfText* text, sfVector2f factors)
+void sfText_scale_helper (sfText* text, sfVector2f* factors)
 {
-    
+    sfText_scale (text, *factors);
 }
 
 
-sfTransform sfText_getTransform (const sfText* text)
+void sfText_getTransform_helper (const sfText* text, sfTransform* transform)
 {
-    
+    *transform = sfText_getTransform (text);
 }
 
 
-sfTransform sfText_getInverseTransform (const sfText* text)
+void sfText_getInverseTransform_helper (const sfText* text, sfTransform* itransform)
 {
-    
+    *itransform = sfText_getInverseTransform (text);
 }
 
 
-void sfText_setColor (sfText* text, sfColor color)
+void sfText_setColor_helper (sfText* text, sfColor* color)
 {
-    
+    sfText_setColor (text, *color);
 }
 
 
-sfColor sfText_getColor (const sfText* text)
+void sfText_getColor_helper (const sfText* text, sfColor* color)
 {
-    
+    *color = sfText_getColor (text);
 }
 
 
-sfVector2f sfText_findCharacterPos (const sfText* text, size_t index)
+void sfText_findCharacterPos_helper (const sfText* text, size_t index, sfVector2f* position)
 {
-    
+    *position = sfText_findCharacterPos (text, index);
 }
 
 
-sfFloatRect sfText_getLocalBounds (const sfText* text)
+void sfText_getLocalBounds_helper (const sfText* text, sfFloatRect* rect)
 {
-    
+    *rect = sfText_getLocalBounds (text);
 }
 
 
-sfFloatRect sfText_getGlobalBounds (const sfText* text)
+void sfText_getGlobalBounds_helper (const sfText* text, sfFloatRect* rect)
 {
-    
+    *rect = sfText_getGlobalBounds (text);
 }
 
