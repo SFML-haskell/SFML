@@ -1,5 +1,24 @@
 module SFML.Graphics.Text
 (
+    TextStyle(..)
+,   createText
+,   copyText
+,   destroyText
+,   setTextString
+,   setTextStringU
+,   setTextFont
+,   setTextCharacterSize
+,   setTextStyle
+,   setTextColor
+,   getTextString
+,   getTextUnicodeString
+,   getTextFont
+,   getTextCharacterSize
+,   getTextStyle
+,   getTextColor
+,   findTextCharacterPos
+,   getTextLocalBounds
+,   getTextGlobalBounds
 )
 where
 
