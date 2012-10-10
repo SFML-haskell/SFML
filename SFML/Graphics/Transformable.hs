@@ -87,7 +87,7 @@ class Transformable a where
     
     -- | Get the combined transform of a transformable.
     getTransform :: a -> IO Transform
-
+    
     -- | Get the inverse of the combined transform of a transformable.
     getInverseTransform :: a -> IO Transform
 
