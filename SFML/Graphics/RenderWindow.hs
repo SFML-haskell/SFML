@@ -5,25 +5,25 @@ module SFML.Graphics.RenderWindow
 ,   renderWindowFromHandle
 ,   destroyRenderWindow
 ,   closeRenderWindow
-,   isRenderWindowOpen
-,   getRenderWindowSettings
-,   pollRenderWindowEvent
-,   waitRenderWindowEvent
-,   getRenderWindowPosition
-,   setRenderWindowPosition
-,   getRenderWindowSize
-,   setRenderWindowSize
-,   setRenderWindowTitle
-,   setRenderWindowIcon
-,   setRenderWindowVisible
-,   setRenderWindowMouseVisible
-,   setRenderWindowVsync
-,   setRenderWindowKeyRepeat
-,   setRenderWindowActive
-,   displayRenderWindow
-,   setRenderWindowFramerateLimit
-,   setRenderWindowJoystickThreshold
-,   getRenderWindowSystemHandle
+,   isWindowOpen
+,   getWindowSettings
+,   pollEvent
+,   waitEvent
+,   getWindowPosition
+,   setWindowPosition
+,   getWindowSize
+,   setWindowSize
+,   setWindowTitle
+,   setWindowIcon
+,   setWindowVisible
+,   setMouseVisible
+,   setVSync
+,   setKeyRepeat
+,   setWindowActive
+,   display
+,   setFramerateLimit
+,   setJoystickThreshold
+,   getSystemHandle
 ,   clearRenderWindow
 ,   setRenderWindowView
 ,   getRenderWindowView
@@ -54,7 +54,9 @@ import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
 import SFML.Graphics.RenderTarget
 import SFML.Graphics.Vertex
+import SFML.Window.ContextSettings
 import SFML.Window.Event
+import SFML.Window.SFWindow
 import SFML.Window.VideoMode
 import SFML.Window.WindowHandle
 import SFML.Window.Window
@@ -130,9 +132,58 @@ foreign import ccall unsafe "sfRenderWindow_close"
 --CSFML_GRAPHICS_API void sfRenderWindow_close(sfRenderWindow* renderWindow);
 
 
--- | Tell whether or not a render window is opened.
-isRenderWindowOpen :: RenderWindow -> IO Bool
-isRenderWindowOpen = fmap (/=0) . sfRenderWindow_isOpen
+instance SFWindow RenderWindow where
+    
+    isWindowOpen = fmap (/=0) . sfRenderWindow_isOpen
+    
+    getWindowSettings wnd = alloca $ \ptr -> sfRenderWindow_getSettings_helper wnd ptr >> peek ptr
+    
+    pollEvent wnd =
+        alloca $ \ptr -> do
+        result <- sfRenderWindow_pollEvent wnd ptr
+        case result of
+            0 -> return Nothing
+            _ -> peek ptr >>= return . Just
+    
+    waitEvent wnd =
+        alloca $ \ptr -> do
+        result <- sfRenderWindow_waitEvent wnd ptr
+        case result of
+            0 -> return Nothing
+            _ -> peek ptr >>= return . Just
+    
+    getWindowPosition wnd = alloca $ \ptr -> sfRenderWindow_getPosition_helper wnd ptr >> peek ptr
+    
+    setWindowPosition wnd pos = with pos $ sfRenderWindow_setPosition_helper wnd
+    
+    getWindowSize wnd = alloca $ \ptr -> sfRenderWindow_getSize_helper wnd ptr >> peek ptr
+    
+    setWindowSize wnd size = with size $ sfRenderWindow_setSize_helper wnd
+    
+    setWindowTitle wnd title = withCAString title $ sfRenderWindow_setTitle wnd
+    
+    setWindowIcon wnd w h pixels =
+        sfRenderWindow_setIcon wnd (fromIntegral w) (fromIntegral h) pixels
+    
+    setWindowVisible wnd val = sfRenderWindow_setVisible wnd (fromIntegral . fromEnum $ val)
+    
+    setMouseVisible wnd val = sfRenderWindow_setMouseCursorVisible wnd (fromIntegral . fromEnum $ val)
+    
+    setVSync wnd val = sfRenderWindow_setVerticalSyncEnabled wnd (fromIntegral . fromEnum $ val)
+    
+    setKeyRepeat wnd val = sfRenderWindow_setKeyRepeatEnabled wnd (fromIntegral . fromEnum $ val)
+    
+    setWindowActive wnd val =
+        fmap (toEnum . fromIntegral) $ sfRenderWindow_setActive wnd (fromIntegral . fromEnum $ val)
+    
+    display = sfRenderWindow_display
+    
+    setFramerateLimit wnd fps = sfRenderWindow_setFramerateLimit wnd (fromIntegral fps)
+    
+    setJoystickThreshold = sfRenderWindow_setJoystickThreshold
+    
+    getSystemHandle = sfRenderWindow_getSystemHandle
+
 
 foreign import ccall unsafe "sfRenderWindow_isOpen"
     sfRenderWindow_isOpen :: RenderWindow -> IO CInt
@@ -140,24 +191,11 @@ foreign import ccall unsafe "sfRenderWindow_isOpen"
 --CSFML_GRAPHICS_API sfBool sfRenderWindow_isOpen(const sfRenderWindow* renderWindow);
 
 
--- | Get the creation settings of a render window.
-getRenderWindowSettings :: RenderWindow -> IO ContextSettings
-getRenderWindowSettings wnd = alloca $ \ptr -> sfRenderWindow_getSettings_helper wnd ptr >> peek ptr
-
 foreign import ccall unsafe "sfRenderWindow_getSettings_helper"
     sfRenderWindow_getSettings_helper :: RenderWindow -> Ptr ContextSettings -> IO ()
 
 --CSFML_GRAPHICS_API sfContextSettings sfRenderWindow_getSettings(const sfRenderWindow* renderWindow);
 
-
--- | Get the event on top of event queue of a render window, if any, and pop it.
-pollRenderWindowEvent :: RenderWindow -> IO (Maybe SFEvent)
-pollRenderWindowEvent wnd =
-    alloca $ \ptr -> do
-    result <- sfRenderWindow_pollEvent wnd ptr
-    case result of
-        0 -> return Nothing
-        _ -> peek ptr >>= return . Just
 
 foreign import ccall unsafe "sfRenderWindow_pollEvent"
     sfRenderWindow_pollEvent :: RenderWindow -> Ptr SFEvent -> IO CInt
@@ -167,17 +205,6 @@ foreign import ccall unsafe "sfRenderWindow_pollEvent"
 --CSFML_GRAPHICS_API sfBool sfRenderWindow_pollEvent(sfRenderWindow* renderWindow, sfEvent* event);
 
 
--- | Wait for an event and return it.
---
--- Return 'Nothing' if an error occurs.
-waitRenderWindowEvent :: RenderWindow -> IO (Maybe SFEvent)
-waitRenderWindowEvent wnd =
-    alloca $ \ptr -> do
-    result <- sfRenderWindow_waitEvent wnd ptr
-    case result of
-        0 -> return Nothing
-        _ -> peek ptr >>= return . Just
-
 foreign import ccall unsafe "sfRenderWindow_waitEvent"
     sfRenderWindow_waitEvent :: RenderWindow -> Ptr SFEvent -> IO CInt
 
@@ -186,25 +213,11 @@ foreign import ccall unsafe "sfRenderWindow_waitEvent"
 --CSFML_GRAPHICS_API sfBool sfRenderWindow_waitEvent(sfRenderWindow* renderWindow, sfEvent* event);
 
 
--- | Get the position of a render window in pixels.
-getRenderWindowPosition :: RenderWindow -> IO Vec2i
-getRenderWindowPosition wnd = alloca $ \ptr -> sfRenderWindow_getPosition_helper wnd ptr >> peek ptr
-
 foreign import ccall unsafe "sfRenderWindow_getPosition_helper"
     sfRenderWindow_getPosition_helper :: RenderWindow -> Ptr Vec2i -> IO ()
 
 --CSFML_GRAPHICS_API sfVector2i sfRenderWindow_getPosition(const sfRenderWindow* renderWindow);
 
-
--- | Change the position of a render window on screen.
---
--- Only works for top-level windows
-setRenderWindowPosition
-    :: RenderWindow -- ^ Render window object
-    -> Vec2i -- ^ New position in pixels
-    -> IO ()
-
-setRenderWindowPosition wnd pos = with pos $ sfRenderWindow_setPosition_helper wnd
 
 foreign import ccall unsafe "sfRenderWindow_setPosition_helper"
     sfRenderWindow_setPosition_helper :: RenderWindow -> Ptr Vec2i -> IO ()
@@ -212,23 +225,11 @@ foreign import ccall unsafe "sfRenderWindow_setPosition_helper"
 --CSFML_GRAPHICS_API void sfRenderWindow_setPosition(sfRenderWindow* renderWindow, sfVector2i position);
 
 
--- | Get the size in pixels of the rendering region of a render window.
-getRenderWindowSize :: RenderWindow -> IO Vec2u
-getRenderWindowSize wnd = alloca $ \ptr -> sfRenderWindow_getSize_helper wnd ptr >> peek ptr
-
 foreign import ccall unsafe "sfRenderWindow_getSize_helper"
     sfRenderWindow_getSize_helper :: RenderWindow -> Ptr Vec2u -> IO ()
 
 --CSFML_GRAPHICS_API sfVector2u sfRenderWindow_getSize(const sfRenderWindow* renderWindow);
 
-
--- | Change the size of the rendering region of a render window.
-setRenderWindowSize
-    :: RenderWindow -- ^ Render window object
-    -> Vec2u -- ^ New size, in pixels
-    -> IO ()
-
-setRenderWindowSize wnd size = with size $ sfRenderWindow_setSize_helper wnd
 
 foreign import ccall unsafe "sfRenderWindow_setSize_helper"
     sfRenderWindow_setSize_helper :: RenderWindow -> Ptr Vec2u -> IO ()
@@ -236,26 +237,11 @@ foreign import ccall unsafe "sfRenderWindow_setSize_helper"
 --CSFML_GRAPHICS_API void sfRenderWindow_setSize(sfRenderWindow* renderWindow, sfVector2u size);
 
 
--- | Change the title of a render window.
-setRenderWindowTitle :: RenderWindow -> String -> IO ()
-setRenderWindowTitle wnd title = withCAString title $ sfRenderWindow_setTitle wnd
-
 foreign import ccall unsafe "sfRenderWindow_setTitle"
     sfRenderWindow_setTitle :: RenderWindow -> CString -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setTitle(sfRenderWindow* renderWindow, const char* title);
 
-
--- | Change a render window's icon.
-setRenderWindowIcon
-    :: RenderWindow -- ^ Render window object
-    -> Int -- ^ Icon width, in pixels
-    -> Int -- ^ Icon height, in pixels
-    -> Ptr a -- ^ Pointer to the pixels in memory. Format must be RGBA 32 bits
-    -> IO ()
-
-setRenderWindowIcon wnd w h pixels =
-    sfRenderWindow_setIcon wnd (fromIntegral w) (fromIntegral h) pixels
 
 foreign import ccall unsafe "sfRenderWindow_setIcon"
     sfRenderWindow_setIcon :: RenderWindow -> CUInt -> CUInt -> Ptr a -> IO ()
@@ -263,19 +249,11 @@ foreign import ccall unsafe "sfRenderWindow_setIcon"
 --CSFML_GRAPHICS_API void sfRenderWindow_setIcon(sfRenderWindow* renderWindow, unsigned int width, unsigned int height, const sfUint8* pixels);
 
 
--- | Show or hide a render window.
-setRenderWindowVisible :: RenderWindow -> Bool -> IO ()
-setRenderWindowVisible wnd val = sfRenderWindow_setVisible wnd (fromIntegral . fromEnum $ val)
-
 foreign import ccall unsafe "sfRenderWindow_setVisible"
     sfRenderWindow_setVisible :: RenderWindow -> CInt -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setVisible(sfRenderWindow* renderWindow, sfBool visible);
 
-
--- | Show or hide the mouse cursor on a render window.
-setRenderWindowMouseVisible :: RenderWindow -> Bool -> IO ()
-setRenderWindowMouseVisible wnd val = sfRenderWindow_setMouseCursorVisible wnd (fromIntegral . fromEnum $ val)
 
 foreign import ccall unsafe "sfRenderWindow_setMouseCursorVisible"
     sfRenderWindow_setMouseCursorVisible :: RenderWindow -> CInt -> IO ()
@@ -283,34 +261,17 @@ foreign import ccall unsafe "sfRenderWindow_setMouseCursorVisible"
 --CSFML_GRAPHICS_API void sfRenderWindow_setMouseCursorVisible(sfRenderWindow* renderWindow, sfBool show);
 
 
--- | Enable or disable vertical synchronization on a render window.
-setRenderWindowVsync :: RenderWindow -> Bool -> IO ()
-setRenderWindowVsync wnd val = sfRenderWindow_setVerticalSyncEnabled wnd (fromIntegral . fromEnum $ val)
-
 foreign import ccall unsafe "sfRenderWindow_setVerticalSyncEnabled"
     sfRenderWindow_setVerticalSyncEnabled :: RenderWindow -> CInt -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setVerticalSyncEnabled(sfRenderWindow* renderWindow, sfBool enabled);
 
 
--- | Enable or disable automatic key-repeat for keydown events.
---
--- Automatic key-repeat is enabled by default
-setRenderWindowKeyRepeat :: RenderWindow -> Bool -> IO ()
-setRenderWindowKeyRepeat wnd val = sfRenderWindow_setKeyRepeatEnabled wnd (fromIntegral . fromEnum $ val)
-
 foreign import ccall unsafe "sfRenderWindow_setKeyRepeatEnabled"
     sfRenderWindow_setKeyRepeatEnabled :: RenderWindow -> CInt -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setKeyRepeatEnabled(sfRenderWindow* renderWindow, sfBool enabled);
-
-
--- | Activate or deactivate a render window as the current target for rendering.
---
--- Return 'True' if the operation was successful, 'False' otherwise.
-setRenderWindowActive :: RenderWindow -> Bool -> IO Bool
-setRenderWindowActive wnd val =
-    fmap (toEnum . fromIntegral) $ sfRenderWindow_setActive wnd (fromIntegral . fromEnum $ val)
+    
 
 foreign import ccall unsafe "sfRenderWindow_setActive"
     sfRenderWindow_setActive :: RenderWindow -> CInt -> IO CInt
@@ -320,47 +281,23 @@ foreign import ccall unsafe "sfRenderWindow_setActive"
 --CSFML_GRAPHICS_API sfBool sfRenderWindow_setActive(sfRenderWindow* renderWindow, sfBool active);
 
 
--- | Display a render window on screen.
-displayRenderWindow :: RenderWindow -> IO ()
-displayRenderWindow = sfRenderWindow_display
-
 foreign import ccall unsafe "sfRenderWindow_display"
     sfRenderWindow_display :: RenderWindow -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_display(sfRenderWindow* renderWindow);
 
 
--- | Limit the framerate to a maximum fixed frequency for a render window.
-setRenderWindowFramerateLimit
-    :: RenderWindow -- ^ Render window object
-    -> Int -- ^ Framerate limit, in frames per seconds (use 0 to disable limit)
-    -> IO ()
-
-setRenderWindowFramerateLimit wnd fps = sfRenderWindow_setFramerateLimit wnd (fromIntegral fps)
-
 foreign import ccall unsafe "sfRenderWindow_setFramerateLimit"
     sfRenderWindow_setFramerateLimit :: RenderWindow -> CInt -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setFramerateLimit(sfRenderWindow* renderWindow, unsigned int limit);
-
-
--- | Change the joystick threshold, ie. the value below which no move event will be generated.
-setRenderWindowJoystickThreshold
-    :: RenderWindow -- ^ Render window object
-    -> Float -- ^ New threshold, in range [0, 100]
-    -> IO ()
-
-setRenderWindowJoystickThreshold = sfRenderWindow_setJoystickThreshold
+    
 
 foreign import ccall unsafe "sfRenderWindow_setJoystickThreshold"
     sfRenderWindow_setJoystickThreshold :: RenderWindow -> Float -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setJoystickThreshold(sfRenderWindow* renderWindow, float threshold);
 
-
--- | Retrieve the OS-specific handle of a render window.
-getRenderWindowSystemHandle :: RenderWindow -> IO WindowHandle
-getRenderWindowSystemHandle = sfRenderWindow_getSystemHandle
 
 foreign import ccall unsafe "sfRenderWindow_getSystemHandle"
     sfRenderWindow_getSystemHandle :: RenderWindow -> IO WindowHandle

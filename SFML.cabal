@@ -29,8 +29,16 @@ library
                        SFML.Graphics.Vertex SFML.Graphics.View
                        SFML.System.Clock SFML.System.InputStream SFML.System.Sleep  SFML.System.Time SFML.System.Vector2
                        SFML.System.Vector3
-                       SFML.Window.Context SFML.Window.Event SFML.Window.Joystick SFML.Window.Keyboard
-                       SFML.Window.Mouse SFML.Window.Types SFML.Window.VideoMode SFML.Window.Window
+                       SFML.Window.Context
+                       SFML.Window.ContextSettings
+                       SFML.Window.Event
+                       SFML.Window.Joystick
+                       SFML.Window.Keyboard
+                       SFML.Window.Mouse
+                       SFML.Window.SFWindow
+                       SFML.Window.Types
+                       SFML.Window.VideoMode
+                       SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
   c-sources:           SFML/Graphics/helper/Font_helper.c
