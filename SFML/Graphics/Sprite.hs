@@ -29,6 +29,7 @@ where
 
 
 import SFML.Graphics.BlendMode
+import SFML.Graphics.Boundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Texturable
@@ -247,39 +248,16 @@ foreign import ccall unsafe "sfSprite_getTextureRect_helper"
 --CSFML_GRAPHICS_API sfIntRect sfSprite_getTextureRect(const sfSprite* sprite);
 
 
--- | Get the local bounding rectangle of a sprite.
---
--- The returned rectangle is in local coordinates, which means
--- that it ignores the transformations (translation, rotation,
--- scale, ...) that are applied to the entity.
---
--- In other words, this function returns the bounds of the
--- entity in the entity's coordinate system.
-getLocalBounds
-    :: Sprite -- ^ Sprite object
-    -> IO FloatRect -- ^ Local bounding rectangle of the entity
-
-getLocalBounds sprite = alloca $ \ptr -> sfSprite_getLocalBounds_helper sprite ptr >> peek ptr
+instance Boundable Sprite where
+    
+    getLocalBounds sprite = alloca $ \ptr -> sfSprite_getLocalBounds_helper sprite ptr >> peek ptr
+    
+    getGlobalBounds sprite = alloca $ \ptr -> sfSprite_getGlobalBounds_helper sprite ptr >> peek ptr
 
 foreign import ccall unsafe "sfSprite_getLocalBounds_helper"
     sfSprite_getLocalBounds_helper :: Sprite -> Ptr FloatRect -> IO ()
 
 --CSFML_GRAPHICS_API sfFloatRect sfSprite_getLocalBounds(const sfSprite* sprite);
-
-
--- | Get the global bounding rectangle of a sprite
---
--- The returned rectangle is in global coordinates, which means
--- that it takes in account the transformations (translation,
--- rotation, scale, ...) that are applied to the entity.
---
--- In other words, this function returns the bounds of the
--- sprite in the global 2D world's coordinate system.
-getGlobalBounds
-    :: Sprite -- ^ Sprite object
-    -> IO FloatRect -- ^ Global bounding rectangle of the entity
-
-getGlobalBounds sprite = alloca $ \ptr -> sfSprite_getGlobalBounds_helper sprite ptr >> peek ptr
 
 foreign import ccall unsafe "sfSprite_getGlobalBounds_helper"
     sfSprite_getGlobalBounds_helper :: Sprite -> Ptr FloatRect -> IO ()

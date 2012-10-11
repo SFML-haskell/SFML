@@ -22,16 +22,23 @@ library
                        SFML.System 
                        SFML.Window
                        SFML.Graphics.BlendMode
+                       SFML.Graphics.Boundable
+                       SFML.Graphics.CircleShape
                        SFML.Graphics.Color
+                       SFML.Graphics.ConvexShape
                        SFML.Graphics.Font
                        SFML.Graphics.Glyph
                        SFML.Graphics.Image
                        SFML.Graphics.PrimitiveType
                        SFML.Graphics.Rect
+                       SFML.Graphics.RectangleShape
                        SFML.Graphics.RenderStates
                        SFML.Graphics.RenderTarget
                        SFML.Graphics.RenderTexture
                        SFML.Graphics.RenderWindow
+                       SFML.Graphics.SFShape
+                       SFML.Graphics.SFShapeResizable
+                       SFML.Graphics.Shape
                        SFML.Graphics.SmoothTexture
                        SFML.Graphics.Sprite
                        SFML.Graphics.Text
@@ -60,10 +67,14 @@ library
                        SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
-  c-sources:           SFML/Graphics/helper/Font_helper.c
+  c-sources:           SFML/Graphics/helper/CircleShape_helper.c
+                       SFML/Graphics/helper/ConvexShape_helper.c
+                       SFML/Graphics/helper/Font_helper.c
                        SFML/Graphics/helper/Image_helper.c
+                       SFML/Graphics/helper/RectangleShape_helper.c
                        SFML/Graphics/helper/RenderTexture_helper.c
                        SFML/Graphics/helper/RenderWindow_helper.c
+                       SFML/Graphics/helper/Shape_helper.c
                        SFML/Graphics/helper/Sprite_helper.c
                        SFML/Graphics/helper/Text_helper.c
                        SFML/Graphics/helper/Texture_helper.c

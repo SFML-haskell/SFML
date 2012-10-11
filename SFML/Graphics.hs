@@ -7,9 +7,11 @@ module SFML.Graphics
 ,   module SFML.Graphics.Image
 ,   module SFML.Graphics.PrimitiveType
 ,   module SFML.Graphics.Rect
+,   module SFML.Graphics.RectangleShape
 ,   module SFML.Graphics.RenderStates
 ,   module SFML.Graphics.RenderTexture
 ,   module SFML.Graphics.RenderWindow
+,   module SFML.Graphics.Shape
 ,   module SFML.Graphics.SmoothTexture
 ,   module SFML.Graphics.Sprite
 ,   module SFML.Graphics.Text
@@ -31,9 +33,11 @@ import SFML.Graphics.Glyph
 import SFML.Graphics.Image
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.Rect
+import SFML.Graphics.RectangleShape
 import SFML.Graphics.RenderStates
 import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
+import SFML.Graphics.Shape
 import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Sprite
 import SFML.Graphics.Text
