@@ -38,6 +38,7 @@ library
                        SFML.Graphics.RenderWindow
                        SFML.Graphics.SFShape
                        SFML.Graphics.SFShapeResizable
+                       SFML.Graphics.Shader
                        SFML.Graphics.Shape
                        SFML.Graphics.SmoothTexture
                        SFML.Graphics.Sprite
@@ -74,6 +75,7 @@ library
                        SFML/Graphics/helper/RectangleShape_helper.c
                        SFML/Graphics/helper/RenderTexture_helper.c
                        SFML/Graphics/helper/RenderWindow_helper.c
+                       SFML/Graphics/helper/Shader_helper.c
                        SFML/Graphics/helper/Shape_helper.c
                        SFML/Graphics/helper/Sprite_helper.c
                        SFML/Graphics/helper/Text_helper.c
