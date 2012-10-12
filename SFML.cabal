@@ -18,9 +18,11 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 library
-  exposed-modules:     SFML.Graphics
+  exposed-modules:     SFML.Audio
+                       SFML.Graphics
                        SFML.System 
                        SFML.Window
+                       SFML.Audio.Listener
                        SFML.Graphics.BlendMode
                        SFML.Graphics.Boundable
                        SFML.Graphics.CircleShape
@@ -68,7 +70,8 @@ library
                        SFML.Window.Window
                        SFML.Window.WindowHandle
   -- other-modules:       
-  c-sources:           SFML/Graphics/helper/CircleShape_helper.c
+  c-sources:           SFML/Audio/helper/Listener_helper.c
+                       SFML/Graphics/helper/CircleShape_helper.c
                        SFML/Graphics/helper/ConvexShape_helper.c
                        SFML/Graphics/helper/Font_helper.c
                        SFML/Graphics/helper/Image_helper.c
