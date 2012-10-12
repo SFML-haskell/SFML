@@ -1,5 +1,22 @@
 module SFML.Graphics.Shader
 (
+    shaderFromFile
+,   shaderFromMemory
+,   shaderFromStream
+,   destroyShader
+,   setFloatParameter
+,   setFloat2Parameter
+,   setFloat3Parameter
+,   setFloat4Parameter
+,   setVector2Parameter
+,   setVector3Parameter
+,   setColorParameter
+,   setTransformParameter
+,   setTextureParameter
+,   setCurrentTextureParameter
+,   bind
+,   unbind
+,   isShaderAvailable
 )
 where
 
