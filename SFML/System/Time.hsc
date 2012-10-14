@@ -14,7 +14,7 @@ module SFML.System.Time
 where
 
 
-import Data.Int (Int64)
+import Data.Int (Int64, Int32)
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Ptr
 import Foreign.Storable
@@ -60,23 +60,23 @@ foreign import ccall "sfTime_asSeconds"
 
 
 -- | Return a time value as a number of milliseconds.
-asMilliseconds :: Time -> Float
-asMilliseconds (Time t) = sfTime_asMilliseconds t
+asMilliseconds :: Time -> Int
+asMilliseconds (Time t) = fromIntegral $ sfTime_asMilliseconds t
 
 foreign import ccall "sfTime_asMilliseconds"
-    sfTime_asMilliseconds :: Timeval -> Float
+    sfTime_asMilliseconds :: Timeval -> Int32
 
 --CSFML_SYSTEM_API sfInt32 sfTime_asMilliseconds(sfTime time);
 
 
 -- | Return a time value as a number of microseconds.
-asMicroseconds :: Time -> Float
+asMicroseconds :: Time -> Int64
 asMicroseconds (Time t) = sfTime_asMicroseconds t
 
 foreign import ccall "sfTime_asMicroseconds"
-    sfTime_asMicroseconds :: Timeval -> Float
+    sfTime_asMicroseconds :: Timeval -> Int64
 
---CSFML_SYSTEM_API sfTimeval sfTime_asMicroseconds(sfTime time);
+--CSFML_SYSTEM_API sfInt64 sfTime_asMicroseconds(sfTime time);
 
 
 -- | Construct a time value from a number of seconds.
@@ -93,24 +93,25 @@ foreign import ccall "sfSeconds_helper"
 
 -- | Construct a time value from a number of milliseconds.
 milliseconds
-    :: Float -- ^ Number of milliseconds
+    :: Int -- ^ Number of milliseconds
     -> Time
-milliseconds t = unsafePerformIO $ alloca $ \ptr -> sfMilliseconds_helper t ptr >> peek ptr
+milliseconds t =
+    unsafePerformIO $ alloca $ \ptr -> sfMilliseconds_helper (fromIntegral t) ptr >> peek ptr
 
 foreign import ccall "sfMilliseconds_helper"
-    sfMilliseconds_helper :: Float -> Ptr Time -> IO ()
+    sfMilliseconds_helper :: Int32 -> Ptr Time -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfMilliseconds(sfInt32 amount);
 
 
 -- | Construct a time value from a number of microseconds.
 microseconds
-    :: Float -- ^ Number of microseconds
+    :: Int64 -- ^ Number of microseconds
     -> Time
 microseconds t = unsafePerformIO $ alloca $ \ptr -> sfMicroseconds_helper t ptr >> peek ptr
 
 foreign import ccall "sfMicroseconds_helper"
-    sfMicroseconds_helper :: Float -> Ptr Time -> IO ()
+    sfMicroseconds_helper :: Int64 -> Ptr Time -> IO ()
 
---CSFML_SYSTEM_API sfTime sfMicroseconds(sfTimeval amount);
+--CSFML_SYSTEM_API sfTime sfMicroseconds(sfInt64 amount);
 
