@@ -88,10 +88,9 @@ library
                        SFML/System/helper/Clock_helper.c
                        SFML/System/helper/Time_helper.c
                        SFML/System/helper/Sleep_helper.c
-                       SFML/Window/helper/Mouse_helper.c
                        SFML/Window/helper/VideoMode_helper.c
                        SFML/Window/helper/Window_helper.c
-  build-depends:       base ==4.5.*
+  build-depends:       base
   build-tools:         hsc2hs -any
   extensions:          CPP, ForeignFunctionInterface
 

@@ -146,4 +146,16 @@ class SFWindow a where
     -- very specific stuff to implement that SFML doesn't support,
     -- or implement a temporary workaround until a bug is fixed.
     getSystemHandle :: a -> IO WindowHandle
+    
+    -- | Get the current position of the mouse
+    --
+    -- This function returns the current position of the mouse
+    -- cursor relative to the given window, or desktop if 'Nothing' is passed.
+    getMousePosition :: Maybe a -> IO Vec2i
+    
+    -- | Set the current position of the mouse
+    --
+    -- This function sets the current position of the mouse
+    -- cursor relative to the given window, or desktop if 'Nothing' is passed.
+    setMousePosition :: Vec2i -> Maybe a -> IO ()
 

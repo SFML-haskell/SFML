@@ -213,6 +213,12 @@ instance SFWindow Window where
     setJoystickThreshold = sfWindow_setJoystickThreshold
     
     getSystemHandle = sfWindow_getSystemHandle
+    
+    getMousePosition Nothing    = alloca $ \ptr -> sfMouse_getPosition_helper (Window nullPtr) ptr >> peek ptr
+    getMousePosition (Just wnd) = alloca $ \ptr -> sfMouse_getPosition_helper wnd ptr >> peek ptr
+    
+    setMousePosition pos Nothing    = with pos $ \ptr -> sfMouse_setPosition_helper ptr (Window nullPtr)
+    setMousePosition pos (Just wnd) = with pos $ \ptr -> sfMouse_setPosition_helper ptr wnd
 
 
 foreign import ccall "sfWindow_isOpen"
@@ -324,4 +330,15 @@ foreign import ccall "sfWindow_getSystemHandle"
     sfWindow_getSystemHandle :: Window -> IO WindowHandle
 
 --CSFML_WINDOW_API sfWindowHandle sfWindow_getSystemHandle(const sfWindow* window);
+
+
+foreign import ccall "sfMouse_getPosition_helper"
+    sfMouse_getPosition_helper :: Window -> Ptr Vec2i -> IO ()
+
+--CSFML_WINDOW_API sfVector2i sfMouse_getPosition(const sfWindow* relativeTo);
+
+foreign import ccall "sfMouse_setPosition_helper"
+    sfMouse_setPosition_helper :: Ptr Vec2i -> Window -> IO ()
+
+--CSFML_WINDOW_API void sfMouse_setPosition(sfVector2i position, const sfWindow* relativeTo);
 

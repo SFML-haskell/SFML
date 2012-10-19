@@ -1,3 +1,4 @@
+#include <SFML/Window/Mouse.h>
 #include <SFML/Window/Window.h>
 
 
@@ -36,4 +37,17 @@ void sfWindow_setSize_helper (sfWindow* window, sfVector2u* size)
 {
     sfWindow_setSize (window, *size);
 }
+
+
+void sfMouse_getPosition_helper (const sfWindow* relativeTo, sfVector2i* pos)
+{
+    *pos = sfMouse_getPosition (relativeTo);
+}
+
+
+void sfMouse_setPosition_helper (sfVector2i* position, const sfWindow* relativeTo)
+{
+    sfMouse_setPosition (*position, relativeTo);
+}
+
 

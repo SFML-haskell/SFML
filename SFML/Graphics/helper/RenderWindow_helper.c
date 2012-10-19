@@ -56,3 +56,15 @@ void sfRenderWindow_convertCoords_helper
     *out = sfRenderWindow_convertCoords (renderWindow, point, targetView);
 }
 
+
+void sfMouse_getPositionRenderWindow_helper (const sfRenderWindow* relativeTo, sfVector2i* position)
+{
+    *position = sfMouse_getPositionRenderWindow (relativeTo);
+}
+
+
+void sfMouse_setPositionRenderWindow_helper (sfVector2i* position, const sfRenderWindow* relativeTo)
+{
+    sfMouse_setPositionRenderWindow (*position, relativeTo);
+}
+

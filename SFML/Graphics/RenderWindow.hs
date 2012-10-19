@@ -43,6 +43,8 @@ module SFML.Graphics.RenderWindow
 ,   popGLStates
 ,   resetGLStates
 ,   captureRenderWindow
+,   getMousePosition
+,   setMousePosition
 )
 where
 
@@ -183,6 +185,18 @@ instance SFWindow RenderWindow where
     setJoystickThreshold = sfRenderWindow_setJoystickThreshold
     
     getSystemHandle = sfRenderWindow_getSystemHandle
+    
+    getMousePosition Nothing =
+        alloca $ \ptr -> sfMouse_getPositionRenderWindow_helper (RenderWindow nullPtr) ptr >> peek ptr
+    
+    getMousePosition (Just wnd) =
+        alloca $ \ptr -> sfMouse_getPositionRenderWindow_helper wnd ptr >> peek ptr
+    
+    setMousePosition pos Nothing =
+        with pos $ \ptr -> sfMouse_setPositionRenderWindow_helper ptr (RenderWindow nullPtr)
+    
+    setMousePosition pos (Just wnd) =
+        with pos $ \ptr -> sfMouse_setPositionRenderWindow_helper ptr wnd
 
 
 foreign import ccall unsafe "sfRenderWindow_isOpen"
@@ -303,6 +317,18 @@ foreign import ccall unsafe "sfRenderWindow_getSystemHandle"
     sfRenderWindow_getSystemHandle :: RenderWindow -> IO WindowHandle
 
 --CSFML_GRAPHICS_API sfWindowHandle sfRenderWindow_getSystemHandle(const sfRenderWindow* renderWindow);
+
+
+foreign import ccall unsafe "sfMouse_getPositionRenderWindow_helper"
+    sfMouse_getPositionRenderWindow_helper :: RenderWindow -> Ptr Vec2i -> IO ()
+
+--CSFML_GRAPHICS_API sfVector2i sfMouse_getPositionRenderWindow(const sfRenderWindow* relativeTo);
+
+
+foreign import ccall unsafe "sfMouse_setPositionRenderWindow_helper"
+    sfMouse_setPositionRenderWindow_helper :: Ptr Vec2i -> RenderWindow -> IO ()
+
+--CSFML_GRAPHICS_API void sfMouse_setPositionRenderWindow(sfVector2i position, const sfRenderWindow* relativeTo);
 
 
 -- | Clear a render window with the given color.
