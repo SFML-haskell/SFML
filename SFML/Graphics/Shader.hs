@@ -15,7 +15,6 @@ module SFML.Graphics.Shader
 ,   setTextureParameter
 ,   setCurrentTextureParameter
 ,   bind
-,   unbind
 ,   isShaderAvailable
 )
 where
@@ -335,20 +334,6 @@ foreign import ccall unsafe "sfShader_bind"
     sfShader_bind :: Shader -> IO ()
 
 --CSFML_GRAPHICS_API void sfShader_bind(const sfShader* shader);
-
-
--- | Unbind a shader (deactivate it).
---
--- This function is normally for internal use only, unless
--- you want to use the shader with a custom OpenGL rendering
--- instead of a SFML drawable.
-unbind :: Shader -> IO ()
-unbind = sfShader_unbind
-
-foreign import ccall unsafe "sfShader_unbind"
-    sfShader_unbind :: Shader -> IO ()
-
---CSFML_GRAPHICS_API void sfShader_unbind(const sfShader* shader);
 
 
 -- | Tell whether or not the system supports shaders.
