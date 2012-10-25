@@ -23,6 +23,7 @@ library
                        SFML.System 
                        SFML.Window
                        SFML.Audio.Listener
+                       SFML.Audio.SoundStatus
                        SFML.Graphics.BlendMode
                        SFML.Graphics.Boundable
                        SFML.Graphics.CircleShape
