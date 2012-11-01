@@ -1,8 +1,7 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.System.Time
 (
-    Timeval
-,   Time(..)
+    Time
 ,   timeZero
 ,   asSeconds
 ,   asMilliseconds
@@ -24,19 +23,7 @@ import System.IO.Unsafe (unsafePerformIO)
 
 sizeInt64 = #{size sfInt64}
 
-type Timeval = Int64
-
--- | Represents a time value
-data Time = Time {-# UNPACK #-} !Timeval
-
-
-instance Storable Time where
-    sizeOf _ = sizeInt64
-    alignment _ = alignment (undefined :: Int64)
-    
-    peek ptr = fmap Time $ peek (castPtr ptr)
-    
-    poke ptr (Time val) = poke (castPtr ptr) val
+type Time = Int64
 
 
 -- | Predefined "zero" time value.
@@ -51,30 +38,30 @@ foreign import ccall "sfTime_Zero_helper"
 
 -- | Return a time value as a number of seconds.
 asSeconds :: Time -> Float
-asSeconds (Time t) = sfTime_asSeconds t
+asSeconds t = sfTime_asSeconds t
 
 foreign import ccall "sfTime_asSeconds"
-    sfTime_asSeconds :: Timeval -> Float
+    sfTime_asSeconds :: Time -> Float
 
 --CSFML_SYSTEM_API float sfTime_asSeconds(sfTime time);
 
 
 -- | Return a time value as a number of milliseconds.
 asMilliseconds :: Time -> Int
-asMilliseconds (Time t) = fromIntegral $ sfTime_asMilliseconds t
+asMilliseconds t = fromIntegral $ sfTime_asMilliseconds t
 
 foreign import ccall "sfTime_asMilliseconds"
-    sfTime_asMilliseconds :: Timeval -> Int32
+    sfTime_asMilliseconds :: Time -> Int32
 
 --CSFML_SYSTEM_API sfInt32 sfTime_asMilliseconds(sfTime time);
 
 
 -- | Return a time value as a number of microseconds.
 asMicroseconds :: Time -> Int64
-asMicroseconds (Time t) = sfTime_asMicroseconds t
+asMicroseconds t = sfTime_asMicroseconds t
 
 foreign import ccall "sfTime_asMicroseconds"
-    sfTime_asMicroseconds :: Timeval -> Int64
+    sfTime_asMicroseconds :: Time -> Int64
 
 --CSFML_SYSTEM_API sfInt64 sfTime_asMicroseconds(sfTime time);
 

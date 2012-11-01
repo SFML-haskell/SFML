@@ -61,7 +61,7 @@ getElapsedTime :: Clock -> IO Time
 getElapsedTime clock = alloca $ \ptr -> sfClock_getElapsedTime_helper clock ptr >> peek ptr
 
 foreign import ccall unsafe "sfClock_getElapsedTime_helper"
-    sfClock_getElapsedTime_helper :: Clock -> Ptr Time -> IO Timeval
+    sfClock_getElapsedTime_helper :: Clock -> Ptr Time -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfClock_getElapsedTime(const sfClock* clock);
 
