@@ -1,5 +1,32 @@
 module SFML.Audio.Music
 (
+    musicFromFile
+,   musicFromMemory
+,   musicFromStream
+,   destroyMusic
+,   setLoop
+,   getLoop
+,   getDuration
+,   play
+,   pause
+,   stop
+,   getChannelCount
+,   getSampleRate
+,   getStatus
+,   getPlayingOffset
+,   setPitch
+,   setVolume
+,   setPosition
+,   setRelativeToListener
+,   setMinDistance
+,   setAttenuation
+,   setPlayingOffset
+,   getPitch
+,   getVolume
+,   getPosition
+,   isRelativeToListener
+,   getMinDistance
+,   getAttenuation
 )
 where
 
