@@ -59,7 +59,7 @@ foreign import ccall unsafe "sfView_createFromRect_helper"
 copyView :: View -> IO View
 copyView = sfView_copy
 
-foreign import ccall unsafe "svView_copy"
+foreign import ccall unsafe "sfView_copy"
     sfView_copy :: View -> IO View
 
 --CSFML_GRAPHICS_API sfView* sfView_copy(sfView* view);
