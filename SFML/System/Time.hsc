@@ -28,10 +28,7 @@ type Time = Int64
 
 -- | Predefined "zero" time value.
 timeZero :: Time
-timeZero = unsafePerformIO $ alloca $ \ptr -> sfTime_Zero_helper ptr >> peek ptr
-
-foreign import ccall "sfTime_Zero_helper"
-    sfTime_Zero_helper :: Ptr Time -> IO ()
+timeZero = 0
 
 --CSFML_SYSTEM_API sfTime sfTime_Zero;
 
