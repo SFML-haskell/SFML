@@ -297,7 +297,7 @@ foreign import ccall unsafe "sfRenderTexture_popGLStates"
 
 --CSFML_GRAPHICS_API void sfRenderTexture_popGLStates(sfRenderTexture* renderTexture);
 
-foreign import ccall unsafe "resetGLStates"
+foreign import ccall unsafe "sfRenderTexture_resetGLStates"
     sfRenderTexture_resetGLStates :: RenderTexture -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderTexture_resetGLStates(sfRenderTexture* renderTexture);
