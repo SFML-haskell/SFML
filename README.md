@@ -30,6 +30,8 @@ Install SFML and CSFML on your system. You have to install them off the git repo
 
 Make sure your compiler can find SFML's and CSFML's headers.
 
+For detailed installation instructions head to the [wiki][1].
+
 Run the following:
 
 ```
@@ -45,3 +47,4 @@ Binaries must be explicitly linked with whatever CSFML libraries they require (-
 Check the [cabal file][0] inside the demos/ directory for an example.
 
 [0]: https://github.com/jeannekamikaze/SFML/blob/master/demos/demos.cabal
+[1]: https://github.com/jeannekamikaze/SFML/wiki
