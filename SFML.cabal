@@ -24,6 +24,8 @@ library
                        SFML.Window
                        SFML.Audio.Listener
                        SFML.Audio.Music
+                       SFML.Audio.SFSound
+                       SFML.Audio.Sound
                        SFML.Audio.SoundStatus
                        SFML.Audio.Types
                        SFML.Graphics.BlendMode
@@ -75,6 +77,7 @@ library
   -- other-modules:       
   c-sources:           SFML/Audio/helper/Listener_helper.c
                        SFML/Audio/helper/Music_helper.c
+                       SFML/Audio/helper/Sound_helper.c
                        SFML/Graphics/helper/CircleShape_helper.c
                        SFML/Graphics/helper/ConvexShape_helper.c
                        SFML/Graphics/helper/Font_helper.c
