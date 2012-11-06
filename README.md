@@ -40,11 +40,5 @@ $ cd SFML
 $ cabal install
 ```
 
-### Linking
-
-Binaries must be explicitly linked with whatever CSFML libraries they require (-lcsfml-system etc).
-
-Check the [cabal file][0] inside the demos/ directory for an example.
-
 [0]: https://github.com/jeannekamikaze/SFML/blob/master/demos/demos.cabal
 [1]: https://github.com/jeannekamikaze/SFML/wiki
