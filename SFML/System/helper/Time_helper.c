@@ -1,12 +1,6 @@
 #include <SFML/System/Time.h>
 
 
-void sfTime_Zero_helper (sfTime* time)
-{
-    *time = sfTime_Zero;
-}
-
-
 void sfSeconds_helper (float amount, sfTime* time)
 {
     *time = sfSeconds (amount);
