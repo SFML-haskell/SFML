@@ -21,6 +21,8 @@ http://shellblade.net/docs/SFML/index.html
 ### Where it's been tested:
 
 * Arch Linux 32-bit
+* Ubuntu Linux 32-bit
+* Windows 7 64-bit
 
 ### Installation
 
