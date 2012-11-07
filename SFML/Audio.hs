@@ -10,6 +10,7 @@ module SFML.Audio
 ,   module SFML.Audio.SoundBufferRecorder
 ,   module SFML.Audio.SoundRecorder
 ,   module SFML.Audio.SoundStatus
+,   module SFML.Audio.SoundStream
 ,   module SFML.Audio.Types
 )
 where
@@ -25,5 +26,6 @@ import SFML.Audio.SoundBuffer
 import SFML.Audio.SoundBufferRecorder
 import SFML.Audio.SoundRecorder
 import SFML.Audio.SoundStatus
+import SFML.Audio.SoundStream
 import SFML.Audio.Types
 

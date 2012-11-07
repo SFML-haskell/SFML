@@ -33,6 +33,7 @@ library
                        SFML.Audio.SoundBufferRecorder
                        SFML.Audio.SoundRecorder
                        SFML.Audio.SoundStatus
+                       SFML.Audio.SoundStream
                        SFML.Audio.Types
                        SFML.Graphics.BlendMode
                        SFML.Graphics.Boundable
@@ -85,6 +86,7 @@ library
                        SFML/Audio/helper/Music_helper.c
                        SFML/Audio/helper/Sound_helper.c
                        SFML/Audio/helper/SoundBuffer_helper.c
+                       SFML/Audio/helper/SoundStream_helper.c
                        SFML/Graphics/helper/CircleShape_helper.c
                        SFML/Graphics/helper/ConvexShape_helper.c
                        SFML/Graphics/helper/Font_helper.c
