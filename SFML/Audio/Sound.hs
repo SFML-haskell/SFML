@@ -43,10 +43,7 @@ import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 
 
---  | Create a new sound
--- 
---  \return A new sfSound object
--- 
+-- | Create a new sound.
 createSound :: IO Sound
 createSound = sfSound_create
 
@@ -56,12 +53,7 @@ foreign import ccall unsafe "sfSound_create"
 -- CSFML_AUDIO_API sfSound* sfSound_create(void);
 
 
---  | Create a new sound by copying an existing one
--- 
---  \param sound Sound to copy
--- 
---  \return A new sfSound object which is a copy of \a sound
--- 
+-- | Create a new sound by copying an existing one.
 copySound :: Sound -> IO Sound
 copySound = sfSound_copy
 
@@ -71,10 +63,7 @@ foreign import ccall unsafe "sfSound_copy"
 -- CSFML_AUDIO_API sfSound* sfSound_copy(sfSound* sound);
 
 
---  | Destroy a sound
--- 
---  \param sound Sound to destroy
--- 
+-- | Destroy a sound.
 destroySound :: Sound -> IO ()
 destroySound = sfSound_destroy
 
@@ -84,15 +73,11 @@ foreign import ccall unsafe "sfSound_destroy"
 -- CSFML_AUDIO_API void sfSound_destroy(sfSound* sound);
 
 
---  | Set the source buffer containing the audio data to play
+-- | Set the source buffer containing the audio data to play.
 -- 
---  It is important to note that the sound buffer is not copied,
---  thus the sfSoundBuffer object must remain alive as long
---  as it is attached to the sound.
--- 
---  \param sound  Sound object
---  \param buffer Sound buffer to attach to the sound
--- 
+-- It is important to note that the sound buffer is not copied,
+-- thus the sfSoundBuffer object must remain alive as long
+-- as it is attached to the sound.
 setBuffer :: Sound -> SoundBuffer -> IO ()
 setBuffer = sfSound_setBuffer
 
@@ -102,12 +87,7 @@ foreign import ccall unsafe "sfSound_setBuffer"
 -- CSFML_AUDIO_API void sfSound_setBuffer(sfSound* sound, const sfSoundBuffer* buffer);
 
 
---  | Get the audio buffer attached to a sound
--- 
---  \param sound Sound object
--- 
---  \return Sound buffer attached to the sound (can be NULL)
--- 
+-- | Get the audio buffer attached to a sound.
 getBuffer :: Sound -> IO SoundBuffer
 getBuffer = sfSound_getBuffer
 

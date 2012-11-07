@@ -32,6 +32,7 @@ where
 
 
 import SFML.Audio.SFSound
+import SFML.Audio.SFSoundBuffer
 import SFML.Audio.SoundStatus
 import SFML.Audio.Types
 import SFML.System.InputStream
@@ -55,31 +56,33 @@ checkNull music@(Music ptr) =
         _ -> Just music
 
 
---  | Create a new music and load it from a file.
+-- | Create a new music and load it from a file.
 -- 
---  This function doesn't start playing the music (call
---  sfMusic_play to do so).
---  Here is a complete list of all the supported audio formats:
---  ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
---  w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
+-- This function doesn't start playing the music (call
+-- sfMusic_play to do so).
+-- 
+-- Here is a complete list of all the supported audio formats:
+-- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
+-- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
 musicFromFile :: FilePath -> IO (Maybe Music)
 musicFromFile path = withCAString path $ \cstr -> sfMusic_createFromFile cstr >>= return . checkNull
 
 foreign import ccall unsafe "sfMusic_createFromFile"
     sfMusic_createFromFile :: CString -> IO Music
 
---  \return A new sfMusic object (NULL if failed)
+-- \return A new sfMusic object (NULL if failed)
 
 -- CSFML_AUDIO_API sfMusic* sfMusic_createFromFile(const char* filename);
 
 
---  | Create a new music and load it from a file in memory.
+-- | Create a new music and load it from a file in memory.
 -- 
---  This function doesn't start playing the music (call
---  sfMusic_play to do so).
---  Here is a complete list of all the supported audio formats:
---  ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
---  w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
+-- This function doesn't start playing the music (call
+-- sfMusic_play to do so).
+-- 
+-- Here is a complete list of all the supported audio formats:
+-- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
+-- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
 musicFromMemory
     :: Ptr a -- ^ Pointer to the file data in memory
     -> Int   -- ^ Size of the data to load, in bytes
@@ -90,30 +93,31 @@ musicFromMemory ptr size = fmap checkNull $ sfMusic_createFromMemory ptr (fromIn
 foreign import ccall unsafe "sfMusic_createFromMemory"
     sfMusic_createFromMemory :: Ptr a -> CUInt -> IO Music
 
---  \return A new sfMusic object (NULL if failed)
+-- \return A new sfMusic object (NULL if failed)
 
 -- CSFML_AUDIO_API sfMusic* sfMusic_createFromMemory(const void* data, size_t sizeInBytes);
 
 
---  | Create a new music and load it from a custom stream.
+-- | Create a new music and load it from a custom stream.
 -- 
---  This function doesn't start playing the music (call
---  sfMusic_play to do so).
---  Here is a complete list of all the supported audio formats:
---  ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
---  w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
+-- This function doesn't start playing the music (call
+-- sfMusic_play to do so).
+-- 
+-- Here is a complete list of all the supported audio formats:
+-- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
+-- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
 musicFromStream :: InputStream -> IO (Maybe Music)
 musicFromStream is = with is $ \ptr -> sfMusic_createFromStream ptr >>= return . checkNull
 
 foreign import ccall unsafe "sfMusic_createFromStream"
     sfMusic_createFromStream :: Ptr InputStream -> IO Music
 
---  \return A new sfMusic object (NULL if failed)
+-- \return A new sfMusic object (NULL if failed)
 
 -- CSFML_AUDIO_API sfMusic* sfMusic_createFromStream(sfInputStream* stream);
 
 
---  | Destroy a music.
+-- | Destroy a music.
 destroyMusic :: Music -> IO ()
 destroyMusic = sfMusic_destroy
 
@@ -123,37 +127,24 @@ foreign import ccall unsafe "sfMusic_destroy"
 -- CSFML_AUDIO_API void sfMusic_destroy(sfMusic* music);
 
 
---  | Get the total duration of a music.
-getDuration :: Music -> IO Time
-getDuration music = alloca $ \ptr -> sfMusic_getDuration_helper music ptr >> peek ptr
+instance SFSoundBuffer Music where
+    
+    getChannelCount = sfMusic_getChannelCount >=> return . fromIntegral
+    
+    getDuration music = alloca $ \ptr -> sfMusic_getDuration_helper music ptr >> peek ptr
+    
+    getSampleRate = sfMusic_getSampleRate
+
 
 foreign import ccall unsafe "sfMusic_getDuration_helper"
     sfMusic_getDuration_helper :: Music -> Ptr Time -> IO ()
 
 -- CSFML_AUDIO_API sfTime sfMusic_getDuration(const sfMusic* music);
 
-
---  | Return the number of channels of a music.
--- 
---  1 channel means a mono sound, 2 means stereo, etc.
-getChannelCount :: Music -> IO Int
-getChannelCount = sfMusic_getChannelCount >=> return . fromIntegral
-
 foreign import ccall unsafe "sfMusic_getChannelCount"
     sfMusic_getChannelCount :: Music -> IO CUInt
 
 -- CSFML_AUDIO_API unsigned int sfMusic_getChannelCount(const sfMusic* music);
-
-
---  | Get the sample rate of a music.
--- 
---  The sample rate is the number of audio samples played per
---  second. The higher, the better the quality.
-getSampleRate
-    :: Music
-    -> IO Int -- ^ Sample rate, in number of samples per second
-
-getSampleRate = sfMusic_getSampleRate
 
 foreign import ccall unsafe "sfMusic_getSampleRate"
     sfMusic_getSampleRate :: Music -> IO Int
