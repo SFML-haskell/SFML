@@ -1,6 +1,8 @@
 module SFML.Audio.SoundStream
 (
     SoundStreamChunk(..)
+,   SoundStreamGetDataCallback
+,   SoundStreamSeekCallback
 ,   createSoundStream
 ,   destroySoundStream
 ,   play
