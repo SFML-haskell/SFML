@@ -6,8 +6,8 @@ module SFML.Audio.Sound
 ,   play
 ,   pause
 ,   stop
-,   setBuffer
-,   getBuffer
+,   setSoundBuffer
+,   getSoundBuffer
 ,   setLoop
 ,   getLoop
 ,   getStatus
@@ -78,8 +78,8 @@ foreign import ccall unsafe "sfSound_destroy"
 -- It is important to note that the sound buffer is not copied,
 -- thus the sfSoundBuffer object must remain alive as long
 -- as it is attached to the sound.
-setBuffer :: Sound -> SoundBuffer -> IO ()
-setBuffer = sfSound_setBuffer
+setSoundBuffer :: Sound -> SoundBuffer -> IO ()
+setSoundBuffer = sfSound_setBuffer
 
 foreign import ccall unsafe "sfSound_setBuffer"
     sfSound_setBuffer :: Sound -> SoundBuffer -> IO ()
@@ -88,8 +88,8 @@ foreign import ccall unsafe "sfSound_setBuffer"
 
 
 -- | Get the audio buffer attached to a sound.
-getBuffer :: Sound -> IO SoundBuffer
-getBuffer = sfSound_getBuffer
+getSoundBuffer :: Sound -> IO SoundBuffer
+getSoundBuffer = sfSound_getBuffer
 
 foreign import ccall unsafe "sfSound_getBuffer"
     sfSound_getBuffer :: Sound -> IO SoundBuffer

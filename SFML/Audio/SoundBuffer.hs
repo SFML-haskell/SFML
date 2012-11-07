@@ -16,6 +16,7 @@ module SFML.Audio.SoundBuffer
 where
 
 
+import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundBuffer
 import SFML.Audio.Types
 import SFML.System.InputStream
@@ -181,14 +182,8 @@ instance SFSoundBuffer SoundBuffer where
     
     getChannelCount = sfSoundBuffer_getChannelCount >=> return . fromIntegral
     
-    getSampleRate = sfSoundBuffer_getSampleRate >=> return . fromIntegral
     getDuration sb = alloca $ \ptr -> sfSoundBuffer_getDuration_helper sb ptr >> peek ptr
 
-
-foreign import ccall unsafe "sfSoundBuffer_getSampleRate"
-    sfSoundBuffer_getSampleRate :: SoundBuffer -> IO CUInt
-
--- CSFML_AUDIO_API unsigned int sfSoundBuffer_getSampleRate(const sfSoundBuffer* soundBuffer);
 
 foreign import ccall unsafe "sfSoundBuffer_getChannelCount"
     sfSoundBuffer_getChannelCount :: SoundBuffer -> IO CUInt
@@ -199,4 +194,15 @@ foreign import ccall unsafe "sfSoundBuffer_getDuration_helper"
     sfSoundBuffer_getDuration_helper :: SoundBuffer -> Ptr Time -> IO ()
 
 -- CSFML_AUDIO_API sfTime sfSoundBuffer_getDuration(const sfSoundBuffer* soundBuffer);
+
+
+instance SFSampled SoundBuffer where
+    
+    getSampleRate = sfSoundBuffer_getSampleRate >=> return . fromIntegral
+
+
+foreign import ccall unsafe "sfSoundBuffer_getSampleRate"
+    sfSoundBuffer_getSampleRate :: SoundBuffer -> IO CUInt
+
+-- CSFML_AUDIO_API unsigned int sfSoundBuffer_getSampleRate(const sfSoundBuffer* soundBuffer);
 

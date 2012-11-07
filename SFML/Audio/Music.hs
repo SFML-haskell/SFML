@@ -31,6 +31,7 @@ module SFML.Audio.Music
 where
 
 
+import SFML.Audio.SFSampled
 import SFML.Audio.SFSound
 import SFML.Audio.SFSoundBuffer
 import SFML.Audio.SoundStatus
@@ -132,8 +133,6 @@ instance SFSoundBuffer Music where
     getChannelCount = sfMusic_getChannelCount >=> return . fromIntegral
     
     getDuration music = alloca $ \ptr -> sfMusic_getDuration_helper music ptr >> peek ptr
-    
-    getSampleRate = sfMusic_getSampleRate
 
 
 foreign import ccall unsafe "sfMusic_getDuration_helper"
@@ -145,6 +144,12 @@ foreign import ccall unsafe "sfMusic_getChannelCount"
     sfMusic_getChannelCount :: Music -> IO CUInt
 
 -- CSFML_AUDIO_API unsigned int sfMusic_getChannelCount(const sfMusic* music);
+
+
+instance SFSampled Music where
+    
+    getSampleRate = sfMusic_getSampleRate
+
 
 foreign import ccall unsafe "sfMusic_getSampleRate"
     sfMusic_getSampleRate :: Music -> IO Int

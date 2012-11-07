@@ -24,10 +24,12 @@ library
                        SFML.Window
                        SFML.Audio.Listener
                        SFML.Audio.Music
+                       SFML.Audio.SFSampled
                        SFML.Audio.SFSound
                        SFML.Audio.SFSoundBuffer
                        SFML.Audio.Sound
                        SFML.Audio.SoundBuffer
+                       SFML.Audio.SoundBufferRecorder
                        SFML.Audio.SoundStatus
                        SFML.Audio.Types
                        SFML.Graphics.BlendMode
