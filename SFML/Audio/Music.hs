@@ -177,11 +177,11 @@ instance SFSound Music where
     
     getPosition music = alloca $ \ptr -> sfMusic_getPosition_helper music ptr >> peek ptr
     
-    getStatus = sfMusic_getStatus >=> return . toEnum
+    getStatus = sfMusic_getStatus >=> return . toEnum . fromIntegral
     
     getVolume = sfMusic_getVolume
     
-    isRelativeToListener = sfMusic_isRelativeToListener >=> return . toEnum
+    isRelativeToListener = sfMusic_isRelativeToListener >=> return . toEnum . fromIntegral
     
     setAttenuation = sfMusic_setAttenuation
     
@@ -195,7 +195,7 @@ instance SFSound Music where
     
     setPosition music pos = with pos $ sfMusic_setPosition_helper music
     
-    setRelativeToListener music val = sfMusic_setRelativeToListener music (fromEnum val)
+    setRelativeToListener music val = sfMusic_setRelativeToListener music (fromIntegral . fromEnum $ val)
     
     setVolume = sfMusic_setVolume
 
@@ -246,7 +246,7 @@ foreign import ccall unsafe "sfMusic_getPosition_helper"
 -- CSFML_AUDIO_API sfVector3f sfMusic_getPosition(const sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_getStatus"
-    sfMusic_getStatus :: Music -> IO Int
+    sfMusic_getStatus :: Music -> IO CInt
 
 -- CSFML_AUDIO_API sfSoundStatus sfMusic_getStatus(const sfMusic* music);
 
@@ -256,7 +256,7 @@ foreign import ccall unsafe "sfMusic_getVolume"
 -- CSFML_AUDIO_API float sfMusic_getVolume(const sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_isRelativeToListener"
-    sfMusic_isRelativeToListener :: Music -> IO Int
+    sfMusic_isRelativeToListener :: Music -> IO CInt
 
 -- CSFML_AUDIO_API sfBool sfMusic_isRelativeToListener(const sfMusic* music);
 
@@ -291,7 +291,7 @@ foreign import ccall unsafe "sfMusic_setPosition_helper"
 -- CSFML_AUDIO_API void sfMusic_setPosition(sfMusic* music, sfVector3f position);
 
 foreign import ccall unsafe "sfMusic_setRelativeToListener"
-    sfMusic_setRelativeToListener :: Music -> Int -> IO ()
+    sfMusic_setRelativeToListener :: Music -> CInt -> IO ()
 
 -- CSFML_AUDIO_API void sfMusic_setRelativeToListener(sfMusic* music, sfBool relative);
 
