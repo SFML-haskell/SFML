@@ -11,6 +11,7 @@ where
 
 
 import SFML.Audio.SFSampled
+import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
 
 import Control.Monad ((>=>))
@@ -47,31 +48,17 @@ foreign import ccall unsafe "sfSoundBufferRecorder_destroy"
 -- CSFML_AUDIO_API void sfSoundBufferRecorder_destroy(sfSoundBufferRecorder* soundBufferRecorder);
 
 
--- | Start the capture of a sound recorder recorder.
---
--- The sampleRate parameter defines the number of audio samples
--- captured per second. The higher, the better the quality
--- (for example, 44100 samples/sec is CD quality).
---
--- This function uses its own thread so that it doesn't block
--- the rest of the program while the capture runs.
--- Please note that only one capture can happen at the same time.
-startRecording
-    :: SoundBufferRecorder
-    -> Int -- ^ Desired capture rate, in number of samples per second
-    -> IO ()
+instance SFSoundRecorder SoundBufferRecorder where
+    
+    startRecording rec rate = sfSoundBufferRecorder_start rec (fromIntegral rate)
+    
+    stopRecording = sfSoundBufferRecorder_stop
 
-startRecording sbr sr = sfSoundBufferRecorder_start sbr (fromIntegral sr)
 
 foreign import ccall unsafe "sfSoundBufferRecorder_start"
     sfSoundBufferRecorder_start :: SoundBufferRecorder -> CUInt -> IO ()
 
 -- CSFML_AUDIO_API void sfSoundBufferRecorder_start(sfSoundBufferRecorder* soundBufferRecorder, unsigned int sampleRate);
-
-
--- | Stop the capture of a sound recorder.
-stopRecording :: SoundBufferRecorder -> IO ()
-stopRecording = sfSoundBufferRecorder_stop
 
 foreign import ccall unsafe "sfSoundBufferRecorder_stop"
     sfSoundBufferRecorder_stop :: SoundBufferRecorder -> IO ()
