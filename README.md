@@ -12,6 +12,7 @@ http://shellblade.net/docs/SFML/index.html
 * Window module
 * System module
 * Graphics module
+* Sound module
 
 ### What's been tested:
 
