@@ -1,6 +1,9 @@
 module SFML.Audio.SoundRecorder
 (
-    createSoundRecorder
+    SoundRecorderStartCallback
+,   SoundRecorderProcessCallback
+,   SoundRecorderStopCallback
+,   createSoundRecorder
 ,   destroySoundRecorder
 ,   startRecording
 ,   stopRecording
