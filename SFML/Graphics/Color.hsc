@@ -48,14 +48,14 @@ instance Storable Color where
         #{poke sfColor, a} ptr a
 
 
-black       = Color   0   0   0 1
-white       = Color 255 255 255 1
-red         = Color 255   0   0 1
-green       = Color   0 255   0 1
-blue        = Color   0   0 255 1
-yellow      = Color 255 255   0 1
-magenta     = Color 255   0 255 1
-cyan        = Color   0 255 255 1
+black       = Color   0   0   0 255
+white       = Color 255 255 255 255
+red         = Color 255   0   0 255
+green       = Color   0 255   0 255
+blue        = Color   0   0 255 255
+yellow      = Color 255 255   0 255
+magenta     = Color 255   0 255 255
+cyan        = Color   0 255 255 255
 transparent = Color   0   0   0 0
 
 
