@@ -10,7 +10,7 @@ main = do
     wnd <- createRenderWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
     tex <- fmap fromJust $ textureFromFile "Haskell-Logo.png" Nothing
     spr <- fmap fromJust $ createSprite
-    fnt <- fmap fromJust $ fontFromFile "FreeSans.otf"
+    fnt <- fmap fromJust $ fontFromFile "Vera.ttf"
     txt <- fmap fromJust $ createText
     setTextString txt "Hello world!"
     setTextFont txt fnt
