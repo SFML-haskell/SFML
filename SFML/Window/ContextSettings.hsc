@@ -1,5 +1,8 @@
 {-# LANGUAGE CPP, ForeignFunctionInterface #-}
 module SFML.Window.ContextSettings
+(
+    ContextSettings(..)
+)
 where
 
 
@@ -14,11 +17,11 @@ sizeInt = #{size int}
 
 
 data ContextSettings = ContextSettings
-    { depthBits         :: Int
-    , stencilBits       :: Int
-    , antialiasingLevel :: Int
-    , majorVersion      :: Int
-    , minorVersion      :: Int
+    { depthBits         :: Int -- ^ Bits of the depth buffer
+    , stencilBits       :: Int -- ^ Bits of the stencil buffer
+    , antialiasingLevel :: Int -- ^ Level of antialiasing
+    , majorVersion      :: Int -- ^ Major number of the context version to create
+    , minorVersion      :: Int -- ^ Minor number of the context version to create
     }
     deriving (Show)
 

@@ -17,7 +17,7 @@ class SFWindow a where
     --
     -- This function returns whether or not the window exists.
     --
-    -- Note that a hidden window (setWindowVisible('False')) will return
+    -- Note that a hidden window (setWindowVisible 'False' ) will return
     -- 'True'.
     isWindowOpen :: a -> IO Bool
     

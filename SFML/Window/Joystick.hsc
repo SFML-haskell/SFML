@@ -20,9 +20,9 @@ import Foreign.Ptr (castPtr)
 
 -- | Global joysticks capabilities
 data JoystickCap
-    = JoystickCount
-    | JoystickButtonCount
-    | JoystickAxisCount
+    = JoystickCount -- ^ Maximum number of supported joysticks
+    | JoystickButtonCount -- ^ Maximum number of supported buttons
+    | JoystickAxisCount -- ^ Maximum number of supported axes
     deriving (Eq, Bounded, Show)
 
 
@@ -91,7 +91,7 @@ foreign import ccall "sfJoystick_getButtonCount"
 
 -- | Check if a joystick supports a given axis.
 --
--- If the joystick is not connected, this function returns false.
+-- If the joystick is not connected, this function returns 'False'.
 hasAxis
     :: Int -- ^ Index of the joystick
     -> Int -- ^ Axis to check
@@ -107,7 +107,7 @@ foreign import ccall "sfJoystick_hasAxis"
 
 -- | Check if a joystick button is pressed.
 --
--- If the joystick is not connected, this function returns false.
+-- If the joystick is not connected, this function returns 'False'.
 isJoystickButtonPressed
     :: Int -- ^ Index of the joystick
     -> Int -- ^ Button to check

@@ -23,9 +23,9 @@ sizeInt = #{size int}
 
 
 data VideoMode = VideoMode
-    { windowWidth  :: Int
-    , windowHeight :: Int
-    , windowBPP    :: Int
+    { windowWidth  :: Int -- ^ Video mode width, in pixels
+    , windowHeight :: Int -- ^ Video mode height, in pixels
+    , windowBPP    :: Int -- ^ Video mode pixel depth, in bits per pixels
     }
     deriving (Show)
 
