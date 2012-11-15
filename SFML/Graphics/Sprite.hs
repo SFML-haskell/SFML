@@ -43,21 +43,14 @@ import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
 import Foreign.Storable (peek)
-import Unsafe.Coerce
 
 
 checkNull :: Sprite -> Maybe Sprite
-checkNull sprite@(Sprite ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just sprite
+checkNull sprite@(Sprite ptr) = if ptr == nullPtr then Nothing else Just sprite
 
 
 checkNullTexture :: Texture -> Maybe Texture
-checkNullTexture tex@(Texture ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just tex
+checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
 -- | Create a new sprite.

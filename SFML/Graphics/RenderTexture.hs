@@ -47,14 +47,10 @@ import Foreign.Marshal.Array (withArray)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
 import Foreign.Storable (peek)
-import Unsafe.Coerce (unsafeCoerce)
 
 
 checkNull :: RenderTexture -> Maybe RenderTexture
-checkNull tex@(RenderTexture ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just tex
+checkNull tex@(RenderTexture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
 -- | Construct a new render texture.

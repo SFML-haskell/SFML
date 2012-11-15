@@ -31,14 +31,10 @@ import Foreign.C.Types
 import Foreign.C.String
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
-import Unsafe.Coerce (unsafeCoerce)
 
 
 checkNull :: Shader -> Maybe Shader
-checkNull shader@(Shader ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just shader
+checkNull shader@(Shader ptr) = if ptr == nullPtr then Nothing else Just shader
 
 
 -- | Load both the vertex and fragment shaders from files.

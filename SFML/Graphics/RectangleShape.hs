@@ -50,18 +50,14 @@ import SFML.System.Vector2
 
 import Control.Monad ((>=>))
 import Foreign.C.Types
-import Foreign.Ptr (Ptr)
+import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Storable (peek)
-import Unsafe.Coerce
 
 
 checkNullTexture :: Texture -> Maybe Texture
-checkNullTexture tex@(Texture ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just tex
+checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
 -- | Create a new rectangle shape.

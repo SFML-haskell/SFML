@@ -16,14 +16,11 @@ import SFML.Audio.Types
 
 import Control.Monad ((>=>))
 import Foreign.C.Types
-import Unsafe.Coerce (unsafeCoerce)
+import Foreign.Ptr (nullPtr)
 
 
 checkNull :: SoundBufferRecorder -> Maybe SoundBufferRecorder
-checkNull sbr@(SoundBufferRecorder ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just sbr
+checkNull sbr@(SoundBufferRecorder ptr) = if ptr == nullPtr then Nothing else Just sbr
 
 
 -- | Create a new sound buffer recorder.

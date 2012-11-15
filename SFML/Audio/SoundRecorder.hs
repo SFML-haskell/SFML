@@ -20,15 +20,11 @@ import SFML.Audio.Types
 import Control.Monad ((>=>))
 import Data.Word (Word16)
 import Foreign.C.Types
-import Foreign.Ptr (Ptr)
-import Unsafe.Coerce (unsafeCoerce)
+import Foreign.Ptr (Ptr, nullPtr)
 
 
 checkNull :: SoundRecorder -> Maybe SoundRecorder
-checkNull sr@(SoundRecorder ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just sr
+checkNull sr@(SoundRecorder ptr) = if ptr == nullPtr then Nothing else Just sr
 
 
 type SoundRecorderStartCallback a = Ptr a -> IO CInt

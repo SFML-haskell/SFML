@@ -37,14 +37,10 @@ import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
 import Foreign.Storable (peek)
 import System.IO.Unsafe
-import Unsafe.Coerce (unsafeCoerce)
 
 
 checkNull :: Texture -> Maybe Texture
-checkNull tex@(Texture ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just tex
+checkNull tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
 -- | Create a new texture.

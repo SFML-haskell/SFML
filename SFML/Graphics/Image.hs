@@ -34,14 +34,10 @@ import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Storable (peek)
-import Unsafe.Coerce (unsafeCoerce)
 
 
 checkNull :: Image -> Maybe Image
-checkNull img@(Image ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just img
+checkNull img@(Image ptr) = if ptr == nullPtr then Nothing else Just img
 
 
 -- | Create an image.

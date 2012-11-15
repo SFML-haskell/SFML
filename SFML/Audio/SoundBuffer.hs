@@ -27,16 +27,12 @@ import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
-import Foreign.Ptr (Ptr)
+import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Storable (peek)
-import Unsafe.Coerce (unsafeCoerce)
 
 
 checkNull :: SoundBuffer -> Maybe SoundBuffer
-checkNull buf@(SoundBuffer ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just buf
+checkNull buf@(SoundBuffer ptr) = if ptr == nullPtr then Nothing else Just buf
 
 
 -- | Create a new sound buffer and load it from a file.

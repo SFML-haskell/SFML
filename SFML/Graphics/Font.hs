@@ -24,14 +24,10 @@ import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
 import Foreign.Storable
-import Unsafe.Coerce
 
 
 checkNull :: Font -> Maybe Font
-checkNull font@(Font ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just font
+checkNull font@(Font ptr) = if ptr == nullPtr then Nothing else Just font
 
 
 -- | Create a new font from a file.

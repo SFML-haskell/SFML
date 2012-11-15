@@ -45,16 +45,12 @@ import Foreign.Marshal.Utils (with)
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.C.String
 import Foreign.C.Types
-import Foreign.Ptr (Ptr)
+import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Storable (peek)
-import Unsafe.Coerce (unsafeCoerce)
 
 
 checkNull :: Music -> Maybe Music
-checkNull music@(Music ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just music
+checkNull music@(Music ptr) = if ptr == nullPtr then Nothing else Just music
 
 
 -- | Create a new music and load it from a file.

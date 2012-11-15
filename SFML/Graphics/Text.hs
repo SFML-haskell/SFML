@@ -39,7 +39,6 @@ import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
 import Foreign.Storable
-import Unsafe.Coerce
 
 
 -- | Text styles.
@@ -65,17 +64,11 @@ instance Enum TextStyle where
 
 
 checkNull :: Text -> Maybe Text
-checkNull text@(Text ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just text
+checkNull text@(Text ptr) = if ptr == nullPtr then Nothing else Just text
 
 
 checkNullFont :: Font -> Maybe Font
-checkNullFont font@(Font ptr) =
-    case (unsafeCoerce ptr) of
-        0 -> Nothing
-        _ -> Just font
+checkNullFont font@(Font ptr) = if ptr == nullPtr then Nothing else Just font
 
 
 -- | Create a new text.
