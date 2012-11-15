@@ -1,4 +1,4 @@
-name: demos
+name: sfml-demos
 version: 0.1.0.0
 cabal-version: >=1.8
 build-type: Simple
@@ -8,6 +8,7 @@ synopsis: SFML demos
 category: Game
 author: Marc Sunet
 data-dir: ""
+data-files:         hello/DST-BreakOut.ogg, hello/Haskell-Logo.png, hello/Vera.ttf
  
 executable window
     hs-source-dirs:     window
