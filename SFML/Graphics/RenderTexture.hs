@@ -36,7 +36,7 @@ import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
-import SFML.Graphics.RenderTarget
+import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Vertex
 import SFML.System.Vector2
@@ -197,7 +197,7 @@ foreign import ccall unsafe "sfRenderTexture_convertCoords_helper"
 --CSFML_GRAPHICS_API sfVector2f sfRenderTexture_convertCoords(const sfRenderTexture* renderTexture, sfVector2i point, const sfView* targetView);
 
 
-instance RenderTarget RenderTexture where
+instance SFRenderTarget RenderTexture where
     
     drawSprite tex sprite Nothing = sfRenderTexture_drawSprite tex sprite nullPtr
     drawSprite tex sprite (Just r) = with r $ sfRenderTexture_drawSprite tex sprite

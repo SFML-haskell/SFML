@@ -46,10 +46,10 @@ library
                        SFML.Graphics.Rect
                        SFML.Graphics.RectangleShape
                        SFML.Graphics.RenderStates
-                       SFML.Graphics.RenderTarget
                        SFML.Graphics.RenderTexture
                        SFML.Graphics.RenderWindow
                        SFML.Graphics.SFBoundable
+                       SFML.Graphics.SFRenderTarget
                        SFML.Graphics.SFShape
                        SFML.Graphics.SFShapeResizable
                        SFML.Graphics.Shader

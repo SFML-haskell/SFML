@@ -11,10 +11,10 @@ module SFML.Graphics
 ,   module SFML.Graphics.Rect
 ,   module SFML.Graphics.RectangleShape
 ,   module SFML.Graphics.RenderStates
-,   module SFML.Graphics.RenderTarget
 ,   module SFML.Graphics.RenderTexture
 ,   module SFML.Graphics.RenderWindow
 ,   module SFML.Graphics.SFBoundable
+,   module SFML.Graphics.SFRenderTarget
 ,   module SFML.Graphics.SFShape
 ,   module SFML.Graphics.SFShapeResizable
 ,   module SFML.Graphics.Shader
@@ -45,10 +45,10 @@ import SFML.Graphics.PrimitiveType
 import SFML.Graphics.Rect
 import SFML.Graphics.RectangleShape
 import SFML.Graphics.RenderStates
-import SFML.Graphics.RenderTarget
 import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
 import SFML.Graphics.SFBoundable
+import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.Shader

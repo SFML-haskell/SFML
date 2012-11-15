@@ -54,7 +54,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
-import SFML.Graphics.RenderTarget
+import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.Vertex
 import SFML.Window.ContextSettings
 import SFML.Window.Event
@@ -414,7 +414,7 @@ foreign import ccall unsafe "sfRenderWindow_convertCoords_helper"
 --CSFML_GRAPHICS_API sfVector2f sfRenderWindow_convertCoords(const sfRenderWindow* renderWindow, sfVector2i point, const sfView* targetView);
 
 
-instance RenderTarget RenderWindow where
+instance SFRenderTarget RenderWindow where
     
     drawSprite wnd sprite Nothing   = sfRenderWindow_drawSprite wnd sprite nullPtr
     drawSprite wnd sprite (Just rs) = with rs $ sfRenderWindow_drawSprite wnd sprite
