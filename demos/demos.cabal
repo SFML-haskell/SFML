@@ -10,28 +10,28 @@ author: Marc Sunet
 data-dir: ""
 data-files:         hello/DST-BreakOut.ogg, hello/Haskell-Logo.png, hello/Vera.ttf
  
-executable window
+executable sfml-window
     hs-source-dirs:     window
     build-depends:      base, SFML
     main-is:            main.hs
     buildable:          True
     ghc-options:        -debug
 
-executable time
+executable sfml-time
     hs-source-dirs:     time
     build-depends:      base, SFML
     main-is:            main.hs
     buildable:          True
     ghc-options:        -debug
 
-executable transform
+executable sfml-transform
     hs-source-dirs:     transform
     build-depends:      base, SFML
     main-is:            main.hs
     buildable:          True
     ghc-options:        -debug
 
-executable hello
+executable sfml-hello
     hs-source-dirs:     hello
     build-depends:      base, SFML
     main-is:            main.hs
