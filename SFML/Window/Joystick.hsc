@@ -68,7 +68,7 @@ isJoystickConnected
 
 isJoystickConnected j = sfJoystick_isConnected (fromIntegral j) >>= return . (/=0)
 
-foreign import ccall "sfJoystick_isConnected"
+foreign import ccall unsafe "sfJoystick_isConnected"
     sfJoystick_isConnected :: CUInt -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfJoystick_isConnected(unsigned int joystick);
@@ -83,7 +83,7 @@ getButtonCount
 
 getButtonCount j = fmap fromIntegral $ sfJoystick_getButtonCount (fromIntegral j)
 
-foreign import ccall "sfJoystick_getButtonCount"
+foreign import ccall unsafe "sfJoystick_getButtonCount"
     sfJoystick_getButtonCount :: CUInt -> IO CUInt
 
 --CSFML_WINDOW_API unsigned int sfJoystick_getButtonCount(unsigned int joystick);
@@ -99,7 +99,7 @@ hasAxis
 
 hasAxis j a = sfJoystick_hasAxis (fromIntegral j) (fromIntegral a) >>= return . (/=0)
 
-foreign import ccall "sfJoystick_hasAxis"
+foreign import ccall unsafe "sfJoystick_hasAxis"
     sfJoystick_hasAxis :: CUInt -> CUInt -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfJoystick_hasAxis(unsigned int joystick, sfJoystickAxis axis);
@@ -115,7 +115,7 @@ isJoystickButtonPressed
 
 isJoystickButtonPressed j b = sfJoystick_isButtonPressed (fromIntegral j) (fromIntegral b) >>= return . (/=0)
 
-foreign import ccall "sfJoystick_isButtonPressed"
+foreign import ccall unsafe "sfJoystick_isButtonPressed"
     sfJoystick_isButtonPressed :: CUInt -> CUInt -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfJoystick_isButtonPressed(unsigned int joystick, unsigned int button);
@@ -131,7 +131,7 @@ getAxisPosition
 
 getAxisPosition j a = sfJoystick_getAxisPosition (fromIntegral j) (fromIntegral a)
 
-foreign import ccall "sfJoystick_getAxisPosition"
+foreign import ccall unsafe "sfJoystick_getAxisPosition"
     sfJoystick_getAxisPosition :: CUInt -> CUInt -> IO Float
 
 --CSFML_WINDOW_API float sfJoystick_getAxisPosition(unsigned int joystick, sfJoystickAxis axis);
@@ -146,7 +146,7 @@ foreign import ccall "sfJoystick_getAxisPosition"
 updateJoystick :: IO ()
 updateJoystick = sfJoystick_update
 
-foreign import ccall "sfJoystick_update"
+foreign import ccall unsafe "sfJoystick_update"
     sfJoystick_update :: IO ()
 
 --CSFML_WINDOW_API void sfJoystick_update(void);

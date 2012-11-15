@@ -135,7 +135,7 @@ isKeyPressed :: KeyCode -> IO Bool
 isKeyPressed k = sfKeyboard_isKeyPressed (fromEnum k) >>= return . (/=0)
 
 
-foreign import ccall "sfKeyboard_isKeyPressed"
+foreign import ccall unsafe "sfKeyboard_isKeyPressed"
     sfKeyboard_isKeyPressed :: Int -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfKeyboard_isKeyPressed(sfKeyCode key);

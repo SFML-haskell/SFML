@@ -104,7 +104,7 @@ createWindow vm title styles ctxSettings =
         Nothing  -> sfWindow_create_helper ptrVM ptrTitle (fromIntegral style) nullPtr
         Just ctx -> with ctx $ sfWindow_create_helper ptrVM ptrTitle (fromIntegral style)
 
-foreign import ccall "sfWindow_create_helper"
+foreign import ccall unsafe "sfWindow_create_helper"
     sfWindow_create_helper :: Ptr VideoMode -> CString -> CUInt -> Ptr ContextSettings -> IO Window
 
 --CSFML_WINDOW_API sfWindow* sfWindow_create(sfVideoMode mode, const char* title, sfUint32 style, const sfContextSettings* settings);
@@ -129,7 +129,7 @@ windowFromHandle hwnd ctxSettings =
         Nothing  -> sfWindow_createFromHandle hwnd nullPtr
         Just ctx -> with ctx $ sfWindow_createFromHandle hwnd
 
-foreign import ccall "sfWindow_createFromHandle"
+foreign import ccall unsafe "sfWindow_createFromHandle"
     sfWindow_createFromHandle :: WindowHandle -> Ptr ContextSettings -> IO Window
 
 --CSFML_WINDOW_API sfWindow* sfWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
@@ -138,7 +138,7 @@ foreign import ccall "sfWindow_createFromHandle"
 -- | Destroy the window.
 destroyWindow = sfWindow_destroy
 
-foreign import ccall "sfWindow_destroy"
+foreign import ccall unsafe "sfWindow_destroy"
     sfWindow_destroy :: Window -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_destroy(sfWindow* window);
@@ -155,7 +155,7 @@ foreign import ccall "sfWindow_destroy"
 
 closeWindow = sfWindow_close
 
-foreign import ccall "sfWindow_close"
+foreign import ccall unsafe "sfWindow_close"
     sfWindow_close :: Window -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_close(sfWindow* window);
@@ -221,123 +221,123 @@ instance SFWindow Window where
     setMousePosition pos (Just wnd) = with pos $ \ptr -> sfMouse_setPosition_helper ptr wnd
 
 
-foreign import ccall "sfWindow_isOpen"
+foreign import ccall unsafe "sfWindow_isOpen"
     sfWindow_isOpen :: Window -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfWindow_isOpen(const sfWindow* window);
 
 
-foreign import ccall "sfWindow_getSettings_helper"
+foreign import ccall unsafe "sfWindow_getSettings_helper"
     sfWindow_getSettings_helper :: Window -> Ptr ContextSettings -> IO ()
 
 --CSFML_WINDOW_API sfContextSettings sfWindow_getSettings(const sfWindow* window);
 
 
-foreign import ccall "sfWindow_pollEvent"
+foreign import ccall unsafe "sfWindow_pollEvent"
     sfWindow_pollEvent :: Window -> Ptr SFEvent -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfWindow_pollEvent(sfWindow* window, sfEvent* event);
 
 
-foreign import ccall "sfWindow_waitEvent"
+foreign import ccall unsafe "sfWindow_waitEvent"
     sfWindow_waitEvent :: Window -> Ptr SFEvent -> IO CInt
 
 --CSFML_WINDOW_API sfBool sfWindow_waitEvent(sfWindow* window, sfEvent* event);
 
 
-foreign import ccall "sfWindow_getPosition_helper"
+foreign import ccall unsafe "sfWindow_getPosition_helper"
     sfWindow_getPosition_helper :: Window -> Ptr Vec2i -> IO ()
 
 --CSFML_WINDOW_API sfVector2i sfWindow_getPosition(const sfWindow* window);
 
 
-foreign import ccall "sfWindow_setPosition_helper"
+foreign import ccall unsafe "sfWindow_setPosition_helper"
     sfWindow_setPosition_helper :: Window -> Ptr Vec2i -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setPosition(sfWindow* window, sfVector2i position);
 
 
-foreign import ccall "sfWindow_getSize_helper"
+foreign import ccall unsafe "sfWindow_getSize_helper"
     sfWindow_getSize_helper :: Window -> Ptr Vec2u -> IO ()
 
 --CSFML_WINDOW_API sfVector2u sfWindow_getSize(const sfWindow* window);
 
 
-foreign import ccall "sfWindow_setSize_helper"
+foreign import ccall unsafe "sfWindow_setSize_helper"
     sfWindow_setSize_helper :: Window -> Ptr Vec2u -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setSize(sfWindow* window, sfVector2u size);
 
 
-foreign import ccall "sfWindow_setTitle"
+foreign import ccall unsafe "sfWindow_setTitle"
     sfWindow_setTitle :: Window -> CString -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setTitle(sfWindow* window, const char* title);
 
 
-foreign import ccall "sfWindow_setIcon"
+foreign import ccall unsafe "sfWindow_setIcon"
     sfWindow_setIcon :: Window -> Int -> Int -> Ptr a -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setIcon(sfWindow* window, unsigned int width, unsigned int height, const sfUint8* pixels);
 
 
-foreign import ccall "sfWindow_setVisible"
+foreign import ccall unsafe "sfWindow_setVisible"
     sfWindow_setVisible :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setVisible(sfWindow* window, sfBool visible);
 
-foreign import ccall "sfWindow_setMouseCursorVisible"
+foreign import ccall unsafe "sfWindow_setMouseCursorVisible"
     sfWindow_setMouseCursorVisible :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setMouseCursorVisible(sfWindow* window, sfBool visible);
 
-foreign import ccall "sfWindow_setVerticalSyncEnabled"
+foreign import ccall unsafe "sfWindow_setVerticalSyncEnabled"
     sfWindow_setVerticalSyncEnabled :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setVerticalSyncEnabled(sfWindow* window, sfBool enabled);
 
 
-foreign import ccall "sfWindow_setActive"
+foreign import ccall unsafe "sfWindow_setActive"
     sfWindow_setActive :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API sfBool sfWindow_setActive(sfWindow* window, sfBool active);
 
 
-foreign import ccall "sfWindow_setKeyRepeatEnabled"
+foreign import ccall unsafe "sfWindow_setKeyRepeatEnabled"
     sfWindow_setKeyRepeatEnabled :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setKeyRepeatEnabled(sfWindow* window, sfBool enabled);
 
 
-foreign import ccall "sfWindow_display"
+foreign import ccall unsafe "sfWindow_display"
     sfWindow_display :: Window -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_display(sfWindow* window);
 
 
-foreign import ccall "sfWindow_setFramerateLimit"
+foreign import ccall unsafe "sfWindow_setFramerateLimit"
     sfWindow_setFramerateLimit :: Window -> CUInt -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setFramerateLimit(sfWindow* window, unsigned int limit);
 
 
-foreign import ccall "sfWindow_setJoystickThreshold"
+foreign import ccall unsafe "sfWindow_setJoystickThreshold"
     sfWindow_setJoystickThreshold :: Window -> Float -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setJoystickThreshold(sfWindow* window, float threshold);
 
-foreign import ccall "sfWindow_getSystemHandle"
+foreign import ccall unsafe "sfWindow_getSystemHandle"
     sfWindow_getSystemHandle :: Window -> IO WindowHandle
 
 --CSFML_WINDOW_API sfWindowHandle sfWindow_getSystemHandle(const sfWindow* window);
 
 
-foreign import ccall "sfMouse_getPosition_helper"
+foreign import ccall unsafe "sfMouse_getPosition_helper"
     sfMouse_getPosition_helper :: Window -> Ptr Vec2i -> IO ()
 
 --CSFML_WINDOW_API sfVector2i sfMouse_getPosition(const sfWindow* relativeTo);
 
-foreign import ccall "sfMouse_setPosition_helper"
+foreign import ccall unsafe "sfMouse_setPosition_helper"
     sfMouse_setPosition_helper :: Ptr Vec2i -> Window -> IO ()
 
 --CSFML_WINDOW_API void sfMouse_setPosition(sfVector2i position, const sfWindow* relativeTo);

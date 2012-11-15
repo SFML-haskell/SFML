@@ -49,7 +49,7 @@ instance Storable VideoMode where
 -- | Get the current desktop video mode
 getDesktopMode = alloca $ \ptr -> sfVideoMode_getDesktopMode_helper ptr >> peek ptr
 
-foreign import ccall "sfVideoMode_getDesktopMode_helper"
+foreign import ccall unsafe "sfVideoMode_getDesktopMode_helper"
     sfVideoMode_getDesktopMode_helper :: Ptr VideoMode -> IO ()
 
 --CSFML_WINDOW_API sfVideoMode sfVideoMode_getDesktopMode(void);
@@ -74,7 +74,7 @@ getFullscreenModes = do
     count <- peek countPtr
     peekArray (fromIntegral count) ptrVM
 
-foreign import ccall "sfVideoMode_getFullscreenModes"
+foreign import ccall unsafe "sfVideoMode_getFullscreenModes"
     sfVideoMode_getFullscreenModes :: Ptr CUInt -> IO (Ptr VideoMode)
 
 --CSFML_WINDOW_API const sfVideoMode* sfVideoMode_getFullscreenModes(size_t* Count);
@@ -88,7 +88,7 @@ foreign import ccall "sfVideoMode_getFullscreenModes"
 isValid :: VideoMode -> IO Bool
 isValid vm = with vm $ \ptrVm -> sfVideoMode_isValid_helper ptrVm >>= return . (/=0)
 
-foreign import ccall "sfVideoMode_isValid_helper"
+foreign import ccall unsafe "sfVideoMode_isValid_helper"
     sfVideoMode_isValid_helper :: Ptr VideoMode -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfVideoMode_isValid(sfVideoMode mode);

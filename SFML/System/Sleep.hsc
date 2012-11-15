@@ -20,7 +20,7 @@ import Foreign.Ptr (Ptr)
 sfSleep :: Time -> IO ()
 sfSleep t = with t sfSleep_helper
 
-foreign import ccall "sfSleep_helper"
+foreign import ccall unsafe "sfSleep_helper"
     sfSleep_helper :: Ptr Time -> IO ()
 
 --CSFML_SYSTEM_API void sfSleep(sfTime duration);

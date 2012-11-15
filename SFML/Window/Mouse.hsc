@@ -40,7 +40,7 @@ instance Storable MouseButton where
 isMouseButtonPressed :: MouseButton -> IO Bool
 isMouseButtonPressed bt = sfMouse_isButtonPressed (fromEnum bt) >>= return . (/=0)
 
-foreign import ccall "sfMouse_isButtonPressed"
+foreign import ccall unsafe "sfMouse_isButtonPressed"
     sfMouse_isButtonPressed :: Int -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfMouse_isButtonPressed(sfMouseButton button);
