@@ -53,12 +53,12 @@ library
                        SFML.Graphics.SFShape
                        SFML.Graphics.SFShapeResizable
                        SFML.Graphics.SFSmoothTexture
+                       SFML.Graphics.SFTexturable
                        SFML.Graphics.Shader
                        SFML.Graphics.Shape
                        SFML.Graphics.Sprite
                        SFML.Graphics.Text
                        SFML.Graphics.Texture
-                       SFML.Graphics.Texturable
                        SFML.Graphics.Transform
                        SFML.Graphics.Transformable SFML.Graphics.Types
                        SFML.Graphics.Vertex

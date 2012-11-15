@@ -18,11 +18,11 @@ module SFML.Graphics
 ,   module SFML.Graphics.SFShape
 ,   module SFML.Graphics.SFShapeResizable
 ,   module SFML.Graphics.SFSmoothTexture
+,   module SFML.Graphics.SFTexturable
 ,   module SFML.Graphics.Shader
 ,   module SFML.Graphics.Shape
 ,   module SFML.Graphics.Sprite
 ,   module SFML.Graphics.Text
-,   module SFML.Graphics.Texturable
 ,   module SFML.Graphics.Texture
 ,   module SFML.Graphics.Transform
 ,   module SFML.Graphics.Transformable
@@ -52,11 +52,11 @@ import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.SFSmoothTexture
+import SFML.Graphics.SFTexturable
 import SFML.Graphics.Shader
 import SFML.Graphics.Shape
 import SFML.Graphics.Sprite
 import SFML.Graphics.Text
-import SFML.Graphics.Texturable
 import SFML.Graphics.Texture
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable

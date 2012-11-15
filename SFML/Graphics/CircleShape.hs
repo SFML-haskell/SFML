@@ -43,7 +43,7 @@ import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
-import SFML.Graphics.Texturable
+import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
@@ -186,7 +186,7 @@ foreign import ccall unsafe "sfCircleShape_getInverseTransform_helper"
 --CSFML_GRAPHICS_API sfTransform sfCircleShape_getInverseTransform(const sfCircleShape* shape);
 
 
-instance Texturable CircleShape where
+instance SFTexturable CircleShape where
     
     setTexture c tex reset = sfCircleShape_setTexture c tex (fromIntegral . fromEnum $ reset)
     

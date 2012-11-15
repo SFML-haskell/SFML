@@ -32,7 +32,7 @@ import SFML.Graphics.BlendMode
 import SFML.Graphics.SFBoundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
-import SFML.Graphics.Texturable
+import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
@@ -205,7 +205,7 @@ foreign import ccall unsafe "sfSprite_getColor_helper"
 --CSFML_GRAPHICS_API sfColor sfSprite_getColor(const sfSprite* sprite);
 
 
-instance Texturable Sprite where
+instance SFTexturable Sprite where
     
     setTexture sprite tex reset = sfSprite_setTexture sprite tex (fromIntegral . fromEnum $ reset)
     

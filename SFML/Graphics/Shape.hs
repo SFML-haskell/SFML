@@ -40,7 +40,7 @@ import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
-import SFML.Graphics.Texturable
+import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
@@ -177,7 +177,7 @@ foreign import ccall unsafe "sfShape_getInverseTransform_helper"
 --CSFML_GRAPHICS_API sfTransform sfShape_getInverseTransform(const sfShape* shape);
 
 
-instance Texturable Shape where
+instance SFTexturable Shape where
     
     setTexture c tex reset = sfShape_setTexture c tex (fromIntegral . fromEnum $ reset)
     
