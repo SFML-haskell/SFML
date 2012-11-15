@@ -29,7 +29,7 @@ where
 
 
 import SFML.Graphics.BlendMode
-import SFML.Graphics.Boundable
+import SFML.Graphics.SFBoundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Texturable
@@ -241,7 +241,7 @@ foreign import ccall unsafe "sfSprite_getTextureRect_helper"
 --CSFML_GRAPHICS_API sfIntRect sfSprite_getTextureRect(const sfSprite* sprite);
 
 
-instance Boundable Sprite where
+instance SFBoundable Sprite where
     
     getLocalBounds sprite = alloca $ \ptr -> sfSprite_getLocalBounds_helper sprite ptr >> peek ptr
     

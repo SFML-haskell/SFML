@@ -37,7 +37,7 @@ module SFML.Graphics.RectangleShape
 where
 
 
-import SFML.Graphics.Boundable
+import SFML.Graphics.SFBoundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
@@ -294,7 +294,7 @@ foreign import ccall unsafe "sfRectangleShape_getSize_helper"
 --CSFML_GRAPHICS_API sfVector2f sfRectangleShape_getSize(const sfRectangleShape* shape);
 
 
-instance Boundable RectangleShape where
+instance SFBoundable RectangleShape where
 
     getLocalBounds c = alloca $ \ptr -> sfRectangleShape_getLocalBounds_helper c ptr >> peek ptr
     

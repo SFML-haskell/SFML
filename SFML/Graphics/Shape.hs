@@ -35,7 +35,7 @@ module SFML.Graphics.Shape
 where
 
 
-import SFML.Graphics.Boundable
+import SFML.Graphics.SFBoundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
@@ -269,7 +269,7 @@ foreign import ccall "sfShape_getPoint_helper"
 --CSFML_GRAPHICS_API sfVector2f sfShape_getPoint(const sfShape* shape, unsigned int index);
 
 
-instance Boundable Shape where
+instance SFBoundable Shape where
 
     getLocalBounds c = alloca $ \ptr -> sfShape_getLocalBounds_helper c ptr >> peek ptr
     

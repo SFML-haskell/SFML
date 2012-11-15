@@ -36,7 +36,7 @@ module SFML.Graphics.ConvexShape
 where
 
 
-import SFML.Graphics.Boundable
+import SFML.Graphics.SFBoundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
@@ -309,7 +309,7 @@ foreign import ccall unsafe "sfConvexShape_setPoint_helper"
 --CSFML_GRAPHICS_API void sfConvexShape_setPoint(sfConvexShape* shape, unsigned int index, sfVector2f point);
 
 
-instance Boundable ConvexShape where
+instance SFBoundable ConvexShape where
 
     getLocalBounds c = alloca $ \ptr -> sfConvexShape_getLocalBounds_helper c ptr >> peek ptr
     

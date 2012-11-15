@@ -38,7 +38,7 @@ module SFML.Graphics.CircleShape
 where
 
 
-import SFML.Graphics.Boundable
+import SFML.Graphics.SFBoundable
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
@@ -316,7 +316,7 @@ foreign import ccall unsafe "sfCircleShape_setPointCount"
 --CSFML_GRAPHICS_API void sfCircleShape_setPointCount(sfCircleShape* shape, unsigned int count);
 
 
-instance Boundable CircleShape where
+instance SFBoundable CircleShape where
 
     getLocalBounds c = alloca $ \ptr -> sfCircleShape_getLocalBounds_helper c ptr >> peek ptr
     

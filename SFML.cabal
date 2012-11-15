@@ -36,7 +36,6 @@ library
                        SFML.Audio.SoundStream
                        SFML.Audio.Types
                        SFML.Graphics.BlendMode
-                       SFML.Graphics.Boundable
                        SFML.Graphics.CircleShape
                        SFML.Graphics.Color
                        SFML.Graphics.ConvexShape
@@ -50,6 +49,7 @@ library
                        SFML.Graphics.RenderTarget
                        SFML.Graphics.RenderTexture
                        SFML.Graphics.RenderWindow
+                       SFML.Graphics.SFBoundable
                        SFML.Graphics.SFShape
                        SFML.Graphics.SFShapeResizable
                        SFML.Graphics.Shader
