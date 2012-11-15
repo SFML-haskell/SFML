@@ -24,7 +24,7 @@ where
 
 
 import SFML.Graphics.Rect
-import SFML.Graphics.SmoothTexture
+import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Types
 import SFML.Window.Types
 import SFML.System.InputStream
@@ -250,7 +250,7 @@ foreign import ccall unsafe "sfTexture_bind"
 --CSFML_GRAPHICS_API void sfTexture_bind(const sfTexture* texture);
 
 
-instance SmoothTexture Texture where
+instance SFSmoothTexture Texture where
     
     setSmooth tex val  = sfTexture_setSmooth tex (fromIntegral . fromEnum $ val)
     

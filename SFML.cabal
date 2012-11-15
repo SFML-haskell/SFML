@@ -52,9 +52,9 @@ library
                        SFML.Graphics.SFRenderTarget
                        SFML.Graphics.SFShape
                        SFML.Graphics.SFShapeResizable
+                       SFML.Graphics.SFSmoothTexture
                        SFML.Graphics.Shader
                        SFML.Graphics.Shape
-                       SFML.Graphics.SmoothTexture
                        SFML.Graphics.Sprite
                        SFML.Graphics.Text
                        SFML.Graphics.Texture

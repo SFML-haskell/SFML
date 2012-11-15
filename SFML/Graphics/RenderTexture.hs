@@ -32,12 +32,12 @@ where
 
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
-import SFML.Graphics.SmoothTexture
+import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
 import SFML.Graphics.SFRenderTarget
-import SFML.Graphics.SmoothTexture
+import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Vertex
 import SFML.System.Vector2
 
@@ -309,7 +309,7 @@ foreign import ccall unsafe "sfRenderTexture_getTexture"
 --CSFML_GRAPHICS_API const sfTexture* sfRenderTexture_getTexture(const sfRenderTexture* renderTexture);
 
 
-instance SmoothTexture RenderTexture where
+instance SFSmoothTexture RenderTexture where
     
     setSmooth tex val = sfRenderTexture_setSmooth tex (fromIntegral . fromEnum $ val)
     

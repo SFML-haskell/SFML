@@ -17,9 +17,9 @@ module SFML.Graphics
 ,   module SFML.Graphics.SFRenderTarget
 ,   module SFML.Graphics.SFShape
 ,   module SFML.Graphics.SFShapeResizable
+,   module SFML.Graphics.SFSmoothTexture
 ,   module SFML.Graphics.Shader
 ,   module SFML.Graphics.Shape
-,   module SFML.Graphics.SmoothTexture
 ,   module SFML.Graphics.Sprite
 ,   module SFML.Graphics.Text
 ,   module SFML.Graphics.Texturable
@@ -51,9 +51,9 @@ import SFML.Graphics.SFBoundable
 import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
+import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Shader
 import SFML.Graphics.Shape
-import SFML.Graphics.SmoothTexture
 import SFML.Graphics.Sprite
 import SFML.Graphics.Text
 import SFML.Graphics.Texturable
