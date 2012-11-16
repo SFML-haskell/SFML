@@ -176,8 +176,10 @@ foreign import ccall unsafe "sfSoundBuffer_getSampleCount"
 
 instance SFSoundBuffer SoundBuffer where
     
+    {-# INLINABLE getChannelCount #-}
     getChannelCount = sfSoundBuffer_getChannelCount >=> return . fromIntegral
     
+    {-# INLINABLE getDuration #-}
     getDuration sb = alloca $ \ptr -> sfSoundBuffer_getDuration_helper sb ptr >> peek ptr
 
 
@@ -194,6 +196,7 @@ foreign import ccall unsafe "sfSoundBuffer_getDuration_helper"
 
 instance SFSampled SoundBuffer where
     
+    {-# INLINABLE getSampleRate #-}
     getSampleRate = sfSoundBuffer_getSampleRate >=> return . fromIntegral
 
 

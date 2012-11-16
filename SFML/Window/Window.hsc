@@ -163,13 +163,16 @@ foreign import ccall unsafe "sfWindow_close"
 
 instance SFWindow Window where
     
+    {-# INLINABLE isWindowOpen #-}
     isWindowOpen wnd = sfWindow_isOpen wnd >>= return . (/=0)
     
+    {-# INLINABLE getWindowSettings #-}
     getWindowSettings wnd =
         alloca $ \ptrCtxSettings -> do
         sfWindow_getSettings_helper wnd ptrCtxSettings
         peek ptrCtxSettings
     
+    {-# INLINABLE pollEvent #-}
     pollEvent wnd =
         alloca $ \ptrEvt -> do
         result <- return . (/=0) =<< sfWindow_pollEvent wnd ptrEvt
@@ -177,6 +180,7 @@ instance SFWindow Window where
             True  -> peek ptrEvt >>= return . Just
             False -> return Nothing
     
+    {-# INLINABLE waitEvent #-}
     waitEvent wnd =
         alloca $ \ptr -> do
         result <- sfWindow_waitEvent wnd ptr
@@ -184,39 +188,56 @@ instance SFWindow Window where
             0 -> return Nothing
             _ -> peek ptr >>= return . Just
     
+    {-# INLINABLE getWindowPosition #-}
     getWindowPosition wnd = alloca $ \vecPtr -> sfWindow_getPosition_helper wnd vecPtr >> peek vecPtr
     
+    {-# INLINABLE setWindowPosition #-}
     setWindowPosition wnd pos = with pos $ \posPtr -> sfWindow_setPosition_helper wnd posPtr
     
+    {-# INLINABLE getWindowSize #-}
     getWindowSize wnd = alloca $ \vecPtr -> sfWindow_getSize_helper wnd vecPtr >> peek vecPtr
     
+    {-# INLINABLE setWindowSize #-}
     setWindowSize wnd size = with size $ \ptrSize -> sfWindow_setSize_helper wnd ptrSize
     
+    {-# INLINABLE setWindowTitle #-}
     setWindowTitle wnd title = withCAString title $ \ptrTitle -> sfWindow_setTitle wnd ptrTitle
     
+    {-# INLINABLE setWindowIcon #-}
     setWindowIcon = sfWindow_setIcon
     
+    {-# INLINABLE setWindowVisible #-}
     setWindowVisible wnd val = sfWindow_setVisible wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setMouseVisible #-}
     setMouseVisible wnd val = sfWindow_setMouseCursorVisible wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setVSync #-}
     setVSync wnd val = sfWindow_setVerticalSyncEnabled wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setKeyRepeat #-}
     setKeyRepeat wnd val = sfWindow_setKeyRepeatEnabled wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setWindowActive #-}
     setWindowActive wnd val = sfWindow_setActive wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE display #-}
     display = sfWindow_display
     
+    {-# INLINABLE setFramerateLimit #-}
     setFramerateLimit wnd val = sfWindow_setFramerateLimit wnd (fromIntegral val)
     
+    {-# INLINABLE setJoystickThreshold #-}
     setJoystickThreshold = sfWindow_setJoystickThreshold
     
+    {-# INLINABLE getSystemHandle #-}
     getSystemHandle = sfWindow_getSystemHandle
     
+    {-# INLINABLE getMousePosition #-}
     getMousePosition Nothing    = alloca $ \ptr -> sfMouse_getPosition_helper (Window nullPtr) ptr >> peek ptr
     getMousePosition (Just wnd) = alloca $ \ptr -> sfMouse_getPosition_helper wnd ptr >> peek ptr
     
+    {-# INLINABLE setMousePosition #-}
     setMousePosition pos Nothing    = with pos $ \ptr -> sfMouse_setPosition_helper ptr (Window nullPtr)
     setMousePosition pos (Just wnd) = with pos $ \ptr -> sfMouse_setPosition_helper ptr wnd
 

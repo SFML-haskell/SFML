@@ -126,8 +126,10 @@ foreign import ccall unsafe "sfMusic_destroy"
 
 instance SFSoundBuffer Music where
     
+    {-# INLINABLE getChannelCount #-}
     getChannelCount = sfMusic_getChannelCount >=> return . fromIntegral
     
+    {-# INLINABLE getDuration #-}
     getDuration music = alloca $ \ptr -> sfMusic_getDuration_helper music ptr >> peek ptr
 
 
@@ -144,6 +146,7 @@ foreign import ccall unsafe "sfMusic_getChannelCount"
 
 instance SFSampled Music where
     
+    {-# INLINABLE getSampleRate #-}
     getSampleRate = sfMusic_getSampleRate
 
 
@@ -155,44 +158,64 @@ foreign import ccall unsafe "sfMusic_getSampleRate"
 
 instance SFSound Music where
     
+    {-# INLINABLE play #-}
     play = sfMusic_play
     
+    {-# INLINABLE pause #-}
     pause = sfMusic_pause
     
+    {-# INLINABLE stop #-}
     stop = sfMusic_stop
     
+    {-# INLINABLE getAttenuation #-}
     getAttenuation = sfMusic_getAttenuation
     
+    {-# INLINABLE getLoop #-}
     getLoop music = fmap (toEnum . fromIntegral) $ sfMusic_getLoop music
     
+    {-# INLINABLE getMinDistance #-}
     getMinDistance = sfMusic_getMinDistance
     
+    {-# INLINABLE getPitch #-}
     getPitch = sfMusic_getPitch
     
+    {-# INLINABLE getPlayingOffset #-}
     getPlayingOffset music = alloca $ \ptr -> sfMusic_getPlayingOffset_helper music ptr >> peek ptr
     
+    {-# INLINABLE getPosition #-}
     getPosition music = alloca $ \ptr -> sfMusic_getPosition_helper music ptr >> peek ptr
     
+    {-# INLINABLE getStatus #-}
     getStatus = sfMusic_getStatus >=> return . toEnum . fromIntegral
     
+    {-# INLINABLE getVolume #-}
     getVolume = sfMusic_getVolume
     
+    {-# INLINABLE isRelativeToListener #-}
     isRelativeToListener = sfMusic_isRelativeToListener >=> return . toEnum . fromIntegral
     
+    {-# INLINABLE setAttenuation #-}
     setAttenuation = sfMusic_setAttenuation
     
+    {-# INLINABLE setLoop #-}
     setLoop music val = sfMusic_setLoop music (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setMinDistance #-}
     setMinDistance = sfMusic_setMinDistance
     
+    {-# INLINABLE setPitch #-}
     setPitch = sfMusic_setPitch
     
+    {-# INLINABLE setPlayingOffset #-}
     setPlayingOffset = sfMusic_setPlayingOffset
     
+    {-# INLINABLE setPosition #-}
     setPosition music pos = with pos $ sfMusic_setPosition_helper music
     
+    {-# INLINABLE setRelativeToListener #-}
     setRelativeToListener music val = sfMusic_setRelativeToListener music (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setVolume #-}
     setVolume = sfMusic_setVolume
 
 

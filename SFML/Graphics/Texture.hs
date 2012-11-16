@@ -252,8 +252,10 @@ foreign import ccall unsafe "sfTexture_bind"
 
 instance SFSmoothTexture Texture where
     
+    {-# INLINABLE setSmooth #-}
     setSmooth tex val  = sfTexture_setSmooth tex (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE isSmooth #-}
     isSmooth = fmap (/=0) . sfTexture_isSmooth
 
 foreign import ccall unsafe "sfTexture_setSmooth"

@@ -129,44 +129,64 @@ foreign import ccall unsafe "sfSoundStream_destroy"
 
 instance SFSound SoundStream where
     
+    {-# INLINABLE play #-}
     play = sfSoundStream_play
     
+    {-# INLINABLE pause #-}
     pause = sfSoundStream_pause
     
+    {-# INLINABLE stop #-}
     stop = sfSoundStream_stop
     
+    {-# INLINABLE getAttenuation #-}
     getAttenuation = sfSoundStream_getAttenuation
     
+    {-# INLINABLE getLoop #-}
     getLoop music = fmap (toEnum . fromIntegral) $ sfSoundStream_getLoop music
     
+    {-# INLINABLE getMinDistance #-}
     getMinDistance = sfSoundStream_getMinDistance
     
+    {-# INLINABLE getPitch #-}
     getPitch = sfSoundStream_getPitch
     
+    {-# INLINABLE getPlayingOffset #-}
     getPlayingOffset music = alloca $ \ptr -> sfSoundStream_getPlayingOffset_helper music ptr >> peek ptr
     
+    {-# INLINABLE getPosition #-}
     getPosition music = alloca $ \ptr -> sfSoundStream_getPosition_helper music ptr >> peek ptr
     
+    {-# INLINABLE getStatus #-}
     getStatus = sfSoundStream_getStatus >=> return . toEnum . fromIntegral
     
+    {-# INLINABLE getVolume #-}
     getVolume = sfSoundStream_getVolume
     
+    {-# INLINABLE isRelativeToListener #-}
     isRelativeToListener = sfSoundStream_isRelativeToListener >=> return . toEnum . fromIntegral
     
+    {-# INLINABLE setAttenuation #-}
     setAttenuation = sfSoundStream_setAttenuation
     
+    {-# INLINABLE setLoop #-}
     setLoop music val = sfSoundStream_setLoop music (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setMinDistance #-}
     setMinDistance = sfSoundStream_setMinDistance
     
+    {-# INLINABLE setPitch #-}
     setPitch = sfSoundStream_setPitch
     
+    {-# INLINABLE setPlayingOffset #-}
     setPlayingOffset = sfSoundStream_setPlayingOffset
     
+    {-# INLINABLE setPosition #-}
     setPosition music pos = with pos $ sfSoundStream_setPosition_helper music
     
+    {-# INLINABLE setRelativeToListener #-}
     setRelativeToListener music val = sfSoundStream_setRelativeToListener music (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setVolume #-}
     setVolume = sfSoundStream_setVolume
 
 

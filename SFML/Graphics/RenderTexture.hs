@@ -199,27 +199,35 @@ foreign import ccall unsafe "sfRenderTexture_convertCoords_helper"
 
 instance SFRenderTarget RenderTexture where
     
+    {-# INLINABLE drawSprite #-}
     drawSprite tex sprite Nothing = sfRenderTexture_drawSprite tex sprite nullPtr
     drawSprite tex sprite (Just r) = with r $ sfRenderTexture_drawSprite tex sprite
     
+    {-# INLINABLE drawText #-}
     drawText tex text Nothing = sfRenderTexture_drawText tex text nullPtr
     drawText tex text (Just r) = with r $ sfRenderTexture_drawText tex text
     
+    {-# INLINABLE drawShape #-}
     drawShape tex shape Nothing = sfRenderTexture_drawShape tex shape nullPtr
     drawShape tex shape (Just r) = with r $ sfRenderTexture_drawShape tex shape
     
+    {-# INLINABLE drawCircle #-}
     drawCircle tex circle Nothing = sfRenderTexture_drawCircleShape tex circle nullPtr
     drawCircle tex circle (Just r) = with r $ sfRenderTexture_drawCircleShape tex circle
     
+    {-# INLINABLE drawConvexShape #-}
     drawConvexShape tex shape Nothing = sfRenderTexture_drawConvexShape tex shape nullPtr
     drawConvexShape tex shape (Just r) = with r $ sfRenderTexture_drawConvexShape tex shape
     
+    {-# INLINABLE drawRectangle #-}
     drawRectangle tex shape Nothing = sfRenderTexture_drawRectangleShape tex shape nullPtr
     drawRectangle tex shape (Just r) = with r $ sfRenderTexture_drawRectangleShape tex shape
     
+    {-# INLINABLE drawVertexArray #-}
     drawVertexArray tex va Nothing = sfRenderTexture_drawVertexArray tex va nullPtr
     drawVertexArray tex va (Just r) = with r $ sfRenderTexture_drawVertexArray tex va
     
+    {-# INLINABLE drawPrimitives #-}
     drawPrimitives tex verts prim Nothing =
         let count = fromIntegral $ length verts
         in withArray verts $ \vertsPtr ->
@@ -236,10 +244,13 @@ instance SFRenderTarget RenderTexture where
     drawPrimitives' tex verts count prim (Just r) =
         with r $ sfRenderTexture_drawPrimitives tex verts (fromIntegral count) (fromIntegral . fromEnum $ prim)
     
+    {-# INLINABLE pushGLStates #-}
     pushGLStates = sfRenderTexture_pushGLStates
     
+    {-# INLINABLE popGLStates #-}
     popGLStates = sfRenderTexture_popGLStates
     
+    {-# INLINABLE resetGLStates #-}
     resetGLStates = sfRenderTexture_resetGLStates
 
 
@@ -311,8 +322,10 @@ foreign import ccall unsafe "sfRenderTexture_getTexture"
 
 instance SFSmoothTexture RenderTexture where
     
+    {-# INLINABLE setSmooth #-}
     setSmooth tex val = sfRenderTexture_setSmooth tex (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE isSmooth #-}
     isSmooth tex = fmap (toEnum . fromIntegral ) $ sfRenderTexture_isSmooth tex
 
 foreign import ccall unsafe "sfRenderTexture_setSmooth"

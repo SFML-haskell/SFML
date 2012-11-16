@@ -93,30 +93,43 @@ foreign import ccall unsafe "sfCircleShape_destroy"
 
 instance Transformable CircleShape where
     
+    {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfCircleShape_setPosition_helper c
     
+    {-# INLINABLE setRotation #-}
     setRotation = sfCircleShape_setRotation
     
+    {-# INLINABLE setScale #-}
     setScale c s = with s $ sfCircleShape_setScale_helper c
     
+    {-# INLINABLE setOrigin #-}
     setOrigin c o = with o $ sfCircleShape_setOrigin_helper c
     
+    {-# INLINABLE getPosition #-}
     getPosition c = alloca $ \ptr -> sfCircleShape_getPosition_helper c ptr >> peek ptr
     
+    {-# INLINABLE getRotation #-}
     getRotation = sfCircleShape_getRotation
     
+    {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfCircleShape_getScale_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOrigin #-}
     getOrigin c = alloca $ \ptr -> sfCircleShape_getOrigin_helper c ptr >> peek ptr
     
+    {-# INLINABLE move #-}
     move c off = with off $ sfCircleShape_move_helper c
     
+    {-# INLINABLE rotate #-}
     rotate = sfCircleShape_rotate
     
+    {-# INLINABLE scale #-}
     scale c s = with s $ sfCircleShape_scale_helper c
     
+    {-# INLINABLE getTransform #-}
     getTransform c = alloca $ \ptr -> sfCircleShape_getTransform_helper c ptr >> peek ptr
     
+    {-# INLINABLE getInverseTransform #-}
     getInverseTransform c = alloca $ \ptr -> sfCircleShape_getInverseTransform_helper c ptr >> peek ptr
 
 
@@ -188,12 +201,16 @@ foreign import ccall unsafe "sfCircleShape_getInverseTransform_helper"
 
 instance SFTexturable CircleShape where
     
+    {-# INLINABLE setTexture #-}
     setTexture c tex reset = sfCircleShape_setTexture c tex (fromIntegral . fromEnum $ reset)
     
+    {-# INLINABLE setTextureRect #-}
     setTextureRect c rect = with rect $ sfCircleShape_setTextureRect_helper c
     
+    {-# INLINABLE getTexture #-}
     getTexture = sfCircleShape_getTexture >=> return . checkNullTexture
     
+    {-# INLINABLE getTextureRect #-}
     getTextureRect c = alloca $ \ptr -> sfCircleShape_getTextureRect_helper c ptr >> peek ptr
 
 
@@ -220,20 +237,28 @@ foreign import ccall unsafe "sfCircleShape_getTextureRect_helper"
 
 instance SFShape CircleShape where
     
+    {-# INLINABLE setFillColor #-}
     setFillColor c color = with color $ sfCircleShape_setFillColor_helper c
     
+    {-# INLINABLE setOutlineColor #-}
     setOutlineColor c color = with color $ sfCircleShape_setOutlineColor_helper c
     
+    {-# INLINABLE setOutlineThickness #-}
     setOutlineThickness = sfCircleShape_setOutlineThickness
     
+    {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfCircleShape_getFillColor_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOutlineColor #-}
     getOutlineColor c = alloca $ \ptr -> sfCircleShape_getOutlineColor_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOutlineThickness #-}
     getOutlineThickness = sfCircleShape_getOutlineThickness
     
+    {-# INLINABLE getPointCount #-}
     getPointCount = sfCircleShape_getPointCount >=> return . fromIntegral
     
+    {-# INLINABLE getPoint #-}
     getPoint c idx = alloca $ \ptr -> sfCircleShape_getPoint_helper c (fromIntegral idx) ptr >> peek ptr
 
 
@@ -307,6 +332,7 @@ foreign import ccall unsafe "sfCircleShape_getRadius"
 
 instance SFShapeResizable CircleShape where
 
+    {-# INLINABLE setPointCount #-}
     setPointCount c count = sfCircleShape_setPointCount c (fromIntegral count)
 
 
@@ -318,8 +344,10 @@ foreign import ccall unsafe "sfCircleShape_setPointCount"
 
 instance SFBoundable CircleShape where
 
+    {-# INLINABLE getLocalBounds #-}
     getLocalBounds c = alloca $ \ptr -> sfCircleShape_getLocalBounds_helper c ptr >> peek ptr
     
+    {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds c = alloca $ \ptr -> sfCircleShape_getGlobalBounds_helper c ptr >> peek ptr
 
 foreign import ccall unsafe "sfCircleShape_getLocalBounds_helper"

@@ -91,30 +91,43 @@ foreign import ccall unsafe "sfRectangleShape_destroy"
 
 instance Transformable RectangleShape where
     
+    {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfRectangleShape_setPosition_helper c
     
+    {-# INLINABLE setRotation #-}
     setRotation = sfRectangleShape_setRotation
     
+    {-# INLINABLE setScale #-}
     setScale c s = with s $ sfRectangleShape_setScale_helper c
     
+    {-# INLINABLE setOrigin #-}
     setOrigin c o = with o $ sfRectangleShape_setOrigin_helper c
     
+    {-# INLINABLE getPosition #-}
     getPosition c = alloca $ \ptr -> sfRectangleShape_getPosition_helper c ptr >> peek ptr
     
+    {-# INLINABLE getRotation #-}
     getRotation = sfRectangleShape_getRotation
     
+    {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfRectangleShape_getScale_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOrigin #-}
     getOrigin c = alloca $ \ptr -> sfRectangleShape_getOrigin_helper c ptr >> peek ptr
     
+    {-# INLINABLE move #-}
     move c off = with off $ sfRectangleShape_move_helper c
     
+    {-# INLINABLE rotate #-}
     rotate = sfRectangleShape_rotate
     
+    {-# INLINABLE scale #-}
     scale c s = with s $ sfRectangleShape_scale_helper c
     
+    {-# INLINABLE getTransform #-}
     getTransform c = alloca $ \ptr -> sfRectangleShape_getTransform_helper c ptr >> peek ptr
     
+    {-# INLINABLE getInverseTransform #-}
     getInverseTransform c = alloca $ \ptr -> sfRectangleShape_getInverseTransform_helper c ptr >> peek ptr
 
 
@@ -185,12 +198,16 @@ foreign import ccall unsafe "sfRectangleShape_getInverseTransform_helper"
 
 instance SFTexturable RectangleShape where
     
+    {-# INLINABLE setTexture #-}
     setTexture c tex reset = sfRectangleShape_setTexture c tex (fromIntegral . fromEnum $ reset)
     
+    {-# INLINABLE setTextureRect #-}
     setTextureRect c rect = with rect $ sfRectangleShape_setTextureRect_helper c
     
+    {-# INLINABLE getTexture #-}
     getTexture = sfRectangleShape_getTexture >=> return . checkNullTexture
     
+    {-# INLINABLE getTextureRect #-}
     getTextureRect c = alloca $ \ptr -> sfRectangleShape_getTextureRect_helper c ptr >> peek ptr
 
 
@@ -216,20 +233,28 @@ foreign import ccall unsafe "sfRectangleShape_getTextureRect_helper"
 
 instance SFShape RectangleShape where
     
+    {-# INLINABLE setFillColor #-}
     setFillColor c color = with color $ sfRectangleShape_setFillColor_helper c
     
+    {-# INLINABLE setOutlineColor #-}
     setOutlineColor c color = with color $ sfRectangleShape_setOutlineColor_helper c
     
+    {-# INLINABLE setOutlineThickness #-}
     setOutlineThickness = sfRectangleShape_setOutlineThickness
     
+    {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfRectangleShape_getFillColor_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOutlineColor #-}
     getOutlineColor c = alloca $ \ptr -> sfRectangleShape_getOutlineColor_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOutlineThickness #-}
     getOutlineThickness = sfRectangleShape_getOutlineThickness
     
+    {-# INLINABLE getPointCount #-}
     getPointCount = sfRectangleShape_getPointCount >=> return . fromIntegral
     
+    {-# INLINABLE getPoint #-}
     getPoint c idx = alloca $ \ptr -> sfRectangleShape_getPoint_helper c (fromIntegral idx) ptr >> peek ptr
 
 
@@ -296,8 +321,10 @@ foreign import ccall unsafe "sfRectangleShape_getSize_helper"
 
 instance SFBoundable RectangleShape where
 
+    {-# INLINABLE getLocalBounds #-}
     getLocalBounds c = alloca $ \ptr -> sfRectangleShape_getLocalBounds_helper c ptr >> peek ptr
     
+    {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds c = alloca $ \ptr -> sfRectangleShape_getGlobalBounds_helper c ptr >> peek ptr
 
 foreign import ccall unsafe "sfRectangleShape_getLocalBounds_helper"

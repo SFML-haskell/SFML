@@ -91,30 +91,43 @@ foreign import ccall unsafe "sfConvexShape_destroy"
 
 instance Transformable ConvexShape where
     
+    {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfConvexShape_setPosition_helper c
     
+    {-# INLINABLE setRotation #-}
     setRotation = sfConvexShape_setRotation
     
+    {-# INLINABLE setScale #-}
     setScale c s = with s $ sfConvexShape_setScale_helper c
     
+    {-# INLINABLE setOrigin #-}
     setOrigin c o = with o $ sfConvexShape_setOrigin_helper c
     
+    {-# INLINABLE getPosition #-}
     getPosition c = alloca $ \ptr -> sfConvexShape_getPosition_helper c ptr >> peek ptr
     
+    {-# INLINABLE getRotation #-}
     getRotation = sfConvexShape_getRotation
     
+    {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfConvexShape_getScale_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOrigin #-}
     getOrigin c = alloca $ \ptr -> sfConvexShape_getOrigin_helper c ptr >> peek ptr
     
+    {-# INLINABLE move #-}
     move c off = with off $ sfConvexShape_move_helper c
     
+    {-# INLINABLE rotate #-}
     rotate = sfConvexShape_rotate
     
+    {-# INLINABLE scale #-}
     scale c s = with s $ sfConvexShape_scale_helper c
     
+    {-# INLINABLE getTransform #-}
     getTransform c = alloca $ \ptr -> sfConvexShape_getTransform_helper c ptr >> peek ptr
     
+    {-# INLINABLE getInverseTransform #-}
     getInverseTransform c = alloca $ \ptr -> sfConvexShape_getInverseTransform_helper c ptr >> peek ptr
 
 
@@ -186,12 +199,16 @@ foreign import ccall unsafe "sfConvexShape_getInverseTransform_helper"
 
 instance SFTexturable ConvexShape where
     
+    {-# INLINABLE setTexture #-}
     setTexture c tex reset = sfConvexShape_setTexture c tex (fromIntegral . fromEnum $ reset)
     
+    {-# INLINABLE setTextureRect #-}
     setTextureRect c rect = with rect $ sfConvexShape_setTextureRect_helper c
     
+    {-# INLINABLE getTexture #-}
     getTexture = sfConvexShape_getTexture >=> return . checkNullTexture
     
+    {-# INLINABLE getTextureRect #-}
     getTextureRect c = alloca $ \ptr -> sfConvexShape_getTextureRect_helper c ptr >> peek ptr
 
 
@@ -218,20 +235,28 @@ foreign import ccall unsafe "sfConvexShape_getTextureRect_helper"
 
 instance SFShape ConvexShape where
     
+    {-# INLINABLE setFillColor #-}
     setFillColor c color = with color $ sfConvexShape_setFillColor_helper c
     
+    {-# INLINABLE setOutlineColor #-}
     setOutlineColor c color = with color $ sfConvexShape_setOutlineColor_helper c
     
+    {-# INLINABLE setOutlineThickness #-}
     setOutlineThickness = sfConvexShape_setOutlineThickness
     
+    {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfConvexShape_getFillColor_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOutlineColor #-}
     getOutlineColor c = alloca $ \ptr -> sfConvexShape_getOutlineColor_helper c ptr >> peek ptr
     
+    {-# INLINABLE getOutlineThickness #-}
     getOutlineThickness = sfConvexShape_getOutlineThickness
     
+    {-# INLINABLE getPointCount #-}
     getPointCount = sfConvexShape_getPointCount >=> return . fromIntegral
     
+    {-# INLINABLE getPoint #-}
     getPoint c idx = alloca $ \ptr -> sfConvexShape_getPoint_helper c (fromIntegral idx) ptr >> peek ptr
 
 
@@ -278,6 +303,7 @@ foreign import ccall unsafe "sfConvexShape_getPoint_helper"
 
 instance SFShapeResizable ConvexShape where
 
+    {-# INLINABLE setPointCount #-}
     setPointCount c count = sfConvexShape_setPointCount c (fromIntegral count)
 
 
@@ -311,8 +337,10 @@ foreign import ccall unsafe "sfConvexShape_setPoint_helper"
 
 instance SFBoundable ConvexShape where
 
+    {-# INLINABLE getLocalBounds #-}
     getLocalBounds c = alloca $ \ptr -> sfConvexShape_getLocalBounds_helper c ptr >> peek ptr
     
+    {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds c = alloca $ \ptr -> sfConvexShape_getGlobalBounds_helper c ptr >> peek ptr
 
 foreign import ccall unsafe "sfConvexShape_getLocalBounds_helper"

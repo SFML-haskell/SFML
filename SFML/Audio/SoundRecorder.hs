@@ -77,8 +77,10 @@ foreign import ccall unsafe "sfSoundRecorder_destroy"
 
 instance SFSoundRecorder SoundRecorder where
     
+    {-# INLINABLE startRecording #-}
     startRecording rec rate = sfSoundRecorder_start rec (fromIntegral rate)
     
+    {-# INLINABLE stopRecording #-}
     stopRecording = sfSoundRecorder_stop
 
 
@@ -95,6 +97,7 @@ foreign import ccall unsafe "sfSoundRecorder_stop"
 
 instance SFSampled SoundRecorder where
     
+    {-# INLINABLE getSampleRate #-}
     getSampleRate = sfSoundRecorder_getSampleRate >=> return . fromIntegral
 
 

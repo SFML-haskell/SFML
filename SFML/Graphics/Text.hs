@@ -105,30 +105,43 @@ foreign import ccall unsafe "sfText_destroy"
 
 instance Transformable Text where
 
+    {-# INLINABLE setPosition #-}
     setPosition text pos = with pos $ sfText_setPosition_helper text
     
+    {-# INLINABLE setRotation #-}
     setRotation = sfText_setRotation
     
+    {-# INLINABLE setScale #-}
     setScale text s = with s $ sfText_setScale_helper text
     
+    {-# INLINABLE setOrigin #-}
     setOrigin text o = with o $ sfText_setOrigin_helper text
     
+    {-# INLINABLE getPosition #-}
     getPosition text = alloca $ \ptr -> sfText_getPosition_helper text ptr >> peek ptr
     
+    {-# INLINABLE getRotation #-}
     getRotation = sfText_getRotation
     
+    {-# INLINABLE getScale #-}
     getScale text = alloca $ \ptr -> sfText_getScale_helper text ptr >> peek ptr
     
+    {-# INLINABLE getOrigin #-}
     getOrigin text = alloca $ \ptr -> sfText_getOrigin_helper text ptr >> peek ptr
     
+    {-# INLINABLE move #-}
     move text pos = with pos $ sfText_move_helper text
     
+    {-# INLINABLE rotate #-}
     rotate = sfText_rotate
     
+    {-# INLINABLE scale #-}
     scale text s = with s $ sfText_scale_helper text
     
+    {-# INLINABLE getTransform #-}
     getTransform text = alloca $ \ptr -> sfText_getTransform_helper text ptr >> peek ptr
     
+    {-# INLINABLE getInverseTransform #-}
     getInverseTransform text = alloca $ \ptr -> sfText_getInverseTransform_helper text ptr >> peek ptr
 
 

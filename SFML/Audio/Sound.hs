@@ -99,44 +99,64 @@ foreign import ccall unsafe "sfSound_getBuffer"
 
 instance SFSound Sound where
     
+    {-# INLINABLE play #-}
     play = sfSound_play
     
+    {-# INLINABLE pause #-}
     pause = sfSound_pause
     
+    {-# INLINABLE stop #-}
     stop = sfSound_stop
     
+    {-# INLINABLE getAttenuation #-}
     getAttenuation = sfSound_getAttenuation
     
+    {-# INLINABLE getLoop #-}
     getLoop = sfSound_getLoop >=> return . toEnum
     
+    {-# INLINABLE getMinDistance #-}
     getMinDistance = sfSound_getMinDistance
     
+    {-# INLINABLE getPitch #-}
     getPitch = sfSound_getPitch
     
+    {-# INLINABLE getPlayingOffset #-}
     getPlayingOffset sound = alloca $ \ptr -> sfSound_getPlayingOffset_helper sound ptr >> peek ptr
     
+    {-# INLINABLE getPosition #-}
     getPosition sound = alloca $ \ptr -> sfSound_getPosition_helper sound ptr >> peek ptr
     
+    {-# INLINABLE getStatus #-}
     getStatus = sfSound_getStatus >=> return . toEnum . fromIntegral
     
+    {-# INLINABLE getVolume #-}
     getVolume = sfSound_getVolume
     
+    {-# INLINABLE isRelativeToListener #-}
     isRelativeToListener = sfSound_isRelativeToListener >=> return . toEnum . fromIntegral
     
+    {-# INLINABLE setAttenuation #-}
     setAttenuation = sfSound_setAttenuation
     
+    {-# INLINABLE setLoop #-}
     setLoop sound val = sfSound_setLoop sound (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setMinDistance #-}
     setMinDistance = sfSound_setMinDistance
     
+    {-# INLINABLE setPitch #-}
     setPitch = sfSound_setPitch
     
+    {-# INLINABLE setPlayingOffset #-}
     setPlayingOffset = sfSound_setPlayingOffset
     
+    {-# INLINABLE setPosition #-}
     setPosition sound pos = with pos $ sfSound_setPosition_helper sound
     
+    {-# INLINABLE setRelativeToListener #-}
     setRelativeToListener sound val = sfSound_setRelativeToListener sound (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setVolume #-}
     setVolume = sfSound_setVolume
 
 

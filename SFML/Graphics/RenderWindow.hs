@@ -136,10 +136,13 @@ foreign import ccall unsafe "sfRenderWindow_close"
 
 instance SFWindow RenderWindow where
     
+    {-# INLINABLE isWindowOpen #-}
     isWindowOpen = fmap (/=0) . sfRenderWindow_isOpen
     
+    {-# INLINABLE getWindowSettings #-}
     getWindowSettings wnd = alloca $ \ptr -> sfRenderWindow_getSettings_helper wnd ptr >> peek ptr
     
+    {-# INLINABLE pollEvent #-}
     pollEvent wnd =
         alloca $ \ptr -> do
         result <- sfRenderWindow_pollEvent wnd ptr
@@ -147,6 +150,7 @@ instance SFWindow RenderWindow where
             0 -> return Nothing
             _ -> peek ptr >>= return . Just
     
+    {-# INLINABLE waitEvent #-}
     waitEvent wnd =
         alloca $ \ptr -> do
         result <- sfRenderWindow_waitEvent wnd ptr
@@ -154,44 +158,61 @@ instance SFWindow RenderWindow where
             0 -> return Nothing
             _ -> peek ptr >>= return . Just
     
+    {-# INLINABLE getWindowPosition #-}
     getWindowPosition wnd = alloca $ \ptr -> sfRenderWindow_getPosition_helper wnd ptr >> peek ptr
     
+    {-# INLINABLE setWindowPosition #-}
     setWindowPosition wnd pos = with pos $ sfRenderWindow_setPosition_helper wnd
     
+    {-# INLINABLE getWindowSize #-}
     getWindowSize wnd = alloca $ \ptr -> sfRenderWindow_getSize_helper wnd ptr >> peek ptr
     
+    {-# INLINABLE setWindowSize #-}
     setWindowSize wnd size = with size $ sfRenderWindow_setSize_helper wnd
     
+    {-# INLINABLE setWindowTitle #-}
     setWindowTitle wnd title = withCAString title $ sfRenderWindow_setTitle wnd
     
+    {-# INLINABLE setWindowIcon #-}
     setWindowIcon wnd w h pixels =
         sfRenderWindow_setIcon wnd (fromIntegral w) (fromIntegral h) pixels
     
+    {-# INLINABLE setWindowVisible #-}
     setWindowVisible wnd val = sfRenderWindow_setVisible wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setMouseVisible #-}
     setMouseVisible wnd val = sfRenderWindow_setMouseCursorVisible wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setVSync #-}
     setVSync wnd val = sfRenderWindow_setVerticalSyncEnabled wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setKeyRepeat #-}
     setKeyRepeat wnd val = sfRenderWindow_setKeyRepeatEnabled wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE setWindowActive #-}
     setWindowActive wnd val =
         fmap (toEnum . fromIntegral) $ sfRenderWindow_setActive wnd (fromIntegral . fromEnum $ val)
     
+    {-# INLINABLE display #-}
     display = sfRenderWindow_display
     
+    {-# INLINABLE setFramerateLimit #-}
     setFramerateLimit wnd fps = sfRenderWindow_setFramerateLimit wnd (fromIntegral fps)
     
+    {-# INLINABLE setJoystickThreshold #-}
     setJoystickThreshold = sfRenderWindow_setJoystickThreshold
     
+    {-# INLINABLE getSystemHandle #-}
     getSystemHandle = sfRenderWindow_getSystemHandle
     
+    {-# INLINABLE getMousePosition #-}
     getMousePosition Nothing =
         alloca $ \ptr -> sfMouse_getPositionRenderWindow_helper (RenderWindow nullPtr) ptr >> peek ptr
     
     getMousePosition (Just wnd) =
         alloca $ \ptr -> sfMouse_getPositionRenderWindow_helper wnd ptr >> peek ptr
     
+    {-# INLINABLE setMousePosition #-}
     setMousePosition pos Nothing =
         with pos $ \ptr -> sfMouse_setPositionRenderWindow_helper ptr (RenderWindow nullPtr)
     
@@ -416,27 +437,35 @@ foreign import ccall unsafe "sfRenderWindow_convertCoords_helper"
 
 instance SFRenderTarget RenderWindow where
     
+    {-# INLINABLE drawSprite #-}
     drawSprite wnd sprite Nothing   = sfRenderWindow_drawSprite wnd sprite nullPtr
     drawSprite wnd sprite (Just rs) = with rs $ sfRenderWindow_drawSprite wnd sprite
     
+    {-# INLINABLE drawText #-}
     drawText wnd text Nothing   = sfRenderWindow_drawText wnd text nullPtr
     drawText wnd text (Just rs) = with rs $ sfRenderWindow_drawText wnd text
     
+    {-# INLINABLE drawShape #-}
     drawShape wnd shape Nothing   = sfRenderWindow_drawShape wnd shape nullPtr
     drawShape wnd shape (Just rs) = with rs $ sfRenderWindow_drawShape wnd shape
     
+    {-# INLINABLE drawCircle #-}
     drawCircle wnd circle Nothing   = sfRenderWindow_drawCircleShape wnd circle nullPtr
     drawCircle wnd circle (Just rs) = with rs $ sfRenderWindow_drawCircleShape wnd circle
     
+    {-# INLINABLE drawConvexShape #-}
     drawConvexShape wnd shape Nothing   = sfRenderWindow_drawConvexShape wnd shape nullPtr
     drawConvexShape wnd shape (Just rs) = with rs $ sfRenderWindow_drawConvexShape wnd shape
     
+    {-# INLINABLE drawRectangle #-}
     drawRectangle wnd rect Nothing   = sfRenderWindow_drawRectangleShape wnd rect nullPtr
     drawRectangle wnd rect (Just rs) = with rs $ sfRenderWindow_drawRectangleShape wnd rect
     
+    {-# INLINABLE drawVertexArray #-}
     drawVertexArray wnd va Nothing   = sfRenderWindow_drawVertexArray wnd va nullPtr
     drawVertexArray wnd va (Just rs) = with rs $ sfRenderWindow_drawVertexArray wnd va
     
+    {-# INLINABLE drawPrimitives #-}
     drawPrimitives wnd verts prim Nothing =
         let n = length verts
         in withArray verts $ \ptr ->
@@ -453,10 +482,13 @@ instance SFRenderTarget RenderWindow where
     drawPrimitives' wnd verts n prim (Just r) =
         with r $ sfRenderWindow_drawPrimitives wnd verts (fromIntegral n) (fromIntegral . fromEnum $ prim)
     
+    {-# INLINABLE pushGLStates #-}
     pushGLStates = sfRenderWindow_pushGLStates
     
+    {-# INLINABLE popGLStates #-}
     popGLStates = sfRenderWindow_popGLStates
     
+    {-# INLINABLE resetGLStates #-}
     resetGLStates = sfRenderWindow_resetGLStates
 
 

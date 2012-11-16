@@ -87,30 +87,43 @@ foreign import ccall unsafe "sfSprite_destroy"
 
 instance Transformable Sprite where
     
+    {-# INLINABLE setPosition #-}
     setPosition sprite pos = with pos $ sfSprite_setPosition_helper sprite
     
+    {-# INLINABLE setRotation #-}
     setRotation = sfSprite_setRotation
     
+    {-# INLINABLE setScale #-}
     setScale sprite s = with s $ sfSprite_setScale_helper sprite
     
+    {-# INLINABLE setOrigin #-}
     setOrigin sprite o = with o $ sfSprite_setOrigin_helper sprite
     
+    {-# INLINABLE getPosition #-}
     getPosition sprite = alloca $ \ptr -> sfSprite_getPosition_helper sprite ptr >> peek ptr
     
+    {-# INLINABLE getRotation #-}
     getRotation = sfSprite_getRotation
     
+    {-# INLINABLE getScale #-}
     getScale sprite = alloca $ \ptr -> sfSprite_getScale_helper sprite ptr >> peek ptr
     
+    {-# INLINABLE getOrigin #-}
     getOrigin sprite = alloca $ \ptr -> sfSprite_getOrigin_helper sprite ptr >> peek ptr
     
+    {-# INLINABLE move #-}
     move sprite off = with off $ sfSprite_move_helper sprite
     
+    {-# INLINABLE rotate #-}
     rotate = sfSprite_rotate
     
+    {-# INLINABLE scale #-}
     scale sprite s = with s $ sfSprite_scale_helper sprite
     
+    {-# INLINABLE getTransform #-}
     getTransform sprite = alloca $ \ptr -> sfSprite_getTransform_helper sprite ptr >> peek ptr
     
+    {-# INLINABLE getInverseTransform #-}
     getInverseTransform sprite = alloca $ \ptr -> sfSprite_getInverseTransform_helper sprite ptr >> peek ptr
 
 
@@ -207,12 +220,16 @@ foreign import ccall unsafe "sfSprite_getColor_helper"
 
 instance SFTexturable Sprite where
     
+    {-# INLINABLE setTexture #-}
     setTexture sprite tex reset = sfSprite_setTexture sprite tex (fromIntegral . fromEnum $ reset)
     
+    {-# INLINABLE setTextureRect #-}
     setTextureRect sprite rect = with rect $ sfSprite_setTextureRect_helper sprite
     
+    {-# INLINABLE getTexture #-}
     getTexture = fmap checkNullTexture . sfSprite_getTexture
     
+    {-# INLINABLE getTextureRect #-}
     getTextureRect sprite = alloca $ \ptr -> sfSprite_getTextureRect_helper sprite ptr >> peek ptr
 
 foreign import ccall unsafe "sfSprite_setTexture"
@@ -243,8 +260,10 @@ foreign import ccall unsafe "sfSprite_getTextureRect_helper"
 
 instance SFBoundable Sprite where
     
+    {-# INLINABLE getLocalBounds #-}
     getLocalBounds sprite = alloca $ \ptr -> sfSprite_getLocalBounds_helper sprite ptr >> peek ptr
     
+    {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds sprite = alloca $ \ptr -> sfSprite_getGlobalBounds_helper sprite ptr >> peek ptr
 
 foreign import ccall unsafe "sfSprite_getLocalBounds_helper"
