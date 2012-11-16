@@ -35,15 +35,15 @@ instance Storable VideoMode where
     alignment _ = alignment (undefined :: CInt)
     
     peek ptr = do
-        w <- #{peek sfVideoMode, width} ptr
-        h <- #{peek sfVideoMode, height} ptr
-        b <- #{peek sfVideoMode, bitsPerPixel} ptr
-        return $ VideoMode w h b
+        w <- #{peek sfVideoMode, width} ptr :: IO CUInt
+        h <- #{peek sfVideoMode, height} ptr :: IO CUInt
+        b <- #{peek sfVideoMode, bitsPerPixel} ptr :: IO CUInt
+        return $ VideoMode (fromIntegral w) (fromIntegral h) (fromIntegral b)
     
     poke ptr (VideoMode w h b) = do
-        #{poke sfVideoMode, width} ptr w
-        #{poke sfVideoMode, height} ptr h
-        #{poke sfVideoMode, bitsPerPixel} ptr b
+        #{poke sfVideoMode, width} ptr (fromIntegral w :: CUInt)
+        #{poke sfVideoMode, height} ptr (fromIntegral h :: CUInt)
+        #{poke sfVideoMode, bitsPerPixel} ptr (fromIntegral b :: CUInt)
 
 
 -- | Get the current desktop video mode
