@@ -6,7 +6,7 @@ module SFML.Graphics.Texture
 ,   textureFromStream
 ,   textureFromImage
 ,   copyTexture
-,   destroyTexture
+,   destroy
 ,   textureSize
 ,   copyTextureToImage
 ,   updateTextureFromPixels
@@ -27,6 +27,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Types
 import SFML.Window.Types
+import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
 
@@ -140,9 +141,10 @@ foreign import ccall unsafe "sfTexture_copy"
 --CSFML_GRAPHICS_API sfTexture* sfTexture_copy(sfTexture* texture);
 
 
--- | Destroy an existing texture.
-destroyTexture :: Texture -> IO ()
-destroyTexture = sfTexture_destroy
+instance SFResource Texture where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfTexture_destroy
 
 foreign import ccall unsafe "sfTexture_destroy"
     sfTexture_destroy :: Texture -> IO ()

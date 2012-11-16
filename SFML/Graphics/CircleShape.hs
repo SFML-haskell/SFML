@@ -3,7 +3,7 @@ module SFML.Graphics.CircleShape
 (
     createCircleShape
 ,   copyCircleShape
-,   destroyCircleShape
+,   destroy
 ,   setPosition
 ,   setRotation
 ,   setScale
@@ -47,6 +47,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Control.Monad ((>=>))
@@ -81,9 +82,10 @@ foreign import ccall unsafe "sfCircleShape_copy"
 --CSFML_GRAPHICS_API sfCircleShape* sfCircleShape_copy(sfCircleShape* shape);
 
 
--- | Destroy an existing circle shape.
-destroyCircleShape :: CircleShape -> IO ()
-destroyCircleShape = sfCircleShape_destroy
+instance SFResource CircleShape where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfCircleShape_destroy
 
 foreign import ccall unsafe "sfCircleShape_destroy"
     sfCircleShape_destroy :: CircleShape -> IO ()

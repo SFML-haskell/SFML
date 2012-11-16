@@ -2,7 +2,7 @@ module SFML.Audio.Sound
 (
     createSound
 ,   copySound
-,   destroySound
+,   destroy
 ,   play
 ,   pause
 ,   stop
@@ -32,6 +32,7 @@ where
 import SFML.Audio.SFSound
 import SFML.Audio.SoundStatus
 import SFML.Audio.Types
+import SFML.SFResource
 import SFML.System.Time
 import SFML.System.Vector3
 
@@ -63,9 +64,10 @@ foreign import ccall unsafe "sfSound_copy"
 -- CSFML_AUDIO_API sfSound* sfSound_copy(sfSound* sound);
 
 
--- | Destroy a sound.
-destroySound :: Sound -> IO ()
-destroySound = sfSound_destroy
+instance SFResource Sound where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfSound_destroy
 
 foreign import ccall unsafe "sfSound_destroy"
     sfSound_destroy :: Sound -> IO ()

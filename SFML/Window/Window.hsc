@@ -5,7 +5,7 @@ module SFML.Window.Window
 ,   WindowStyle(..)
 ,   createWindow
 ,   windowFromHandle
-,   destroyWindow
+,   destroy
 ,   closeWindow
 ,   isWindowOpen
 ,   getWindowSettings
@@ -32,6 +32,7 @@ module SFML.Window.Window
 where
 
 
+import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Window.ContextSettings
 import SFML.Window.Event
@@ -137,8 +138,11 @@ foreign import ccall unsafe "sfWindow_createFromHandle"
 --CSFML_WINDOW_API sfWindow* sfWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
 
 
--- | Destroy the window.
-destroyWindow = sfWindow_destroy
+
+instance SFResource Window where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfWindow_destroy
 
 foreign import ccall unsafe "sfWindow_destroy"
     sfWindow_destroy :: Window -> IO ()

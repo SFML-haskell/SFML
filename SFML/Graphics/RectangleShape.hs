@@ -2,7 +2,7 @@ module SFML.Graphics.RectangleShape
 (
     createRectangleShape
 ,   copyRectangleShape
-,   destroyRectangleShape
+,   destroy
 ,   setPosition
 ,   setRotation
 ,   setScale
@@ -46,6 +46,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Control.Monad ((>=>))
@@ -80,9 +81,10 @@ foreign import ccall unsafe "sfRectangleShape_copy"
 --CSFML_GRAPHICS_API sfRectangleShape* sfRectangleShape_copy(sfRectangleShape* shape);
 
 
--- | Destroy an existing rectangle shape.
-destroyRectangleShape :: RectangleShape -> IO ()
-destroyRectangleShape = sfRectangleShape_destroy
+instance SFResource RectangleShape where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfRectangleShape_destroy
 
 foreign import ccall unsafe "sfRectangleShape_destroy"
     sfRectangleShape_destroy :: RectangleShape -> IO ()

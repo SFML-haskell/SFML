@@ -4,7 +4,7 @@ module SFML.Audio.SoundRecorder
 ,   SoundRecorderProcessCallback
 ,   SoundRecorderStopCallback
 ,   createSoundRecorder
-,   destroySoundRecorder
+,   destroy
 ,   startRecording
 ,   stopRecording
 ,   getSampleRate
@@ -16,6 +16,7 @@ where
 import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
+import SFML.SFResource
 
 import Control.Monad ((>=>))
 import Data.Word (Word16)
@@ -65,9 +66,10 @@ foreign import ccall unsafe "sfSoundRecorder_create"
 -- CSFML_AUDIO_API sfSoundRecorder* sfSoundRecorder_create(sfSoundRecorderStartCallback onStart, sfSoundRecorderProcessCallback onProcess, sfSoundRecorderStopCallback onStop, void* userData);
 
 
--- | Destroy a sound recorder.
-destroySoundRecorder :: SoundRecorder -> IO ()
-destroySoundRecorder = sfSoundRecorder_destroy
+instance SFResource SoundRecorder where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfSoundRecorder_destroy
 
 foreign import ccall unsafe "sfSoundRecorder_destroy"
     sfSoundRecorder_destroy :: SoundRecorder -> IO ()

@@ -3,7 +3,7 @@ module SFML.Graphics.Text
     TextStyle(..)
 ,   createText
 ,   copyText
-,   destroyText
+,   destroy
 ,   setTextString
 ,   setTextStringU
 ,   setTextFont
@@ -28,6 +28,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Control.Monad
@@ -93,9 +94,10 @@ foreign import ccall unsafe "sfText_copy"
 --CSFML_GRAPHICS_API sfText* sfText_copy(sfText* text);
 
 
--- | Destroy an existing text.
-destroyText :: Text -> IO ()
-destroyText = sfText_destroy
+instance SFResource Text where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfText_destroy
 
 foreign import ccall unsafe "sfText_destroy"
     sfText_destroy :: Text -> IO ()

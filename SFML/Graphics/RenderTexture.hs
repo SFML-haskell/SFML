@@ -1,7 +1,7 @@
 module SFML.Graphics.RenderTexture
 (
     createRenderTexture
-,   destroyRenderTexture
+,   destroy
 ,   getRenderTextureSize
 ,   setRenderTextureActive
 ,   displayRenderTexture
@@ -39,6 +39,7 @@ import SFML.Graphics.RenderStates
 import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Vertex
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Foreign.C.Types
@@ -71,9 +72,10 @@ foreign import ccall unsafe "sfRenderTexture_create"
 --CSFML_GRAPHICS_API sfRenderTexture* sfRenderTexture_create(unsigned int width, unsigned int height, sfBool depthBuffer);
 
 
--- | Destroy an existing render texture.
-destroyRenderTexture :: RenderTexture -> IO ()
-destroyRenderTexture = sfRenderTexture_destroy
+instance SFResource RenderTexture where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfRenderTexture_destroy
 
 foreign import ccall unsafe "sfRenderTexture_destroy"
     sfRenderTexture_destroy :: RenderTexture -> IO ()

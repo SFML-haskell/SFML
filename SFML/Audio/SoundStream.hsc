@@ -4,7 +4,7 @@ module SFML.Audio.SoundStream
 ,   SoundStreamGetDataCallback
 ,   SoundStreamSeekCallback
 ,   createSoundStream
-,   destroySoundStream
+,   destroy
 ,   play
 ,   pause
 ,   stop
@@ -32,6 +32,7 @@ where
 import SFML.Audio.SFSound
 import SFML.Audio.SoundStatus
 import SFML.Audio.Types
+import SFML.SFResource
 import SFML.System.Time
 import SFML.System.Vector3
 
@@ -118,8 +119,10 @@ foreign import ccall unsafe "sfSoundStream_create"
 -- CSFML_AUDIO_API sfSoundStream* sfSoundStream_create(sfSoundStreamGetDataCallback onGetData, sfSoundStreamSeekCallback    onSeek, unsigned int channelCount, unsigned int sampleRate, void* userData);
 
 
--- | Destroy a sound stream.
-destroySoundStream = sfSoundStream_destroy
+instance SFResource SoundStream where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfSoundStream_destroy
 
 foreign import ccall unsafe "sfSoundStream_destroy"
     sfSoundStream_destroy :: SoundStream -> IO ()

@@ -3,7 +3,7 @@ module SFML.Graphics.View
     createView
 ,   viewFromRect
 ,   copyView
-,   destroyView
+,   destroy
 ,   setViewCenter
 ,   setViewSize
 ,   setViewRotation
@@ -22,6 +22,7 @@ where
 
 import SFML.Graphics.Rect
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Foreign.Marshal.Alloc (alloca)
@@ -65,9 +66,10 @@ foreign import ccall unsafe "sfView_copy"
 --CSFML_GRAPHICS_API sfView* sfView_copy(sfView* view);
 
 
--- | Destroy an existing view.
-destroyView :: View -> IO ()
-destroyView = sfView_destroy
+instance SFResource View where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfView_destroy
 
 foreign import ccall unsafe "sfView_destroy"
     sfView_destroy :: View -> IO ()

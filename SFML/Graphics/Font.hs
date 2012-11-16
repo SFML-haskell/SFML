@@ -4,7 +4,7 @@ module SFML.Graphics.Font
 ,   fontFromMemory
 ,   fontFromStream
 ,   copyFont
-,   destroyFont
+,   destroy
 ,   getGlyph
 ,   getKerning
 ,   getLineSpacing
@@ -15,6 +15,7 @@ where
 
 import SFML.Graphics.Glyph
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.InputStream
 
 import Data.Word
@@ -74,9 +75,10 @@ foreign import ccall unsafe "sfFont_copy"
 --CSFML_GRAPHICS_API sfFont* sfFont_copy(sfFont* font);
 
 
--- | Destroy an existing font.
-destroyFont :: Font -> IO ()
-destroyFont = sfFont_destroy
+instance SFResource Font where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfFont_destroy
 
 foreign import ccall unsafe "sfFont_destroy"
     sfFont_destroy :: Font -> IO ()

@@ -3,7 +3,7 @@ module SFML.Graphics.RenderWindow
 (
     createRenderWindow
 ,   renderWindowFromHandle
-,   destroyRenderWindow
+,   destroy
 ,   closeRenderWindow
 ,   isWindowOpen
 ,   getWindowSettings
@@ -62,6 +62,7 @@ import SFML.Window.SFWindow
 import SFML.Window.VideoMode
 import SFML.Window.WindowHandle
 import SFML.Window.Window
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Data.Bits ((.|.))
@@ -112,9 +113,10 @@ foreign import ccall unsafe "sfRenderWindow_createFromHandle"
 --CSFML_GRAPHICS_API sfRenderWindow* sfRenderWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
 
 
--- | Destroy an existing render window.
-destroyRenderWindow :: RenderWindow -> IO ()
-destroyRenderWindow = sfRenderWindow_destroy
+instance SFResource RenderWindow where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfRenderWindow_destroy
 
 foreign import ccall unsafe "sfRenderWindow_destroy"
     sfRenderWindow_destroy :: RenderWindow -> IO ()

@@ -1,7 +1,7 @@
 module SFML.Audio.SoundBufferRecorder
 (
     createSoundBufferRecorder
-,   destroySoundBufferRecorder
+,   destroy
 ,   startRecording
 ,   stopRecording
 ,   getSampleRate
@@ -13,6 +13,7 @@ where
 import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
+import SFML.SFResource
 
 import Control.Monad ((>=>))
 import Foreign.C.Types
@@ -35,9 +36,10 @@ foreign import ccall unsafe "sfSoundBufferRecorder_create"
 -- CSFML_AUDIO_API sfSoundBufferRecorder* sfSoundBufferRecorder_create(void);
 
 
--- | Destroy a sound buffer recorder.
-destroySoundBufferRecorder :: SoundBufferRecorder -> IO ()
-destroySoundBufferRecorder = sfSoundBufferRecorder_destroy
+instance SFResource SoundBufferRecorder where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfSoundBufferRecorder_destroy
 
 foreign import ccall unsafe "sfSoundBufferRecorder_destroy"
     sfSoundBufferRecorder_destroy :: SoundBufferRecorder -> IO ()

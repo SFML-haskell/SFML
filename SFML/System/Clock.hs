@@ -4,13 +4,14 @@ module SFML.System.Clock
     Clock(..)
 ,   createClock
 ,   copyClock
-,   destroyClock
+,   destroy
 ,   getElapsedTime
 ,   restartClock
 )
 where
 
 
+import SFML.SFResource
 import SFML.System.Time
 
 import Foreign.Marshal.Alloc (alloca)
@@ -41,9 +42,10 @@ foreign import ccall unsafe "sfClock_copy"
 --CSFML_SYSTEM_API sfClock* sfClock_copy(sfClock* clock);
 
 
--- | Destroy a clock.
-destroyClock :: Clock -> IO ()
-destroyClock = sfClock_destroy
+instance SFResource Clock where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfClock_destroy
 
 foreign import ccall unsafe "sfClock_destroy"
     sfClock_destroy :: Clock -> IO ()

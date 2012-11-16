@@ -1,7 +1,7 @@
 module SFML.Graphics.Shape
 (
     createShape
-,   destroyShape
+,   destroy
 ,   setPosition
 ,   setRotation
 ,   setScale
@@ -44,6 +44,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Control.Monad ((>=>))
@@ -73,8 +74,10 @@ foreign import ccall unsafe "sfShape_create"
 --CSFML_GRAPHICS_API sfShape* sfShape_create(sfShapeGetPointCountCallback getPointCount, sfShapeGetPointCallback getPoint, void* userData);
 
 
--- | Destroy an existing shape.
-destroyShape = sfShape_destroy
+instance SFResource Shape where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfShape_destroy
 
 foreign import ccall unsafe "sfShape_destroy"
     sfShape_destroy :: Shape -> IO ()

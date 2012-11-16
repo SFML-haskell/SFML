@@ -7,7 +7,7 @@ module SFML.Graphics.Image
 ,   imageFromMemory
 ,   imageFromStream
 ,   copyImage
-,   destroyImage
+,   destroy
 ,   saveImage
 ,   imageSize
 ,   createMaskFromColor
@@ -24,6 +24,7 @@ where
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
 
@@ -158,10 +159,10 @@ foreign import ccall unsafe "sfImage_copy"
 --CSFML_GRAPHICS_API sfImage* sfImage_copy(sfImage* image);
 
 
--- | Destroy an existing image.
-destroyImage :: Image -> IO ()
-
-destroyImage = sfImage_destroy
+instance SFResource Image where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfImage_destroy
 
 foreign import ccall unsafe "sfImage_destroy"
     sfImage_destroy :: Image -> IO ()

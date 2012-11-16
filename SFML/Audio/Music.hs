@@ -3,7 +3,7 @@ module SFML.Audio.Music
     musicFromFile
 ,   musicFromMemory
 ,   musicFromStream
-,   destroyMusic
+,   destroy
 ,   setLoop
 ,   getLoop
 ,   getDuration
@@ -36,6 +36,7 @@ import SFML.Audio.SFSound
 import SFML.Audio.SFSoundBuffer
 import SFML.Audio.SoundStatus
 import SFML.Audio.Types
+import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Time
 import SFML.System.Vector3
@@ -114,9 +115,10 @@ foreign import ccall unsafe "sfMusic_createFromStream"
 -- CSFML_AUDIO_API sfMusic* sfMusic_createFromStream(sfInputStream* stream);
 
 
--- | Destroy a music.
-destroyMusic :: Music -> IO ()
-destroyMusic = sfMusic_destroy
+instance SFResource Music where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfMusic_destroy
 
 foreign import ccall unsafe "sfMusic_destroy"
     sfMusic_destroy :: Music -> IO ()

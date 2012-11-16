@@ -2,12 +2,13 @@
 module SFML.Window.Context
 (
     createContext
-,   destroyContext
+,   destroy
 ,   setActiveContext
 )
 where
 
 
+import SFML.SFResource
 import SFML.Window.Types
 
 import Foreign.C.Types
@@ -23,8 +24,11 @@ createContext = sfContext_create
 foreign import ccall unsafe "sfContext_create"
     sfContext_create :: IO Context
 
--- | Destroy the context.
-destroyContext = sfContext_destroy
+
+instance SFResource Context where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfContext_destroy
 
 foreign import ccall unsafe "sfContext_destroy"
     sfContext_destroy :: Context -> IO ()

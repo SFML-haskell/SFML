@@ -2,7 +2,7 @@ module SFML.Graphics.Sprite
 (
     createSprite
 ,   copySprite
-,   destroySprite
+,   destroy
 ,   setPosition
 ,   setRotation
 ,   setScale
@@ -36,6 +36,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Foreign.C.Types
@@ -75,9 +76,10 @@ foreign import ccall unsafe "sfSprite_copy"
 --CSFML_GRAPHICS_API sfSprite* sfSprite_copy(sfSprite* sprite);
 
 
--- | Destroy an existing sprite
-destroySprite :: Sprite -> IO ()
-destroySprite = sfSprite_destroy
+instance SFResource Sprite where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfSprite_destroy
 
 foreign import ccall unsafe "sfSprite_destroy"
     sfSprite_destroy :: Sprite -> IO ()

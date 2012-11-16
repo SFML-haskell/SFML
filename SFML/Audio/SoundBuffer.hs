@@ -5,7 +5,7 @@ module SFML.Audio.SoundBuffer
 ,   soundBufferFromStream
 ,   soundBufferFromSamples
 ,   copySoundBuffer
-,   destroySoundBuffer
+,   destroy
 ,   saveSoundBufferToFile
 ,   getSamples
 ,   getSampleCount
@@ -19,6 +19,7 @@ where
 import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundBuffer
 import SFML.Audio.Types
+import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Time
 
@@ -116,9 +117,10 @@ foreign import ccall unsafe "sfSoundBuffer_copy"
 -- CSFML_AUDIO_API sfSoundBuffer* sfSoundBuffer_copy(sfSoundBuffer* soundBuffer);
 
 
--- | Destroy a sound buffer
-destroySoundBuffer :: SoundBuffer -> IO ()
-destroySoundBuffer = sfSoundBuffer_destroy
+instance SFResource SoundBuffer where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfSoundBuffer_destroy
 
 foreign import ccall unsafe "sfSoundBuffer_destroy"
     sfSoundBuffer_destroy :: SoundBuffer -> IO ()

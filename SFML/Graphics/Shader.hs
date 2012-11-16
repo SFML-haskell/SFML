@@ -3,7 +3,7 @@ module SFML.Graphics.Shader
     shaderFromFile
 ,   shaderFromMemory
 ,   shaderFromStream
-,   destroyShader
+,   destroy
 ,   setFloatParameter
 ,   setFloat2Parameter
 ,   setFloat3Parameter
@@ -23,6 +23,7 @@ where
 import SFML.Graphics.Color
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
 import SFML.System.Vector3
@@ -127,9 +128,10 @@ foreign import ccall unsafe "sfShader_createFromStream"
 --CSFML_GRAPHICS_API sfShader* sfShader_createFromStream(sfInputStream* vertexShaderStream, sfInputStream* fragmentShaderStream);
 
 
--- | Destroy an existing shader.
-destroyShader :: Shader -> IO ()
-destroyShader = sfShader_destroy
+instance SFResource Shader where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfShader_destroy
 
 foreign import ccall unsafe "sfShader_destroy"
     sfShader_destroy :: Shader -> IO ()

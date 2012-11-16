@@ -2,7 +2,7 @@ module SFML.Graphics.ConvexShape
 (
     createConvexShape
 ,   copyConvexShape
-,   destroyConvexShape
+,   destroy
 ,   setPosition
 ,   setRotation
 ,   setScale
@@ -45,6 +45,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFResource
 import SFML.System.Vector2
 
 import Control.Monad ((>=>))
@@ -79,9 +80,10 @@ foreign import ccall unsafe "sfConvexShape_copy"
 --CSFML_GRAPHICS_API sfConvexShape* sfConvexShape_copy(sfConvexShape* shape);
 
 
--- | Destroy an existing convex shape.
-destroyConvexShape :: ConvexShape -> IO ()
-destroyConvexShape = sfConvexShape_destroy
+instance SFResource ConvexShape where
+    
+    {-# INLINABLE destroy #-}
+    destroy = sfConvexShape_destroy
 
 foreign import ccall unsafe "sfConvexShape_destroy"
     sfConvexShape_destroy :: ConvexShape -> IO ()
