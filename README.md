@@ -14,16 +14,22 @@ http://shellblade.net/docs/SFML/index.html
 * Graphics module
 * Audio module
 
+### What's been left out
+
+* Threading and networking, since Haskell has better alternatives
+
 ### What's been tested:
 
 * Window module, partially
 * System module, all but vectors
+* Graphics module, partially
+* Audio module, partially
 
 ### Where it's been tested:
 
 * Arch Linux 32-bit
 * Ubuntu Linux 32-bit
-* Windows 7 64-bit
+* Windows 7 32-bit
 
 ### Installation (brief)
 
