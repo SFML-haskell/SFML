@@ -26,6 +26,8 @@ module SFML.Window.Window
 ,   setFramerateLimit
 ,   setJoystickThreshold
 ,   getSystemHandle
+,   getMousePosition
+,   setMousePosition
 )
 where
 
