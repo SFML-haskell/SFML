@@ -9,6 +9,7 @@ module SFML.Window.VideoMode
 where
 
 
+import Control.Applicative
 import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.Marshal.Alloc (alloca)
@@ -47,7 +48,7 @@ instance Storable VideoMode where
 
 
 -- | Get the current desktop video mode
-getDesktopMode = alloca $ \ptr -> sfVideoMode_getDesktopMode_helper ptr >> peek ptr
+getDesktopMode = alloca $ liftA2 (*>) sfVideoMode_getDesktopMode_helper peek
 
 foreign import ccall unsafe "sfVideoMode_getDesktopMode_helper"
     sfVideoMode_getDesktopMode_helper :: Ptr VideoMode -> IO ()
