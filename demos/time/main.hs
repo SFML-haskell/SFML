@@ -4,7 +4,7 @@ import SFML.System
 main = do
     clock <- createClock
     loop clock 3
-    destroyClock clock
+    destroy clock
 
 
 loop clock 0 = return ()

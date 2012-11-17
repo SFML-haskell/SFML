@@ -24,12 +24,12 @@ main = do
     play msc
     setTexture spr tex True
     loop wnd spr txt
-    destroyMusic msc
-    destroyText txt
-    destroyFont fnt
-    destroySprite spr
-    destroyTexture tex
-    destroyRenderWindow wnd
+    destroy msc
+    destroy txt
+    destroy fnt
+    destroy spr
+    destroy tex
+    destroy wnd
 
 
 loop :: RenderWindow -> Sprite -> Text -> IO ()

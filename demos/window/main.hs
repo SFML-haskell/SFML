@@ -14,7 +14,7 @@ main = do
     let ctxSettings = Just $ ContextSettings 24 8 0 1 2
     wnd <- createWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
     loop wnd
-    destroyWindow wnd
+    destroy wnd
 
 
 loop :: Window -> IO ()
