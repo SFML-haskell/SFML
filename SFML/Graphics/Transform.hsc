@@ -55,9 +55,9 @@ instance Storable Transform where
         m20 <- peekByteOff ptr $ 6*sizeFloat
         m21 <- peekByteOff ptr $ 7*sizeFloat
         m22 <- peekByteOff ptr $ 8*sizeFloat
-        return $ Transform m00 m10 m20 m01 m11 m21 m02 m12 m22
+        return $ Transform m00 m01 m02 m10 m11 m12 m20 m21 m22
     
-    poke ptr (Transform m00 m10 m20 m01 m11 m21 m02 m12 m22) = do
+    poke ptr (Transform m00 m01 m02 m10 m11 m12 m20 m21 m22) = do
         pokeByteOff ptr 0 m00
         pokeByteOff ptr sizeFloat m01
         pokeByteOff ptr (2*sizeFloat) m02
