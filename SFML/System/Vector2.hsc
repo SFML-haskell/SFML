@@ -26,13 +26,13 @@ instance Storable Vec2i where
     alignment _ = alignment (undefined :: CInt)
     
     peek ptr = do
-        x <- #{peek sfVector2i, x} ptr
-        y <- #{peek sfVector2i, y} ptr
-        return $ Vec2i x y
+        x <- #{peek sfVector2i, x} ptr :: IO CInt
+        y <- #{peek sfVector2i, y} ptr :: IO CInt
+        return $ Vec2i (fromIntegral x) (fromIntegral y)
     
     poke ptr (Vec2i x y) = do
-        #{poke sfVector2i, x} ptr x
-        #{poke sfVector2i, y} ptr y
+        #{poke sfVector2i, x} ptr (fromIntegral x :: CInt)
+        #{poke sfVector2i, y} ptr (fromIntegral y :: CInt)
 
 
 instance Num Vec2i where
@@ -52,13 +52,13 @@ instance Storable Vec2u where
     alignment _ = alignment (undefined :: CUInt)
     
     peek ptr = do
-        x <- #{peek sfVector2u, x} ptr
-        y <- #{peek sfVector2u, y} ptr
-        return $ Vec2u x y
+        x <- #{peek sfVector2u, x} ptr :: IO CUInt
+        y <- #{peek sfVector2u, y} ptr :: IO CUInt
+        return $ Vec2u (fromIntegral x) (fromIntegral y)
     
     poke ptr (Vec2u x y) = do
-        #{poke sfVector2u, x} ptr x
-        #{poke sfVector2u, y} ptr y
+        #{poke sfVector2u, x} ptr (fromIntegral x :: CUInt)
+        #{poke sfVector2u, y} ptr (fromIntegral y :: CUInt)
 
 
 instance Num Vec2u where
