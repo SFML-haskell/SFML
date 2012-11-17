@@ -4,7 +4,7 @@ module SFML.Graphics.RenderWindow
     createRenderWindow
 ,   renderWindowFromHandle
 ,   destroy
-,   closeRenderWindow
+,   close
 ,   isWindowOpen
 ,   getWindowSettings
 ,   pollEvent
@@ -25,10 +25,10 @@ module SFML.Graphics.RenderWindow
 ,   setJoystickThreshold
 ,   getSystemHandle
 ,   clearRenderWindow
-,   setRenderWindowView
-,   getRenderWindowView
-,   getRenderWindowDefaultView
-,   getRenderWindowViewport
+,   setView
+,   getView
+,   getDefaultView
+,   getViewport
 ,   convertCoords
 ,   drawSprite
 ,   drawText
@@ -54,7 +54,9 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
+import SFML.Graphics.SFCoordSpace
 import SFML.Graphics.SFRenderTarget
+import SFML.Graphics.SFViewable
 import SFML.Graphics.Vertex
 import SFML.Window.ContextSettings
 import SFML.Window.Event
@@ -62,6 +64,7 @@ import SFML.Window.SFWindow
 import SFML.Window.VideoMode
 import SFML.Window.WindowHandle
 import SFML.Window.Window
+import SFML.SFDisplayable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -124,19 +127,16 @@ foreign import ccall unsafe "sfRenderWindow_destroy"
 --CSFML_GRAPHICS_API void sfRenderWindow_destroy(sfRenderWindow* renderWindow);
 
 
--- | Close a render window.
---
--- This function does not destroy the window's internal data.
-closeRenderWindow :: RenderWindow -> IO ()
-closeRenderWindow = sfRenderWindow_close
-
-foreign import ccall unsafe "sfRenderWindow_close"
-    sfRenderWindow_close :: RenderWindow -> IO ()
-
---CSFML_GRAPHICS_API void sfRenderWindow_close(sfRenderWindow* renderWindow);
+instance SFDisplayable RenderWindow where
+    
+    {-# INLINABLE display #-}
+    display = sfRenderWindow_display
 
 
 instance SFWindow RenderWindow where
+    
+    {-# INLINABLE close #-}    
+    close = sfRenderWindow_close
     
     {-# INLINABLE isWindowOpen #-}
     isWindowOpen = fmap (/=0) . sfRenderWindow_isOpen
@@ -195,9 +195,6 @@ instance SFWindow RenderWindow where
     setWindowActive wnd val =
         fmap (toEnum . fromIntegral) $ sfRenderWindow_setActive wnd (fromIntegral . fromEnum $ val)
     
-    {-# INLINABLE display #-}
-    display = sfRenderWindow_display
-    
     {-# INLINABLE setFramerateLimit #-}
     setFramerateLimit wnd fps = sfRenderWindow_setFramerateLimit wnd (fromIntegral fps)
     
@@ -221,6 +218,11 @@ instance SFWindow RenderWindow where
     setMousePosition pos (Just wnd) =
         with pos $ \ptr -> sfMouse_setPositionRenderWindow_helper ptr wnd
 
+
+foreign import ccall unsafe "sfRenderWindow_close"
+    sfRenderWindow_close :: RenderWindow -> IO ()
+
+--CSFML_GRAPHICS_API void sfRenderWindow_close(sfRenderWindow* renderWindow);
 
 foreign import ccall unsafe "sfRenderWindow_isOpen"
     sfRenderWindow_isOpen :: RenderWindow -> IO CInt
@@ -368,47 +370,35 @@ foreign import ccall unsafe "sfRenderWindow_clear_helper"
 --CSFML_GRAPHICS_API void sfRenderWindow_clear(sfRenderWindow* renderWindow, sfColor color);
 
 
--- | Change the current active view of a render window.
-setRenderWindowView
-    :: RenderWindow -- ^ Render window object
-    -> View -- ^ Pointer to the new view
-    -> IO ()
+instance SFViewable RenderWindow where
+    
+    {-# INLINABLE setView #-}
+    setView = sfRenderWindow_setView
 
-setRenderWindowView = sfRenderWindow_setView
+    {-# INLINABLE getView #-}
+    getView = sfRenderWindow_getView
+    
+    {-# INLINABLE getDefaultView #-}
+    getDefaultView = sfRenderWindow_getDefaultView
+    
+    {-# INLINABLE getViewport #-}
+    getViewport wnd view = alloca $ \ptr -> sfRenderWindow_getViewport_helper wnd view ptr >> peek ptr
+
 
 foreign import ccall unsafe "sfRenderWindow_setView"
     sfRenderWindow_setView :: RenderWindow -> View -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderWindow_setView(sfRenderWindow* renderWindow, const sfView* view);
 
-
--- | Get the current active view of a render window.
-getRenderWindowView :: RenderWindow -> IO View
-getRenderWindowView = sfRenderWindow_getView
-
 foreign import ccall unsafe "sfRenderWindow_getView"
     sfRenderWindow_getView :: RenderWindow -> IO View
 
 --CSFML_GRAPHICS_API const sfView* sfRenderWindow_getView(const sfRenderWindow* renderWindow);
 
-
--- | Get the default view of a render window.
-getRenderWindowDefaultView :: RenderWindow -> IO View
-getRenderWindowDefaultView = sfRenderWindow_getDefaultView
-
 foreign import ccall unsafe "sfRenderWindow_getDefaultView"
     sfRenderWindow_getDefaultView :: RenderWindow -> IO View
 
 --CSFML_GRAPHICS_API const sfView* sfRenderWindow_getDefaultView(const sfRenderWindow* renderWindow);
-
-
--- | Get the viewport of a view applied to this target, expressed in pixels in the current target.
-getRenderWindowViewport
-    :: RenderWindow -- ^ Render window object
-    -> View -- ^ Target view
-    -> IO IntRect
-
-getRenderWindowViewport wnd view = alloca $ \ptr -> sfRenderWindow_getViewport_helper wnd view ptr >> peek ptr
 
 foreign import ccall unsafe "sfRenderWindow_getViewport_helper"
     sfRenderWindow_getViewport_helper :: RenderWindow -> View -> Ptr IntRect -> IO ()
@@ -416,18 +406,14 @@ foreign import ccall unsafe "sfRenderWindow_getViewport_helper"
 --CSFML_GRAPHICS_API sfIntRect sfRenderWindow_getViewport(const sfRenderWindow* renderWindow, const sfView* view);
 
 
--- | Convert a point in window coordinates into view coordinates.
-convertCoords
-    :: RenderWindow -- ^ Render window object
-    -> Vec2i -- ^ Point to convert, relative to the window
-    -> Maybe View  -- ^ Target view to convert the point to ('Nothing' to use the current view)
-    -> IO Vec2f
-
-convertCoords wnd p view =
-    alloca $ \ptr ->
-    with p $ \posPtr -> case view of
-        Nothing -> sfRenderWindow_convertCoords_helper wnd posPtr (View nullPtr) ptr >> peek ptr
-        Just v  -> sfRenderWindow_convertCoords_helper wnd posPtr v ptr >> peek ptr
+instance SFCoordSpace RenderWindow where
+    
+    {-# INLINABLE convertCoords #-}
+    convertCoords wnd p view =
+        alloca $ \ptr ->
+        with p $ \posPtr -> case view of
+            Nothing -> sfRenderWindow_convertCoords_helper wnd posPtr (View nullPtr) ptr >> peek ptr
+            Just v  -> sfRenderWindow_convertCoords_helper wnd posPtr v ptr >> peek ptr
 
 foreign import ccall unsafe "sfRenderWindow_convertCoords_helper"
     sfRenderWindow_convertCoords_helper :: RenderWindow -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()

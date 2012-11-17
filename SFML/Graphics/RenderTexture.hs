@@ -2,15 +2,15 @@ module SFML.Graphics.RenderTexture
 (
     createRenderTexture
 ,   destroy
-,   getRenderTextureSize
-,   setRenderTextureActive
-,   displayRenderTexture
-,   clearRenderTexture
-,   setRenderTextureView
-,   getRenderTextureView
-,   getRenderTextureDefaultView
-,   getRenderTextureViewport
-,   convertRenderTextureCoords
+,   getTextureSize
+,   setActive
+,   display
+,   clear
+,   setView
+,   getView
+,   getDefaultView
+,   getViewport
+,   convertCoords
 ,   drawSprite
 ,   drawText
 ,   drawShape
@@ -32,13 +32,16 @@ where
 
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
+import SFML.Graphics.SFCoordSpace
 import SFML.Graphics.SFSmoothTexture
+import SFML.Graphics.SFViewable
 import SFML.Graphics.Types
 import SFML.Graphics.PrimitiveType
 import SFML.Graphics.RenderStates
 import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Vertex
+import SFML.SFDisplayable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -84,11 +87,11 @@ foreign import ccall unsafe "sfRenderTexture_destroy"
 
 
 -- | Get the size of the rendering region of a render texture.
-getRenderTextureSize
+getTextureSize
     :: RenderTexture
     -> IO Vec2u -- ^ Size in pixels
 
-getRenderTextureSize tex = alloca $ \ptr -> sfRenderTexture_getSize_helper tex ptr >> peek ptr
+getTextureSize tex = alloca $ \ptr -> sfRenderTexture_getSize_helper tex ptr >> peek ptr
 
 foreign import ccall unsafe "sfRenderTexture_getSize_helper"
     sfRenderTexture_getSize_helper :: RenderTexture -> Ptr Vec2u -> IO ()
@@ -97,12 +100,12 @@ foreign import ccall unsafe "sfRenderTexture_getSize_helper"
 
 
 -- | Activate or deactivate a render texture as the current target for rendering.
-setRenderTextureActive
+setActive
     :: RenderTexture -- ^ Render texture object
     -> Bool -- ^ 'True' to activate, 'False' to deactivate
     -> IO Bool -- ^ 'True' if operation was successful, 'False' otherwise
 
-setRenderTextureActive tex val =
+setActive tex val =
     fmap (toEnum . fromIntegral) $ sfRenderTexture_setActive tex (fromIntegral . fromEnum $ val)
 
 foreign import ccall unsafe "sfRenderTexture_setActive"
@@ -111,9 +114,10 @@ foreign import ccall unsafe "sfRenderTexture_setActive"
 --CSFML_GRAPHICS_API sfBool sfRenderTexture_setActive(sfRenderTexture* renderTexture, sfBool active);
 
 
--- | Update the contents of the target texture.
-displayRenderTexture :: RenderTexture -> IO ()
-displayRenderTexture = sfRenderTexture_display
+instance SFDisplayable RenderTexture where
+    
+    {-# INLINABLE display #-}
+    display = sfRenderTexture_display
 
 foreign import ccall unsafe "sfRenderTexture_display"
     sfRenderTexture_display :: RenderTexture -> IO ()
@@ -122,12 +126,12 @@ foreign import ccall unsafe "sfRenderTexture_display"
 
 
 -- | Clear the rendertexture with the given color.
-clearRenderTexture
+clear
     :: RenderTexture -- ^ Render texture object
     -> Color -- ^ Fill color
     -> IO ()
 
-clearRenderTexture tex col = with col $ sfRenderTexture_clear_helper tex
+clear tex col = with col $ sfRenderTexture_clear_helper tex
 
 foreign import ccall unsafe "sfRenderTexture_clear_helper"
     sfRenderTexture_clear_helper :: RenderTexture -> Ptr Color -> IO ()
@@ -135,44 +139,35 @@ foreign import ccall unsafe "sfRenderTexture_clear_helper"
 --CSFML_GRAPHICS_API void sfRenderTexture_clear(sfRenderTexture* renderTexture, sfColor color);
 
 
--- | Change the current active view of a render texture.
-setRenderTextureView :: RenderTexture -> View -> IO ()
-setRenderTextureView = sfRenderTexture_setView
+instance SFViewable RenderTexture where
+    
+    {-# INLINABLE setView #-}
+    setView = sfRenderTexture_setView
+    
+    {-# INLINABLE getView #-}
+    getView = sfRenderTexture_getView
+    
+    {-# INLINABLE getDefaultView #-}
+    getDefaultView = sfRenderTexture_getDefaultView
+    
+    {-# INLINABLE getViewport #-}
+    getViewport tex view = alloca $ \ptr -> sfRenderTexture_getViewport_helper tex view ptr >> peek ptr
+
 
 foreign import ccall unsafe "sfRenderTexture_setView"
     sfRenderTexture_setView :: RenderTexture -> View -> IO ()
 
 --CSFML_GRAPHICS_API void sfRenderTexture_setView(sfRenderTexture* renderTexture, const sfView* view);
 
-
--- | Get the current active view of a render texture.
-getRenderTextureView :: RenderTexture -> IO View
-getRenderTextureView = sfRenderTexture_getView
-
 foreign import ccall unsafe "sfRenderTexture_getView"
     sfRenderTexture_getView :: RenderTexture -> IO View
 
 --CSFML_GRAPHICS_API const sfView* sfRenderTexture_getView(const sfRenderTexture* renderTexture);
 
-
--- | Get the default view of a render texture.
-getRenderTextureDefaultView :: RenderTexture -> IO View
-getRenderTextureDefaultView = sfRenderTexture_getDefaultView
-
 foreign import ccall unsafe "sfRenderTexture_getDefaultView"
     sfRenderTexture_getDefaultView :: RenderTexture -> IO View
 
 --CSFML_GRAPHICS_API const sfView* sfRenderTexture_getDefaultView(const sfRenderTexture* renderTexture);
-
-
--- | Get the viewport of a view applied to this target, expressed in pixels in the current target.
-getRenderTextureViewport
-    :: RenderTexture -- ^ Render texture object
-    -> View -- ^ Target view
-    -> IO IntRect
-
-getRenderTextureViewport tex view =
-    alloca $ \ptr -> sfRenderTexture_getViewport_helper tex view ptr >> peek ptr
 
 foreign import ccall unsafe "sfRenderTexture_getViewport_helper"
     sfRenderTexture_getViewport_helper :: RenderTexture -> View -> Ptr IntRect -> IO ()
@@ -180,18 +175,14 @@ foreign import ccall unsafe "sfRenderTexture_getViewport_helper"
 --CSFML_GRAPHICS_API sfIntRect sfRenderTexture_getViewport(const sfRenderTexture* renderTexture, const sfView* view);
 
 
--- | Convert a point in texture coordinates into view coordinates.
-convertRenderTextureCoords
-    :: RenderTexture -- ^ Render texture object
-    -> Vec2i -- ^ Point to convert, relative to the texture
-    -> Maybe View -- ^ Target view to convert the point to ('Nothing' to use the current view)
-    -> IO Vec2f
-
-convertRenderTextureCoords tex point view =
-    alloca $ \out ->
-    with point $ \ptr -> case view of
-        Nothing -> sfRenderTexture_convertCoords_helper tex ptr (View nullPtr) out >> peek out
-        Just v  -> sfRenderTexture_convertCoords_helper tex ptr v out >> peek out
+instance SFCoordSpace RenderTexture where
+    
+    {-# INLINABLE convertCoords #-}
+    convertCoords tex point view =
+        alloca $ \out ->
+        with point $ \ptr -> case view of
+            Nothing -> sfRenderTexture_convertCoords_helper tex ptr (View nullPtr) out >> peek out
+            Just v  -> sfRenderTexture_convertCoords_helper tex ptr v out >> peek out
 
 foreign import ccall unsafe "sfRenderTexture_convertCoords_helper"
     sfRenderTexture_convertCoords_helper :: RenderTexture -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()

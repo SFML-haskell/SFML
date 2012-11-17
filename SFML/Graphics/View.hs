@@ -12,7 +12,7 @@ module SFML.Graphics.View
 ,   getViewCenter
 ,   getViewSize
 ,   getViewRotation
-,   getViewport
+,   getViewViewport
 ,   moveView
 ,   rotateView
 ,   zoomView
@@ -182,8 +182,8 @@ foreign import ccall unsafe "sfView_getRotation"
 
 
 -- | Get the target viewport rectangle of a view, expressed as a factor of the target size.
-getViewport :: View -> IO FloatRect
-getViewport view = alloca $ \ptr -> sfView_getViewport_helper view ptr >> peek ptr
+getViewViewport :: View -> IO FloatRect
+getViewViewport view = alloca $ \ptr -> sfView_getViewport_helper view ptr >> peek ptr
 
 foreign import ccall unsafe "sfView_getViewport_helper"
     sfView_getViewport_helper :: View -> Ptr FloatRect -> IO ()

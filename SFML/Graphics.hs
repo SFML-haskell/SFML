@@ -14,11 +14,13 @@ module SFML.Graphics
 ,   module SFML.Graphics.RenderTexture
 ,   module SFML.Graphics.RenderWindow
 ,   module SFML.Graphics.SFBoundable
+,   module SFML.Graphics.SFCoordSpace
 ,   module SFML.Graphics.SFRenderTarget
 ,   module SFML.Graphics.SFShape
 ,   module SFML.Graphics.SFShapeResizable
 ,   module SFML.Graphics.SFSmoothTexture
 ,   module SFML.Graphics.SFTexturable
+,   module SFML.Graphics.SFViewable
 ,   module SFML.Graphics.Shader
 ,   module SFML.Graphics.Shape
 ,   module SFML.Graphics.Sprite
@@ -48,11 +50,13 @@ import SFML.Graphics.RenderStates
 import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
 import SFML.Graphics.SFBoundable
+import SFML.Graphics.SFCoordSpace
 import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.SFTexturable
+import SFML.Graphics.SFViewable
 import SFML.Graphics.Shader
 import SFML.Graphics.Shape
 import SFML.Graphics.Sprite

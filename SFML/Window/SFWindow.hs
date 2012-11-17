@@ -2,6 +2,8 @@ module SFML.Window.SFWindow
 where
 
 
+import SFML.SFDisplayable
+import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Window.ContextSettings
 import SFML.Window.Event
@@ -11,7 +13,13 @@ import SFML.Window.WindowHandle
 import Foreign.Ptr (Ptr)
 
 
-class SFWindow a where
+class (SFResource a, SFDisplayable a) => SFWindow a where
+    
+    -- | Close the window.
+    --
+    -- After calling this function, the window object remains
+    -- valid; you must call 'destroy' to actually delete it.
+    close :: a -> IO ()
     
     -- | Tell whether or not a window is opened
     --
@@ -116,14 +124,7 @@ class SFWindow a where
     -- Only one window can be active on a thread at a time, thus
     -- the window previously active (if any) automatically gets deactivated.
     setWindowActive :: a -> Bool -> IO ()
-    
-    -- | Display on screen what has been rendered to the window so far.
-    --
-    -- This function is typically called after all OpenGL rendering
-    -- has been done for the current frame, in order to show
-    -- it on screen.
-    display :: a -> IO ()
-    
+        
     -- | Limit the framerate to a maximum fixed frequency.
     --
     -- If a limit is set, the window will use a small delay after

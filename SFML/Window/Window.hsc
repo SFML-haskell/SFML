@@ -6,7 +6,7 @@ module SFML.Window.Window
 ,   createWindow
 ,   windowFromHandle
 ,   destroy
-,   closeWindow
+,   close
 ,   isWindowOpen
 ,   getWindowSettings
 ,   pollEvent
@@ -32,6 +32,7 @@ module SFML.Window.Window
 where
 
 
+import SFML.SFDisplayable
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Window.ContextSettings
@@ -138,7 +139,6 @@ foreign import ccall unsafe "sfWindow_createFromHandle"
 --CSFML_WINDOW_API sfWindow* sfWindow_createFromHandle(sfWindowHandle handle, const sfContextSettings* settings);
 
 
-
 instance SFResource Window where
     
     {-# INLINABLE destroy #-}
@@ -150,24 +150,16 @@ foreign import ccall unsafe "sfWindow_destroy"
 --CSFML_WINDOW_API void sfWindow_destroy(sfWindow* window);
 
 
--- | Close a window and destroy all the attached resources.
---
--- After calling this function, the sfWindow object remains
--- valid, you must call sfWindow_destroy to actually delete it.
---
--- All other functions such as sfWindow_pollEvent or sfWindow_display
--- will still work (i.e. you don't have to test sfWindow_isOpen
--- every time), and will have no effect on closed windows.
-
-closeWindow = sfWindow_close
-
-foreign import ccall unsafe "sfWindow_close"
-    sfWindow_close :: Window -> IO ()
-
---CSFML_WINDOW_API void sfWindow_close(sfWindow* window);
+instance SFDisplayable Window where
+    
+    {-# INLINABLE display #-}
+    display = sfWindow_display
 
 
 instance SFWindow Window where
+    
+    {-# INLINABLE close #-}
+    close = sfWindow_close
     
     {-# INLINABLE isWindowOpen #-}
     isWindowOpen wnd = sfWindow_isOpen wnd >>= return . (/=0)
@@ -227,9 +219,6 @@ instance SFWindow Window where
     {-# INLINABLE setWindowActive #-}
     setWindowActive wnd val = sfWindow_setActive wnd (fromIntegral . fromEnum $ val)
     
-    {-# INLINABLE display #-}
-    display = sfWindow_display
-    
     {-# INLINABLE setFramerateLimit #-}
     setFramerateLimit wnd val = sfWindow_setFramerateLimit wnd (fromIntegral val)
     
@@ -247,6 +236,11 @@ instance SFWindow Window where
     setMousePosition pos Nothing    = with pos $ \ptr -> sfMouse_setPosition_helper ptr (Window nullPtr)
     setMousePosition pos (Just wnd) = with pos $ \ptr -> sfMouse_setPosition_helper ptr wnd
 
+
+foreign import ccall unsafe "sfWindow_close"
+    sfWindow_close :: Window -> IO ()
+
+--CSFML_WINDOW_API void sfWindow_close(sfWindow* window);
 
 foreign import ccall unsafe "sfWindow_isOpen"
     sfWindow_isOpen :: Window -> IO CChar

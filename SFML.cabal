@@ -49,11 +49,13 @@ library
                        SFML.Graphics.RenderTexture
                        SFML.Graphics.RenderWindow
                        SFML.Graphics.SFBoundable
+                       SFML.Graphics.SFCoordSpace
                        SFML.Graphics.SFRenderTarget
                        SFML.Graphics.SFShape
                        SFML.Graphics.SFShapeResizable
                        SFML.Graphics.SFSmoothTexture
                        SFML.Graphics.SFTexturable
+                       SFML.Graphics.SFViewable
                        SFML.Graphics.Shader
                        SFML.Graphics.Shape
                        SFML.Graphics.Sprite
@@ -64,6 +66,7 @@ library
                        SFML.Graphics.Vertex
                        SFML.Graphics.VertexArray
                        SFML.Graphics.View
+                       SFML.SFDisplayable
                        SFML.SFResource
                        SFML.System.Clock
                        SFML.System.InputStream
