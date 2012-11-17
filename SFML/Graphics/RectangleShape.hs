@@ -1,7 +1,7 @@
 module SFML.Graphics.RectangleShape
 (
     createRectangleShape
-,   copyRectangleShape
+,   copy
 ,   destroy
 ,   setPosition
 ,   setRotation
@@ -46,6 +46,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -71,9 +72,11 @@ foreign import ccall unsafe "sfRectangleShape_create"
 --CSFML_GRAPHICS_API sfRectangleShape* sfRectangleShape_create(void);
 
 
--- | Copy an existing rectangle shape.
-copyRectangleShape :: RectangleShape -> IO RectangleShape
-copyRectangleShape = sfRectangleShape_copy
+instance SFCopyable RectangleShape where
+    
+    {-# INLINABLE copy #-}
+    copy = sfRectangleShape_copy
+
 
 foreign import ccall unsafe "sfRectangleShape_copy"
     sfRectangleShape_copy :: RectangleShape -> IO RectangleShape

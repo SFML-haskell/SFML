@@ -2,7 +2,7 @@
 module SFML.Graphics.CircleShape
 (
     createCircleShape
-,   copyCircleShape
+,   copy
 ,   destroy
 ,   setPosition
 ,   setRotation
@@ -47,6 +47,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -72,9 +73,11 @@ foreign import ccall unsafe "sfCircleShape_create"
 --CSFML_GRAPHICS_API sfCircleShape* sfCircleShape_create(void);
 
 
--- | Copy an existing circle shape.
-copyCircleShape :: CircleShape -> IO CircleShape
-copyCircleShape = sfCircleShape_copy
+instance SFCopyable CircleShape where
+    
+    {-# INLINABLE copy #-}
+    copy = sfCircleShape_copy
+
 
 foreign import ccall unsafe "sfCircleShape_copy"
     sfCircleShape_copy :: CircleShape -> IO CircleShape

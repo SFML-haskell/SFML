@@ -3,7 +3,7 @@ module SFML.System.Clock
 (
     Clock(..)
 ,   createClock
-,   copyClock
+,   copy
 ,   destroy
 ,   getElapsedTime
 ,   restartClock
@@ -11,6 +11,7 @@ module SFML.System.Clock
 where
 
 
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Time
 
@@ -32,9 +33,11 @@ foreign import ccall unsafe "sfClock_create"
 --CSFML_SYSTEM_API sfClock* sfClock_create(void);
 
 
--- | Create a new clock by copying an existing one.
-copyClock :: Clock -> IO Clock
-copyClock = sfClock_copy
+instance SFCopyable Clock where
+    
+    {-# INLINABLE copy #-}
+    copy = sfClock_copy
+
 
 foreign import ccall unsafe "sfClock_copy"
     sfClock_copy :: Clock -> IO Clock

@@ -66,6 +66,7 @@ library
                        SFML.Graphics.Vertex
                        SFML.Graphics.VertexArray
                        SFML.Graphics.View
+                       SFML.SFCopyable
                        SFML.SFDisplayable
                        SFML.SFResource
                        SFML.System.Clock

@@ -1,7 +1,7 @@
 module SFML.Graphics.Sprite
 (
     createSprite
-,   copySprite
+,   copy
 ,   destroy
 ,   setPosition
 ,   setRotation
@@ -36,6 +36,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -66,9 +67,11 @@ foreign import ccall unsafe "sfSprite_create"
 --CSFML_GRAPHICS_API sfSprite* sfSprite_create(void);
 
 
--- | Copy an existing sprite.
-copySprite :: Sprite -> IO Sprite
-copySprite = sfSprite_copy
+instance SFCopyable Sprite where
+    
+    {-# INLINABLE copy #-}
+    copy = sfSprite_copy
+
 
 foreign import ccall unsafe "sfSprite_copy"
     sfSprite_copy :: Sprite -> IO Sprite

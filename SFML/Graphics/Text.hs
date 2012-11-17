@@ -2,7 +2,7 @@ module SFML.Graphics.Text
 (
     TextStyle(..)
 ,   createText
-,   copyText
+,   copy
 ,   destroy
 ,   setTextString
 ,   setTextStringU
@@ -28,6 +28,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -84,9 +85,11 @@ foreign import ccall unsafe "sfText_create"
 --CSFML_GRAPHICS_API sfText* sfText_create(void);
 
 
--- | Copy an existing text.
-copyText :: Text -> IO Text
-copyText = sfText_copy
+instance SFCopyable Text where
+    
+    {-# INLINABLE copy #-}
+    copy = sfText_copy
+
 
 foreign import ccall unsafe "sfText_copy"
     sfText_copy :: Text -> IO Text

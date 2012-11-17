@@ -6,7 +6,7 @@ module SFML.Graphics.Image
 ,   imageFromFile
 ,   imageFromMemory
 ,   imageFromStream
-,   copyImage
+,   copy
 ,   destroy
 ,   saveImage
 ,   imageSize
@@ -24,6 +24,7 @@ where
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
@@ -148,10 +149,11 @@ foreign import ccall "sfImage_createFromStream"
 --CSFML_GRAPHICS_API sfImage* sfImage_createFromStream(sfInputStream* stream);
 
 
--- | Copy an existing image.
-copyImage :: Image -> IO Image
+instance SFCopyable Image where
+    
+    {-# INLINABLE copy #-}
+    copy = sfImage_copy
 
-copyImage = sfImage_copy
 
 foreign import ccall unsafe "sfImage_copy"
     sfImage_copy :: Image -> IO Image

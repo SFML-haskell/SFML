@@ -5,7 +5,7 @@ module SFML.Graphics.Texture
 ,   textureFromMemory
 ,   textureFromStream
 ,   textureFromImage
-,   copyTexture
+,   copy
 ,   destroy
 ,   textureSize
 ,   copyTextureToImage
@@ -27,6 +27,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Types
 import SFML.Window.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
@@ -131,9 +132,11 @@ foreign import ccall unsafe "sfTexture_createFromImage"
 --CSFML_GRAPHICS_API sfTexture* sfTexture_createFromImage(const sfImage* image, const sfIntRect* area);
 
 
--- | Copy an existing texture.
-copyTexture :: Texture -> IO Texture
-copyTexture = sfTexture_copy
+instance SFCopyable Texture where
+    
+    {-# INLINABLE copy #-}
+    copy = sfTexture_copy
+
 
 foreign import ccall unsafe "sfTexture_copy"
     sfTexture_copy :: Texture -> IO Texture

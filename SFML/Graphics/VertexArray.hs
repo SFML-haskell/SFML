@@ -1,7 +1,7 @@
 module SFML.Graphics.VertexArray
 (
     createVA
-,   copyVA
+,   copy
 ,   destroy
 ,   getVertexCount
 ,   getVertex
@@ -19,6 +19,7 @@ import SFML.Graphics.PrimitiveType
 import SFML.Graphics.Rect
 import SFML.Graphics.Types
 import SFML.Graphics.Vertex
+import SFML.SFCopyable
 import SFML.SFResource
 
 import Control.Monad
@@ -39,9 +40,11 @@ foreign import ccall unsafe "sfVertexArray_create"
 --CSFML_GRAPHICS_API sfVertexArray* sfVertexArray_create(void);
 
 
--- | Copy an existing vertex array.
-copyVA :: VertexArray -> IO VertexArray
-copyVA = sfVertexArray_copy
+instance SFCopyable VertexArray where
+    
+    {-# INLINABLE copy #-}
+    copy = sfVertexArray_copy
+
 
 foreign import ccall unsafe "sfVertexArray_copy"
     sfVertexArray_copy :: VertexArray -> IO VertexArray

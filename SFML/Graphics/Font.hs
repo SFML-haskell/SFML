@@ -3,7 +3,7 @@ module SFML.Graphics.Font
     fontFromFile
 ,   fontFromMemory
 ,   fontFromStream
-,   copyFont
+,   copy
 ,   destroy
 ,   getGlyph
 ,   getKerning
@@ -15,6 +15,7 @@ where
 
 import SFML.Graphics.Glyph
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.InputStream
 
@@ -65,9 +66,11 @@ foreign import ccall "sfFont_createFromStream"
 --CSFML_GRAPHICS_API sfFont* sfFont_createFromStream(sfInputStream* stream);
 
 
--- | Copy an existing font.
-copyFont :: Font -> IO Font
-copyFont = sfFont_copy
+instance SFCopyable Font where
+    
+    {-# INLINABLE copy #-}
+    copy = sfFont_copy
+
 
 foreign import ccall unsafe "sfFont_copy"
     sfFont_copy :: Font -> IO Font

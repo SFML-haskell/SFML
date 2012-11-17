@@ -1,7 +1,7 @@
 module SFML.Graphics.ConvexShape
 (
     createConvexShape
-,   copyConvexShape
+,   copy
 ,   destroy
 ,   setPosition
 ,   setRotation
@@ -45,6 +45,7 @@ import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
+import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
 
@@ -70,9 +71,11 @@ foreign import ccall unsafe "sfConvexShape_create"
 --CSFML_GRAPHICS_API sfConvexShape* sfConvexShape_create(void);
 
 
--- | Copy an existing convex shape.
-copyConvexShape :: ConvexShape -> IO ConvexShape
-copyConvexShape = sfConvexShape_copy
+instance SFCopyable ConvexShape where
+    
+    {-# INLINABLE copy #-}
+    copy = sfConvexShape_copy
+
 
 foreign import ccall unsafe "sfConvexShape_copy"
     sfConvexShape_copy :: ConvexShape -> IO ConvexShape
