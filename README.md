@@ -14,7 +14,7 @@ http://shellblade.net/docs/SFML/index.html
 * Graphics module
 * Audio module
 
-### What's been left out
+### What's been left out:
 
 * Threading and networking, since Haskell has better alternatives
 
