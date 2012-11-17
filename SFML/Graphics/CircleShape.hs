@@ -102,7 +102,7 @@ instance Transformable CircleShape where
     setPosition c p = with p $ sfCircleShape_setPosition_helper c
     
     {-# INLINABLE setRotation #-}
-    setRotation = sfCircleShape_setRotation
+    setRotation c r = sfCircleShape_setRotation c (realToFrac r)
     
     {-# INLINABLE setScale #-}
     setScale c s = with s $ sfCircleShape_setScale_helper c
@@ -114,7 +114,7 @@ instance Transformable CircleShape where
     getPosition c = alloca $ \ptr -> sfCircleShape_getPosition_helper c ptr >> peek ptr
     
     {-# INLINABLE getRotation #-}
-    getRotation = sfCircleShape_getRotation
+    getRotation = sfCircleShape_getRotation >=> return . realToFrac
     
     {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfCircleShape_getScale_helper c ptr >> peek ptr
@@ -126,7 +126,7 @@ instance Transformable CircleShape where
     move c off = with off $ sfCircleShape_move_helper c
     
     {-# INLINABLE rotate #-}
-    rotate = sfCircleShape_rotate
+    rotate c a = sfCircleShape_rotate c (realToFrac a)
     
     {-# INLINABLE scale #-}
     scale c s = with s $ sfCircleShape_scale_helper c
@@ -144,7 +144,7 @@ foreign import ccall unsafe "sfCircleShape_setPosition_helper"
 --CSFML_GRAPHICS_API void sfCircleShape_setPosition(sfCircleShape* shape, sfVector2f position);
 
 foreign import ccall unsafe "sfCircleShape_setRotation"
-    sfCircleShape_setRotation :: CircleShape -> Float -> IO ()
+    sfCircleShape_setRotation :: CircleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfCircleShape_setRotation(sfCircleShape* shape, float angle);
 
@@ -164,7 +164,7 @@ foreign import ccall unsafe "sfCircleShape_getPosition_helper"
 --CSFML_GRAPHICS_API sfVector2f sfCircleShape_getPosition(const sfCircleShape* shape);
 
 foreign import ccall unsafe "sfCircleShape_getRotation"
-    sfCircleShape_getRotation :: CircleShape -> IO Float
+    sfCircleShape_getRotation :: CircleShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfCircleShape_getRotation(const sfCircleShape* shape);
 
@@ -184,7 +184,7 @@ foreign import ccall unsafe "sfCircleShape_move_helper"
 --CSFML_GRAPHICS_API void sfCircleShape_move(sfCircleShape* shape, sfVector2f offset);
 
 foreign import ccall unsafe "sfCircleShape_rotate"
-    sfCircleShape_rotate :: CircleShape -> Float -> IO ()
+    sfCircleShape_rotate :: CircleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfCircleShape_rotate(sfCircleShape* shape, float angle);
 
@@ -249,7 +249,7 @@ instance SFShape CircleShape where
     setOutlineColor c color = with color $ sfCircleShape_setOutlineColor_helper c
     
     {-# INLINABLE setOutlineThickness #-}
-    setOutlineThickness = sfCircleShape_setOutlineThickness
+    setOutlineThickness c t = sfCircleShape_setOutlineThickness c (realToFrac t)
     
     {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfCircleShape_getFillColor_helper c ptr >> peek ptr
@@ -258,7 +258,7 @@ instance SFShape CircleShape where
     getOutlineColor c = alloca $ \ptr -> sfCircleShape_getOutlineColor_helper c ptr >> peek ptr
     
     {-# INLINABLE getOutlineThickness #-}
-    getOutlineThickness = sfCircleShape_getOutlineThickness
+    getOutlineThickness = sfCircleShape_getOutlineThickness >=> return . realToFrac
     
     {-# INLINABLE getPointCount #-}
     getPointCount = sfCircleShape_getPointCount >=> return . fromIntegral
@@ -278,7 +278,7 @@ foreign import ccall unsafe "sfCircleShape_setOutlineColor_helper"
 --CSFML_GRAPHICS_API void sfCircleShape_setOutlineColor(sfCircleShape* shape, sfColor color);
 
 foreign import ccall unsafe "sfCircleShape_setOutlineThickness"
-    sfCircleShape_setOutlineThickness :: CircleShape -> Float -> IO ()
+    sfCircleShape_setOutlineThickness :: CircleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfCircleShape_setOutlineThickness(sfCircleShape* shape, float thickness);
 
@@ -293,7 +293,7 @@ foreign import ccall unsafe "sfCircleShape_getOutlineColor_helper"
 --CSFML_GRAPHICS_API sfColor sfCircleShape_getOutlineColor(const sfCircleShape* shape);
 
 foreign import ccall unsafe "sfCircleShape_getOutlineThickness"
-    sfCircleShape_getOutlineThickness :: CircleShape -> IO Float
+    sfCircleShape_getOutlineThickness :: CircleShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfCircleShape_getOutlineThickness(const sfCircleShape* shape);
 
@@ -314,10 +314,10 @@ setRadius
     -> Float -- ^ New radius of the circle
     -> IO ()
 
-setRadius = sfCircleShape_setRadius
+setRadius c r = sfCircleShape_setRadius c (realToFrac r)
 
 foreign import ccall unsafe "sfCircleShape_setRadius"
-    sfCircleShape_setRadius :: CircleShape -> Float -> IO ()
+    sfCircleShape_setRadius :: CircleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfCircleShape_setRadius(sfCircleShape* shape, float radius);
 
@@ -327,10 +327,10 @@ getRadius
     :: CircleShape
     -> IO Float -- ^ Radius of the circle
 
-getRadius = sfCircleShape_getRadius
+getRadius = sfCircleShape_getRadius >=> return . realToFrac
 
 foreign import ccall unsafe "sfCircleShape_getRadius"
-    sfCircleShape_getRadius :: CircleShape -> IO Float
+    sfCircleShape_getRadius :: CircleShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfCircleShape_getRadius(const sfCircleShape* shape);
 

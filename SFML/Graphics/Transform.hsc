@@ -46,27 +46,27 @@ instance Storable Transform where
     alignment _ = alignment (undefined :: CFloat)
     
     peek ptr = do
-        m00 <- peekByteOff ptr 0
-        m01 <- peekByteOff ptr sizeFloat
-        m02 <- peekByteOff ptr $ 2*sizeFloat
-        m10 <- peekByteOff ptr $ 3*sizeFloat
-        m11 <- peekByteOff ptr $ 4*sizeFloat
-        m12 <- peekByteOff ptr $ 5*sizeFloat
-        m20 <- peekByteOff ptr $ 6*sizeFloat
-        m21 <- peekByteOff ptr $ 7*sizeFloat
-        m22 <- peekByteOff ptr $ 8*sizeFloat
+        m00 <- fmap realToFrac $ (peekByteOff ptr 0 :: IO CFloat)
+        m01 <- fmap realToFrac $ (peekByteOff ptr sizeFloat :: IO CFloat)
+        m02 <- fmap realToFrac $ (peekByteOff ptr $ 2*sizeFloat :: IO CFloat)
+        m10 <- fmap realToFrac $ (peekByteOff ptr $ 3*sizeFloat :: IO CFloat)
+        m11 <- fmap realToFrac $ (peekByteOff ptr $ 4*sizeFloat :: IO CFloat)
+        m12 <- fmap realToFrac $ (peekByteOff ptr $ 5*sizeFloat :: IO CFloat)
+        m20 <- fmap realToFrac $ (peekByteOff ptr $ 6*sizeFloat :: IO CFloat)
+        m21 <- fmap realToFrac $ (peekByteOff ptr $ 7*sizeFloat :: IO CFloat)
+        m22 <- fmap realToFrac $ (peekByteOff ptr $ 8*sizeFloat :: IO CFloat)
         return $ Transform m00 m01 m02 m10 m11 m12 m20 m21 m22
     
     poke ptr (Transform m00 m01 m02 m10 m11 m12 m20 m21 m22) = do
-        pokeByteOff ptr 0 m00
-        pokeByteOff ptr sizeFloat m01
-        pokeByteOff ptr (2*sizeFloat) m02
-        pokeByteOff ptr (3*sizeFloat) m10
-        pokeByteOff ptr (4*sizeFloat) m11
-        pokeByteOff ptr (5*sizeFloat) m12
-        pokeByteOff ptr (6*sizeFloat) m20
-        pokeByteOff ptr (7*sizeFloat) m21
-        pokeByteOff ptr (8*sizeFloat) m22
+        pokeByteOff ptr 0 (realToFrac m00 :: CFloat)
+        pokeByteOff ptr sizeFloat (realToFrac m01 :: CFloat)
+        pokeByteOff ptr (2*sizeFloat) (realToFrac m02 :: CFloat)
+        pokeByteOff ptr (3*sizeFloat) (realToFrac m10 :: CFloat)
+        pokeByteOff ptr (4*sizeFloat) (realToFrac m11 :: CFloat)
+        pokeByteOff ptr (5*sizeFloat) (realToFrac m12 :: CFloat)
+        pokeByteOff ptr (6*sizeFloat) (realToFrac m20 :: CFloat)
+        pokeByteOff ptr (7*sizeFloat) (realToFrac m21 :: CFloat)
+        pokeByteOff ptr (8*sizeFloat) (realToFrac m22 :: CFloat)
 
 
 instance Num Transform where

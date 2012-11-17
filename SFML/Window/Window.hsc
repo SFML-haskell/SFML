@@ -223,7 +223,7 @@ instance SFWindow Window where
     setFramerateLimit wnd val = sfWindow_setFramerateLimit wnd (fromIntegral val)
     
     {-# INLINABLE setJoystickThreshold #-}
-    setJoystickThreshold = sfWindow_setJoystickThreshold
+    setJoystickThreshold w t = sfWindow_setJoystickThreshold w (realToFrac t)
     
     {-# INLINABLE getSystemHandle #-}
     getSystemHandle = sfWindow_getSystemHandle
@@ -343,7 +343,7 @@ foreign import ccall unsafe "sfWindow_setFramerateLimit"
 
 
 foreign import ccall unsafe "sfWindow_setJoystickThreshold"
-    sfWindow_setJoystickThreshold :: Window -> Float -> IO ()
+    sfWindow_setJoystickThreshold :: Window -> CFloat -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setJoystickThreshold(sfWindow* window, float threshold);
 

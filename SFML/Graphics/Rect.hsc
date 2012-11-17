@@ -38,17 +38,17 @@ instance Storable FloatRect where
     alignment _ = alignment (undefined :: CFloat)
     
     peek ptr = do
-        l <- #{peek sfFloatRect, left} ptr
-        t <- #{peek sfFloatRect, top} ptr
-        w <- #{peek sfFloatRect, width} ptr
-        h <- #{peek sfFloatRect, height} ptr
+        l <- fmap realToFrac (#{peek sfFloatRect, left} ptr :: IO CFloat)
+        t <- fmap realToFrac (#{peek sfFloatRect, top} ptr :: IO CFloat)
+        w <- fmap realToFrac (#{peek sfFloatRect, width} ptr :: IO CFloat)
+        h <- fmap realToFrac (#{peek sfFloatRect, height} ptr :: IO CFloat)
         return $ FloatRect l t w h
     
     poke ptr (FloatRect l t w h) = do
-        #{poke sfFloatRect, left} ptr l
-        #{poke sfFloatRect, top} ptr t
-        #{poke sfFloatRect, width} ptr w
-        #{poke sfFloatRect, height} ptr h
+        #{poke sfFloatRect, left} ptr (realToFrac l :: CFloat)
+        #{poke sfFloatRect, top} ptr (realToFrac t :: CFloat)
+        #{poke sfFloatRect, width} ptr (realToFrac w :: CFloat)
+        #{poke sfFloatRect, height} ptr (realToFrac h :: CFloat)
 
 
 -- | Utility class for manipulating rectangles.

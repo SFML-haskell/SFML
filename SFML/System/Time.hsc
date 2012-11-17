@@ -13,7 +13,9 @@ module SFML.System.Time
 where
 
 
+import Control.Monad ((>=>))
 import Data.Int (Int64, Int32)
+import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Ptr
 import Foreign.Storable
@@ -35,10 +37,10 @@ timeZero = 0
 
 -- | Return a time value as a number of seconds.
 asSeconds :: Time -> Float
-asSeconds t = sfTime_asSeconds t
+asSeconds = realToFrac . sfTime_asSeconds
 
 foreign import ccall unsafe "sfTime_asSeconds"
-    sfTime_asSeconds :: Time -> Float
+    sfTime_asSeconds :: Time -> CFloat
 
 --CSFML_SYSTEM_API float sfTime_asSeconds(sfTime time);
 
@@ -67,10 +69,10 @@ foreign import ccall unsafe "sfTime_asMicroseconds"
 seconds
     :: Float -- ^ Number of seconds
     -> Time
-seconds t = unsafePerformIO $ alloca $ \ptr -> sfSeconds_helper t ptr >> peek ptr
+seconds s = unsafePerformIO $ alloca $ \ptr -> sfSeconds_helper (realToFrac s) ptr >> peek ptr
 
 foreign import ccall unsafe "sfSeconds_helper"
-    sfSeconds_helper :: Float -> Ptr Time -> IO ()
+    sfSeconds_helper :: CFloat -> Ptr Time -> IO ()
 
 --CSFML_SYSTEM_API sfTime sfSeconds(float amount);
 

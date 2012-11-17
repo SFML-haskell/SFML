@@ -129,10 +129,10 @@ getAxisPosition
     -> Int -- ^ Axis to check
     -> IO Float
 
-getAxisPosition j a = sfJoystick_getAxisPosition (fromIntegral j) (fromIntegral a)
+getAxisPosition j a = sfJoystick_getAxisPosition (fromIntegral j) (fromIntegral a) >>= return . realToFrac
 
 foreign import ccall unsafe "sfJoystick_getAxisPosition"
-    sfJoystick_getAxisPosition :: CUInt -> CUInt -> IO Float
+    sfJoystick_getAxisPosition :: CUInt -> CUInt -> IO CFloat
 
 --CSFML_WINDOW_API float sfJoystick_getAxisPosition(unsigned int joystick, sfJoystickAxis axis);
 

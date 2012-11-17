@@ -156,7 +156,7 @@ instance Storable SFEvent where
                 15 -> do
                     j    <- #{peek sfJoystickMoveEvent, joystickId} ptr :: IO CUInt
                     axis <- #{peek sfJoystickMoveEvent, axis} ptr
-                    pos  <- #{peek sfJoystickMoveEvent, position} ptr
+                    pos  <- fmap realToFrac (#{peek sfJoystickMoveEvent, position} ptr :: IO CFloat)
                     return $ SFEvtJoystickMoved (fromIntegral j) axis pos
                 16 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickConnected
                 17 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickDisconnected

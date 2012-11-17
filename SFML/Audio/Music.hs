@@ -170,16 +170,16 @@ instance SFSound Music where
     stop = sfMusic_stop
     
     {-# INLINABLE getAttenuation #-}
-    getAttenuation = sfMusic_getAttenuation
+    getAttenuation = sfMusic_getAttenuation >=> return . realToFrac
     
     {-# INLINABLE getLoop #-}
     getLoop music = fmap (toEnum . fromIntegral) $ sfMusic_getLoop music
     
     {-# INLINABLE getMinDistance #-}
-    getMinDistance = sfMusic_getMinDistance
+    getMinDistance = sfMusic_getMinDistance >=> return . realToFrac
     
     {-# INLINABLE getPitch #-}
-    getPitch = sfMusic_getPitch
+    getPitch = sfMusic_getPitch >=> return . realToFrac
     
     {-# INLINABLE getPlayingOffset #-}
     getPlayingOffset music = alloca $ \ptr -> sfMusic_getPlayingOffset_helper music ptr >> peek ptr
@@ -191,22 +191,22 @@ instance SFSound Music where
     getStatus = sfMusic_getStatus >=> return . toEnum . fromIntegral
     
     {-# INLINABLE getVolume #-}
-    getVolume = sfMusic_getVolume
+    getVolume = sfMusic_getVolume >=> return . realToFrac
     
     {-# INLINABLE isRelativeToListener #-}
     isRelativeToListener = sfMusic_isRelativeToListener >=> return . toEnum . fromIntegral
     
     {-# INLINABLE setAttenuation #-}
-    setAttenuation = sfMusic_setAttenuation
+    setAttenuation m a = sfMusic_setAttenuation m $ realToFrac a
     
     {-# INLINABLE setLoop #-}
     setLoop music val = sfMusic_setLoop music (fromIntegral . fromEnum $ val)
     
     {-# INLINABLE setMinDistance #-}
-    setMinDistance = sfMusic_setMinDistance
+    setMinDistance m d = sfMusic_setMinDistance m $ realToFrac d
     
     {-# INLINABLE setPitch #-}
-    setPitch = sfMusic_setPitch
+    setPitch m p = sfMusic_setPitch m $ realToFrac p
     
     {-# INLINABLE setPlayingOffset #-}
     setPlayingOffset = sfMusic_setPlayingOffset
@@ -218,7 +218,7 @@ instance SFSound Music where
     setRelativeToListener music val = sfMusic_setRelativeToListener music (fromIntegral . fromEnum $ val)
     
     {-# INLINABLE setVolume #-}
-    setVolume = sfMusic_setVolume
+    setVolume m v = sfMusic_setVolume m $ realToFrac v
 
 
 foreign import ccall unsafe "sfMusic_play"
@@ -237,7 +237,7 @@ foreign import ccall unsafe "sfMusic_stop"
 -- CSFML_AUDIO_API void sfMusic_stop(sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_getAttenuation"
-    sfMusic_getAttenuation :: Music -> IO Float
+    sfMusic_getAttenuation :: Music -> IO CFloat
 
 -- CSFML_AUDIO_API float sfMusic_getAttenuation(const sfMusic* music);
 
@@ -247,12 +247,12 @@ foreign import ccall unsafe "sfMusic_getLoop"
 -- CSFML_AUDIO_API sfBool sfMusic_getLoop(const sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_getMinDistance"
-    sfMusic_getMinDistance :: Music -> IO Float
+    sfMusic_getMinDistance :: Music -> IO CFloat
 
 -- CSFML_AUDIO_API float sfMusic_getMinDistance(const sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_getPitch"
-    sfMusic_getPitch :: Music -> IO Float
+    sfMusic_getPitch :: Music -> IO CFloat
 
 -- CSFML_AUDIO_API float sfMusic_getPitch(const sfMusic* music);
 
@@ -272,7 +272,7 @@ foreign import ccall unsafe "sfMusic_getStatus"
 -- CSFML_AUDIO_API sfSoundStatus sfMusic_getStatus(const sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_getVolume"
-    sfMusic_getVolume :: Music -> IO Float
+    sfMusic_getVolume :: Music -> IO CFloat
 
 -- CSFML_AUDIO_API float sfMusic_getVolume(const sfMusic* music);
 
@@ -282,7 +282,7 @@ foreign import ccall unsafe "sfMusic_isRelativeToListener"
 -- CSFML_AUDIO_API sfBool sfMusic_isRelativeToListener(const sfMusic* music);
 
 foreign import ccall unsafe "sfMusic_setAttenuation"
-    sfMusic_setAttenuation :: Music -> Float -> IO ()
+    sfMusic_setAttenuation :: Music -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfMusic_setAttenuation(sfMusic* music, float attenuation);
 
@@ -292,12 +292,12 @@ foreign import ccall unsafe "sfMusic_setLoop"
 -- CSFML_AUDIO_API void sfMusic_setLoop(sfMusic* music, sfBool loop);
 
 foreign import ccall unsafe "sfMusic_setMinDistance"
-    sfMusic_setMinDistance :: Music -> Float -> IO ()
+    sfMusic_setMinDistance :: Music -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfMusic_setMinDistance(sfMusic* music, float distance);
 
 foreign import ccall unsafe "sfMusic_setPitch"
-    sfMusic_setPitch :: Music -> Float -> IO ()
+    sfMusic_setPitch :: Music -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfMusic_setPitch(sfMusic* music, float pitch);
 
@@ -317,7 +317,7 @@ foreign import ccall unsafe "sfMusic_setRelativeToListener"
 -- CSFML_AUDIO_API void sfMusic_setRelativeToListener(sfMusic* music, sfBool relative);
 
 foreign import ccall unsafe "sfMusic_setVolume"
-    sfMusic_setVolume :: Music -> Float -> IO ()
+    sfMusic_setVolume :: Music -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfMusic_setVolume(sfMusic* music, float volume);
 

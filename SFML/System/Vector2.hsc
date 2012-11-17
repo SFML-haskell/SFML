@@ -8,6 +8,7 @@ module SFML.System.Vector2
 where
 
 
+import Data.Word
 import Foreign.C.Types
 import Foreign.Storable
 
@@ -44,7 +45,7 @@ instance Num Vec2i where
     fromInteger i = Vec2i i' i' where i' = fromInteger i
 
 
-data Vec2u = Vec2u {-# UNPACK #-} !CUInt {-# UNPACK #-} !CUInt deriving Show
+data Vec2u = Vec2u {-# UNPACK #-} !Word {-# UNPACK #-} !Word deriving Show
 
 
 instance Storable Vec2u where
@@ -78,13 +79,13 @@ instance Storable Vec2f where
     alignment _ = alignment (undefined :: CFloat)
     
     peek ptr = do
-        x <- #{peek sfVector2f, x} ptr
-        y <- #{peek sfVector2f, y} ptr
+        x <- fmap realToFrac (#{peek sfVector2f, x} ptr :: IO CFloat)
+        y <- fmap realToFrac (#{peek sfVector2f, y} ptr :: IO CFloat)
         return $ Vec2f x y
     
     poke ptr (Vec2f x y) = do
-        #{poke sfVector2f, x} ptr x
-        #{poke sfVector2f, y} ptr y
+        #{poke sfVector2f, x} ptr (realToFrac x :: CFloat)
+        #{poke sfVector2f, y} ptr (realToFrac y :: CFloat)
 
 
 instance Num Vec2f where

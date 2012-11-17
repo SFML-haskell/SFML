@@ -91,7 +91,7 @@ instance Transformable Shape where
     setPosition c p = with p $ sfShape_setPosition_helper c
     
     {-# INLINABLE setRotation #-}
-    setRotation = sfShape_setRotation
+    setRotation s r = sfShape_setRotation s (realToFrac r)
     
     {-# INLINABLE setScale #-}
     setScale c s = with s $ sfShape_setScale_helper c
@@ -103,7 +103,7 @@ instance Transformable Shape where
     getPosition c = alloca $ \ptr -> sfShape_getPosition_helper c ptr >> peek ptr
     
     {-# INLINABLE getRotation #-}
-    getRotation = sfShape_getRotation
+    getRotation = sfShape_getRotation >=> return . realToFrac
     
     {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfShape_getScale_helper c ptr >> peek ptr
@@ -115,7 +115,7 @@ instance Transformable Shape where
     move c off = with off $ sfShape_move_helper c
     
     {-# INLINABLE rotate #-}
-    rotate = sfShape_rotate
+    rotate s a = sfShape_rotate s (realToFrac a)
     
     {-# INLINABLE scale #-}
     scale c s = with s $ sfShape_scale_helper c
@@ -133,7 +133,7 @@ foreign import ccall unsafe "sfShape_setPosition_helper"
 --CSFML_GRAPHICS_API void sfShape_setPosition(sfShape* shape, sfVector2f position);
 
 foreign import ccall unsafe "sfShape_setRotation"
-    sfShape_setRotation :: Shape -> Float -> IO ()
+    sfShape_setRotation :: Shape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShape_setRotation(sfShape* shape, float angle);
 
@@ -153,7 +153,7 @@ foreign import ccall unsafe "sfShape_getPosition_helper"
 --CSFML_GRAPHICS_API sfVector2f sfShape_getPosition(const sfShape* shape);
 
 foreign import ccall unsafe "sfShape_getRotation"
-    sfShape_getRotation :: Shape -> IO Float
+    sfShape_getRotation :: Shape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfShape_getRotation(const sfShape* shape);
 
@@ -173,7 +173,7 @@ foreign import ccall unsafe "sfShape_move_helper"
 --CSFML_GRAPHICS_API void sfShape_move(sfShape* shape, sfVector2f offset);
 
 foreign import ccall unsafe "sfShape_rotate"
-    sfShape_rotate :: Shape -> Float -> IO ()
+    sfShape_rotate :: Shape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShape_rotate(sfShape* shape, float angle);
 
@@ -238,7 +238,7 @@ instance SFShape Shape where
     setOutlineColor c color = with color $ sfShape_setOutlineColor_helper c
     
     {-# INLINABLE setOutlineThickness #-}
-    setOutlineThickness = sfShape_setOutlineThickness
+    setOutlineThickness s t = sfShape_setOutlineThickness s (realToFrac t)
     
     {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfShape_getFillColor_helper c ptr >> peek ptr
@@ -247,7 +247,7 @@ instance SFShape Shape where
     getOutlineColor c = alloca $ \ptr -> sfShape_getOutlineColor_helper c ptr >> peek ptr
     
     {-# INLINABLE getOutlineThickness #-}
-    getOutlineThickness = sfShape_getOutlineThickness
+    getOutlineThickness = sfShape_getOutlineThickness >=> return . realToFrac
     
     {-# INLINABLE getPointCount #-}
     getPointCount = sfShape_getPointCount >=> return . fromIntegral
@@ -267,7 +267,7 @@ foreign import ccall unsafe "sfShape_setOutlineColor_helper"
 --CSFML_GRAPHICS_API void sfShape_setOutlineColor(sfShape* shape, sfColor color);
 
 foreign import ccall unsafe "sfShape_setOutlineThickness"
-    sfShape_setOutlineThickness :: Shape -> Float -> IO ()
+    sfShape_setOutlineThickness :: Shape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShape_setOutlineThickness(sfShape* shape, float thickness);
 
@@ -282,7 +282,7 @@ foreign import ccall unsafe "sfShape_getOutlineColor_helper"
 --CSFML_GRAPHICS_API sfColor sfShape_getOutlineColor(const sfShape* shape);
 
 foreign import ccall unsafe "sfShape_getOutlineThickness"
-    sfShape_getOutlineThickness :: Shape -> IO Float
+    sfShape_getOutlineThickness :: Shape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfShape_getOutlineThickness(const sfShape* shape);
 

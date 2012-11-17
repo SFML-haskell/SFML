@@ -100,7 +100,7 @@ instance Transformable ConvexShape where
     setPosition c p = with p $ sfConvexShape_setPosition_helper c
     
     {-# INLINABLE setRotation #-}
-    setRotation = sfConvexShape_setRotation
+    setRotation c r = sfConvexShape_setRotation c (realToFrac r)
     
     {-# INLINABLE setScale #-}
     setScale c s = with s $ sfConvexShape_setScale_helper c
@@ -112,7 +112,7 @@ instance Transformable ConvexShape where
     getPosition c = alloca $ \ptr -> sfConvexShape_getPosition_helper c ptr >> peek ptr
     
     {-# INLINABLE getRotation #-}
-    getRotation = sfConvexShape_getRotation
+    getRotation = sfConvexShape_getRotation >=> return . realToFrac
     
     {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfConvexShape_getScale_helper c ptr >> peek ptr
@@ -124,7 +124,7 @@ instance Transformable ConvexShape where
     move c off = with off $ sfConvexShape_move_helper c
     
     {-# INLINABLE rotate #-}
-    rotate = sfConvexShape_rotate
+    rotate c a = sfConvexShape_rotate c (realToFrac a)
     
     {-# INLINABLE scale #-}
     scale c s = with s $ sfConvexShape_scale_helper c
@@ -142,7 +142,7 @@ foreign import ccall unsafe "sfConvexShape_setPosition_helper"
 --CSFML_GRAPHICS_API void sfConvexShape_setPosition(sfConvexShape* shape, sfVector2f position);
 
 foreign import ccall unsafe "sfConvexShape_setRotation"
-    sfConvexShape_setRotation :: ConvexShape -> Float -> IO ()
+    sfConvexShape_setRotation :: ConvexShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfConvexShape_setRotation(sfConvexShape* shape, float angle);
 
@@ -162,7 +162,7 @@ foreign import ccall unsafe "sfConvexShape_getPosition_helper"
 --CSFML_GRAPHICS_API sfVector2f sfConvexShape_getPosition(const sfConvexShape* shape);
 
 foreign import ccall unsafe "sfConvexShape_getRotation"
-    sfConvexShape_getRotation :: ConvexShape -> IO Float
+    sfConvexShape_getRotation :: ConvexShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfConvexShape_getRotation(const sfConvexShape* shape);
 
@@ -182,7 +182,7 @@ foreign import ccall unsafe "sfConvexShape_move_helper"
 --CSFML_GRAPHICS_API void sfConvexShape_move(sfConvexShape* shape, sfVector2f offset);
 
 foreign import ccall unsafe "sfConvexShape_rotate"
-    sfConvexShape_rotate :: ConvexShape -> Float -> IO ()
+    sfConvexShape_rotate :: ConvexShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfConvexShape_rotate(sfConvexShape* shape, float angle);
 
@@ -247,7 +247,7 @@ instance SFShape ConvexShape where
     setOutlineColor c color = with color $ sfConvexShape_setOutlineColor_helper c
     
     {-# INLINABLE setOutlineThickness #-}
-    setOutlineThickness = sfConvexShape_setOutlineThickness
+    setOutlineThickness c t = sfConvexShape_setOutlineThickness c (realToFrac t)
     
     {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfConvexShape_getFillColor_helper c ptr >> peek ptr
@@ -256,7 +256,7 @@ instance SFShape ConvexShape where
     getOutlineColor c = alloca $ \ptr -> sfConvexShape_getOutlineColor_helper c ptr >> peek ptr
     
     {-# INLINABLE getOutlineThickness #-}
-    getOutlineThickness = sfConvexShape_getOutlineThickness
+    getOutlineThickness = sfConvexShape_getOutlineThickness >=> return . realToFrac
     
     {-# INLINABLE getPointCount #-}
     getPointCount = sfConvexShape_getPointCount >=> return . fromIntegral
@@ -276,7 +276,7 @@ foreign import ccall unsafe "sfConvexShape_setOutlineColor_helper"
 --CSFML_GRAPHICS_API void sfConvexShape_setOutlineColor(sfConvexShape* shape, sfColor color);
 
 foreign import ccall unsafe "sfConvexShape_setOutlineThickness"
-    sfConvexShape_setOutlineThickness :: ConvexShape -> Float -> IO ()
+    sfConvexShape_setOutlineThickness :: ConvexShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfConvexShape_setOutlineThickness(sfConvexShape* shape, float thickness);
 
@@ -291,7 +291,7 @@ foreign import ccall unsafe "sfConvexShape_getOutlineColor_helper"
 --CSFML_GRAPHICS_API sfColor sfConvexShape_getOutlineColor(const sfConvexShape* shape);
 
 foreign import ccall unsafe "sfConvexShape_getOutlineThickness"
-    sfConvexShape_getOutlineThickness :: ConvexShape -> IO Float
+    sfConvexShape_getOutlineThickness :: ConvexShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfConvexShape_getOutlineThickness(const sfConvexShape* shape);
 

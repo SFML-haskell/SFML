@@ -12,6 +12,8 @@ where
 
 import SFML.System.Vector3
 
+import Control.Monad ((>=>))
+import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr (Ptr)
@@ -28,20 +30,20 @@ setGlobalVolume
     :: Float -- ^ New global volume, in the range [0, 100]
     -> IO ()
 
-setGlobalVolume = sfListener_setGlobalVolume
+setGlobalVolume = sfListener_setGlobalVolume . realToFrac
 
 foreign import ccall unsafe "sfListener_setGlobalVolume"
-    sfListener_setGlobalVolume :: Float -> IO ()
+    sfListener_setGlobalVolume :: CFloat -> IO ()
 
 --CSFML_AUDIO_API void sfListener_setGlobalVolume(float volume);
 
 
 -- | Get the current value of the global volume.
 getGlobalVolume :: IO Float -- ^ Current global volume, in the range [0, 100]
-getGlobalVolume = sfListener_getGlobalVolume
+getGlobalVolume = fmap realToFrac sfListener_getGlobalVolume
 
 foreign import ccall unsafe "sfListener_getGlobalVolume"
-    sfListener_getGlobalVolume :: IO Float
+    sfListener_getGlobalVolume :: IO CFloat
 
 --CSFML_AUDIO_API float sfListener_getGlobalVolume(void);
 

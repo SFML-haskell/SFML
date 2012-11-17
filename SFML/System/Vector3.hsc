@@ -23,13 +23,13 @@ instance Storable Vec3f where
     alignment _ = alignment (undefined :: CFloat)
     
     peek ptr = do
-        x <- #{peek sfVector3f, x} ptr
-        y <- #{peek sfVector3f, y} ptr
-        z <- #{peek sfVector3f, z} ptr
+        x <- fmap realToFrac (#{peek sfVector3f, x} ptr :: IO CFloat)
+        y <- fmap realToFrac (#{peek sfVector3f, y} ptr :: IO CFloat)
+        z <- fmap realToFrac (#{peek sfVector3f, z} ptr :: IO CFloat)
         return $ Vec3f x y z
     
     poke ptr (Vec3f x y z) = do
-        #{poke sfVector3f, x} ptr x
-        #{poke sfVector3f, y} ptr y
-        #{poke sfVector3f, z} ptr z
+        #{poke sfVector3f, x} ptr (realToFrac x :: CFloat)
+        #{poke sfVector3f, y} ptr (realToFrac y :: CFloat)
+        #{poke sfVector3f, z} ptr (realToFrac z :: CFloat)
 

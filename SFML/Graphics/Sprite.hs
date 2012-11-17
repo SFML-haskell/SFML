@@ -40,6 +40,7 @@ import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
 
+import Control.Monad ((>=>))
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
@@ -96,7 +97,7 @@ instance Transformable Sprite where
     setPosition sprite pos = with pos $ sfSprite_setPosition_helper sprite
     
     {-# INLINABLE setRotation #-}
-    setRotation = sfSprite_setRotation
+    setRotation s r = sfSprite_setRotation s (realToFrac r)
     
     {-# INLINABLE setScale #-}
     setScale sprite s = with s $ sfSprite_setScale_helper sprite
@@ -108,7 +109,7 @@ instance Transformable Sprite where
     getPosition sprite = alloca $ \ptr -> sfSprite_getPosition_helper sprite ptr >> peek ptr
     
     {-# INLINABLE getRotation #-}
-    getRotation = sfSprite_getRotation
+    getRotation = sfSprite_getRotation >=> return . realToFrac
     
     {-# INLINABLE getScale #-}
     getScale sprite = alloca $ \ptr -> sfSprite_getScale_helper sprite ptr >> peek ptr
@@ -120,7 +121,7 @@ instance Transformable Sprite where
     move sprite off = with off $ sfSprite_move_helper sprite
     
     {-# INLINABLE rotate #-}
-    rotate = sfSprite_rotate
+    rotate s a = sfSprite_rotate s (realToFrac a)
     
     {-# INLINABLE scale #-}
     scale sprite s = with s $ sfSprite_scale_helper sprite
@@ -138,7 +139,7 @@ foreign import ccall unsafe "sfSprite_setPosition_helper"
 --CSFML_GRAPHICS_API void sfSprite_setPosition(sfSprite* sprite, sfVector2f position);
 
 foreign import ccall unsafe "sfSprite_setRotation"
-    sfSprite_setRotation :: Sprite -> Float -> IO ()
+    sfSprite_setRotation :: Sprite -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfSprite_setRotation(sfSprite* sprite, float angle);
 
@@ -158,7 +159,7 @@ foreign import ccall unsafe "sfSprite_getPosition_helper"
 --CSFML_GRAPHICS_API sfVector2f sfSprite_getPosition(const sfSprite* sprite);
 
 foreign import ccall unsafe "sfSprite_getRotation"
-    sfSprite_getRotation :: Sprite -> IO Float
+    sfSprite_getRotation :: Sprite -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfSprite_getRotation(const sfSprite* sprite);
 
@@ -178,7 +179,7 @@ foreign import ccall unsafe "sfSprite_move_helper"
 --CSFML_GRAPHICS_API void sfSprite_move(sfSprite* sprite, sfVector2f offset);
 
 foreign import ccall unsafe "sfSprite_rotate"
-    sfSprite_rotate :: Sprite -> Float -> IO ()
+    sfSprite_rotate :: Sprite -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfSprite_rotate(sfSprite* sprite, float angle);
 

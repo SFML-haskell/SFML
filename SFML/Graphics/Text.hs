@@ -114,7 +114,7 @@ instance Transformable Text where
     setPosition text pos = with pos $ sfText_setPosition_helper text
     
     {-# INLINABLE setRotation #-}
-    setRotation = sfText_setRotation
+    setRotation t r = sfText_setRotation t (realToFrac r)
     
     {-# INLINABLE setScale #-}
     setScale text s = with s $ sfText_setScale_helper text
@@ -126,7 +126,7 @@ instance Transformable Text where
     getPosition text = alloca $ \ptr -> sfText_getPosition_helper text ptr >> peek ptr
     
     {-# INLINABLE getRotation #-}
-    getRotation = sfText_getRotation
+    getRotation = sfText_getRotation >=> return . realToFrac
     
     {-# INLINABLE getScale #-}
     getScale text = alloca $ \ptr -> sfText_getScale_helper text ptr >> peek ptr
@@ -138,7 +138,7 @@ instance Transformable Text where
     move text pos = with pos $ sfText_move_helper text
     
     {-# INLINABLE rotate #-}
-    rotate = sfText_rotate
+    rotate t a = sfText_rotate t (realToFrac a)
     
     {-# INLINABLE scale #-}
     scale text s = with s $ sfText_scale_helper text
@@ -156,7 +156,7 @@ foreign import ccall unsafe "sfText_setPosition_helper"
 --CSFML_GRAPHICS_API void sfText_setPosition(sfText* text, sfVector2f position);
 
 foreign import ccall unsafe "sfText_setRotation"
-    sfText_setRotation :: Text -> Float -> IO ()
+    sfText_setRotation :: Text -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfText_setRotation(sfText* text, float angle);
 
@@ -176,7 +176,7 @@ foreign import ccall unsafe "sfText_getPosition_helper"
 --CSFML_GRAPHICS_API sfVector2f sfText_getPosition(const sfText* text);
 
 foreign import ccall unsafe "sfText_getRotation"
-    sfText_getRotation :: Text -> IO Float
+    sfText_getRotation :: Text -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfText_getRotation(const sfText* text);
 
@@ -196,7 +196,7 @@ foreign import ccall unsafe "sfText_move_helper"
 --CSFML_GRAPHICS_API void sfText_move(sfText* text, sfVector2f offset);
 
 foreign import ccall unsafe "sfText_rotate"
-    sfText_rotate :: Text -> Float -> IO ()
+    sfText_rotate :: Text -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfText_rotate(sfText* text, float angle);
 

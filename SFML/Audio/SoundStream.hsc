@@ -142,16 +142,16 @@ instance SFSound SoundStream where
     stop = sfSoundStream_stop
     
     {-# INLINABLE getAttenuation #-}
-    getAttenuation = sfSoundStream_getAttenuation
+    getAttenuation = sfSoundStream_getAttenuation >=> return . realToFrac
     
     {-# INLINABLE getLoop #-}
     getLoop music = fmap (toEnum . fromIntegral) $ sfSoundStream_getLoop music
     
     {-# INLINABLE getMinDistance #-}
-    getMinDistance = sfSoundStream_getMinDistance
+    getMinDistance = sfSoundStream_getMinDistance >=> return . realToFrac
     
     {-# INLINABLE getPitch #-}
-    getPitch = sfSoundStream_getPitch
+    getPitch = sfSoundStream_getPitch >=> return . realToFrac
     
     {-# INLINABLE getPlayingOffset #-}
     getPlayingOffset music = alloca $ \ptr -> sfSoundStream_getPlayingOffset_helper music ptr >> peek ptr
@@ -163,22 +163,22 @@ instance SFSound SoundStream where
     getStatus = sfSoundStream_getStatus >=> return . toEnum . fromIntegral
     
     {-# INLINABLE getVolume #-}
-    getVolume = sfSoundStream_getVolume
+    getVolume = sfSoundStream_getVolume >=> return . realToFrac
     
     {-# INLINABLE isRelativeToListener #-}
     isRelativeToListener = sfSoundStream_isRelativeToListener >=> return . toEnum . fromIntegral
     
     {-# INLINABLE setAttenuation #-}
-    setAttenuation = sfSoundStream_setAttenuation
+    setAttenuation m a = sfSoundStream_setAttenuation m (realToFrac a)
     
     {-# INLINABLE setLoop #-}
     setLoop music val = sfSoundStream_setLoop music (fromIntegral . fromEnum $ val)
     
     {-# INLINABLE setMinDistance #-}
-    setMinDistance = sfSoundStream_setMinDistance
+    setMinDistance m d = sfSoundStream_setMinDistance m (realToFrac d)
     
     {-# INLINABLE setPitch #-}
-    setPitch = sfSoundStream_setPitch
+    setPitch m p = sfSoundStream_setPitch m (realToFrac p)
     
     {-# INLINABLE setPlayingOffset #-}
     setPlayingOffset = sfSoundStream_setPlayingOffset
@@ -190,7 +190,7 @@ instance SFSound SoundStream where
     setRelativeToListener music val = sfSoundStream_setRelativeToListener music (fromIntegral . fromEnum $ val)
     
     {-# INLINABLE setVolume #-}
-    setVolume = sfSoundStream_setVolume
+    setVolume m v = sfSoundStream_setVolume m (realToFrac v)
 
 
 foreign import ccall unsafe "sfSoundStream_play"
@@ -224,12 +224,12 @@ foreign import ccall unsafe "sfSoundStream_getSampleRate"
 -- CSFML_AUDIO_API unsigned int sfSoundStream_getSampleRate(const sfSoundStream* soundStream);
 
 foreign import ccall unsafe "sfSoundStream_setPitch"
-    sfSoundStream_setPitch :: SoundStream -> Float -> IO ()
+    sfSoundStream_setPitch :: SoundStream -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfSoundStream_setPitch(sfSoundStream* soundStream, float pitch);
 
 foreign import ccall unsafe "sfSoundStream_setVolume"
-    sfSoundStream_setVolume :: SoundStream -> Float -> IO ()
+    sfSoundStream_setVolume :: SoundStream -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfSoundStream_setVolume(sfSoundStream* soundStream, float volume);
 
@@ -244,12 +244,12 @@ foreign import ccall unsafe "sfSoundStream_setRelativeToListener"
 -- CSFML_AUDIO_API void sfSoundStream_setRelativeToListener(sfSoundStream* soundStream, sfBool relative);
 
 foreign import ccall unsafe "sfSoundStream_setMinDistance"
-    sfSoundStream_setMinDistance :: SoundStream -> Float -> IO ()
+    sfSoundStream_setMinDistance :: SoundStream -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfSoundStream_setMinDistance(sfSoundStream* soundStream, float distance);
 
 foreign import ccall unsafe "sfSoundStream_setAttenuation"
-    sfSoundStream_setAttenuation :: SoundStream -> Float -> IO ()
+    sfSoundStream_setAttenuation :: SoundStream -> CFloat -> IO ()
 
 -- CSFML_AUDIO_API void sfSoundStream_setAttenuation(sfSoundStream* soundStream, float attenuation);
 
@@ -264,12 +264,12 @@ foreign import ccall unsafe "sfSoundStream_setLoop"
 -- CSFML_AUDIO_API void sfSoundStream_setLoop(sfSoundStream* soundStream, sfBool loop);
 
 foreign import ccall unsafe "sfSoundStream_getPitch"
-    sfSoundStream_getPitch :: SoundStream -> IO Float
+    sfSoundStream_getPitch :: SoundStream -> IO CFloat
 
 -- CSFML_AUDIO_API float sfSoundStream_getPitch(const sfSoundStream* soundStream);
 
 foreign import ccall unsafe "sfSoundStream_getVolume"
-    sfSoundStream_getVolume :: SoundStream -> IO Float
+    sfSoundStream_getVolume :: SoundStream -> IO CFloat
 
 -- CSFML_AUDIO_API float sfSoundStream_getVolume(const sfSoundStream* soundStream);
 
@@ -284,12 +284,12 @@ foreign import ccall unsafe "sfSoundStream_isRelativeToListener"
 -- CSFML_AUDIO_API sfBool sfSoundStream_isRelativeToListener(const sfSoundStream* soundStream);
 
 foreign import ccall unsafe "sfSoundStream_getMinDistance"
-    sfSoundStream_getMinDistance :: SoundStream -> IO Float
+    sfSoundStream_getMinDistance :: SoundStream -> IO CFloat
 
 -- CSFML_AUDIO_API float sfSoundStream_getMinDistance(const sfSoundStream* soundStream);
 
 foreign import ccall unsafe "sfSoundStream_getAttenuation"
-    sfSoundStream_getAttenuation :: SoundStream -> IO Float
+    sfSoundStream_getAttenuation :: SoundStream -> IO CFloat
 
 -- CSFML_AUDIO_API float sfSoundStream_getAttenuation(const sfSoundStream* soundStream);
 

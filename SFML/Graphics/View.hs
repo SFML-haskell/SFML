@@ -25,6 +25,8 @@ import SFML.Graphics.Types
 import SFML.SFResource
 import SFML.System.Vector2
 
+import Control.Monad ((>=>))
+import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
@@ -105,10 +107,10 @@ setViewRotation
     -> Float -- ^ New angle, in degrees
     -> IO ()
 
-setViewRotation = sfView_setRotation
+setViewRotation v r = sfView_setRotation v (realToFrac r)
 
 foreign import ccall unsafe "sfView_setRotation"
-    sfView_setRotation :: View -> Float -> IO ()
+    sfView_setRotation :: View -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfView_setRotation(sfView* view, float angle);
 
@@ -173,10 +175,10 @@ foreign import ccall unsafe "sfView_getSize_helper"
 
 -- | Get the current orientation of a view, in degrees.
 getViewRotation :: View -> IO Float
-getViewRotation = sfView_getRotation
+getViewRotation = sfView_getRotation >=> return . realToFrac
 
 foreign import ccall unsafe "sfView_getRotation"
-    sfView_getRotation :: View -> IO Float
+    sfView_getRotation :: View -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfView_getRotation(const sfView* view);
 
@@ -211,10 +213,10 @@ rotateView
     -> Float -- ^ Angle to rotate, in degrees
     -> IO ()
 
-rotateView = sfView_rotate
+rotateView v a = sfView_rotate v (realToFrac a)
 
 foreign import ccall unsafe "sfView_rotate"
-    sfView_rotate :: View -> Float -> IO ()
+    sfView_rotate :: View -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfView_rotate(sfView* view, float angle);
 
@@ -236,10 +238,10 @@ zoomView
     -> Float -- ^ Zoom factor to apply
     -> IO ()
 
-zoomView = sfView_zoom
+zoomView v z = sfView_zoom v (realToFrac z)
 
 foreign import ccall unsafe "sfView_zoom"
-    sfView_zoom :: View -> Float -> IO ()
+    sfView_zoom :: View -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfView_zoom(sfView* view, float factor);
 

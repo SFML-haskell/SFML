@@ -100,7 +100,7 @@ instance Transformable RectangleShape where
     setPosition c p = with p $ sfRectangleShape_setPosition_helper c
     
     {-# INLINABLE setRotation #-}
-    setRotation = sfRectangleShape_setRotation
+    setRotation s r = sfRectangleShape_setRotation s (realToFrac r)
     
     {-# INLINABLE setScale #-}
     setScale c s = with s $ sfRectangleShape_setScale_helper c
@@ -112,7 +112,7 @@ instance Transformable RectangleShape where
     getPosition c = alloca $ \ptr -> sfRectangleShape_getPosition_helper c ptr >> peek ptr
     
     {-# INLINABLE getRotation #-}
-    getRotation = sfRectangleShape_getRotation
+    getRotation = sfRectangleShape_getRotation >=> return . realToFrac
     
     {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfRectangleShape_getScale_helper c ptr >> peek ptr
@@ -124,7 +124,7 @@ instance Transformable RectangleShape where
     move c off = with off $ sfRectangleShape_move_helper c
     
     {-# INLINABLE rotate #-}
-    rotate = sfRectangleShape_rotate
+    rotate r a = sfRectangleShape_rotate r (realToFrac a)
     
     {-# INLINABLE scale #-}
     scale c s = with s $ sfRectangleShape_scale_helper c
@@ -142,7 +142,7 @@ foreign import ccall unsafe "sfRectangleShape_setPosition_helper"
 --CSFML_GRAPHICS_API void sfRectangleShape_setPosition(sfRectangleShape* shape, sfVector2f position);
 
 foreign import ccall unsafe "sfRectangleShape_setRotation"
-    sfRectangleShape_setRotation :: RectangleShape -> Float -> IO ()
+    sfRectangleShape_setRotation :: RectangleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfRectangleShape_setRotation(sfRectangleShape* shape, float angle);
 
@@ -162,7 +162,7 @@ foreign import ccall unsafe "sfRectangleShape_getPosition_helper"
 --CSFML_GRAPHICS_API sfVector2f sfRectangleShape_getPosition(const sfRectangleShape* shape);
 
 foreign import ccall unsafe "sfRectangleShape_getRotation"
-    sfRectangleShape_getRotation :: RectangleShape -> IO Float
+    sfRectangleShape_getRotation :: RectangleShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfRectangleShape_getRotation(const sfRectangleShape* shape);
 
@@ -182,7 +182,7 @@ foreign import ccall unsafe "sfRectangleShape_move_helper"
 --CSFML_GRAPHICS_API void sfRectangleShape_move(sfRectangleShape* shape, sfVector2f offset);
 
 foreign import ccall unsafe "sfRectangleShape_rotate"
-    sfRectangleShape_rotate :: RectangleShape -> Float -> IO ()
+    sfRectangleShape_rotate :: RectangleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfRectangleShape_rotate(sfRectangleShape* shape, float angle);
 
@@ -245,7 +245,7 @@ instance SFShape RectangleShape where
     setOutlineColor c color = with color $ sfRectangleShape_setOutlineColor_helper c
     
     {-# INLINABLE setOutlineThickness #-}
-    setOutlineThickness = sfRectangleShape_setOutlineThickness
+    setOutlineThickness r t = sfRectangleShape_setOutlineThickness r (realToFrac t)
     
     {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfRectangleShape_getFillColor_helper c ptr >> peek ptr
@@ -254,7 +254,7 @@ instance SFShape RectangleShape where
     getOutlineColor c = alloca $ \ptr -> sfRectangleShape_getOutlineColor_helper c ptr >> peek ptr
     
     {-# INLINABLE getOutlineThickness #-}
-    getOutlineThickness = sfRectangleShape_getOutlineThickness
+    getOutlineThickness = sfRectangleShape_getOutlineThickness >=> return . realToFrac
     
     {-# INLINABLE getPointCount #-}
     getPointCount = sfRectangleShape_getPointCount >=> return . fromIntegral
@@ -274,7 +274,7 @@ foreign import ccall unsafe "sfRectangleShape_setOutlineColor_helper"
 --CSFML_GRAPHICS_API void sfRectangleShape_setOutlineColor(sfRectangleShape* shape, sfColor color);
 
 foreign import ccall unsafe "sfRectangleShape_setOutlineThickness"
-    sfRectangleShape_setOutlineThickness :: RectangleShape -> Float -> IO ()
+    sfRectangleShape_setOutlineThickness :: RectangleShape -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfRectangleShape_setOutlineThickness(sfRectangleShape* shape, float thickness);
 
@@ -289,7 +289,7 @@ foreign import ccall unsafe "sfRectangleShape_getOutlineColor_helper"
 --CSFML_GRAPHICS_API sfColor sfRectangleShape_getOutlineColor(const sfRectangleShape* shape);
 
 foreign import ccall unsafe "sfRectangleShape_getOutlineThickness"
-    sfRectangleShape_getOutlineThickness :: RectangleShape -> IO Float
+    sfRectangleShape_getOutlineThickness :: RectangleShape -> IO CFloat
 
 --CSFML_GRAPHICS_API float sfRectangleShape_getOutlineThickness(const sfRectangleShape* shape);
 

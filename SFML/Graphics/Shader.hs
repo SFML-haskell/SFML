@@ -148,10 +148,10 @@ setFloatParameter
 
 setFloatParameter shader name val =
     withCString name $ \cname ->
-    sfShader_setFloatParameter shader cname val
+    sfShader_setFloatParameter shader cname $ realToFrac val
 
 foreign import ccall unsafe "sfShader_setFloatParameter"
-    sfShader_setFloatParameter :: Shader -> CString -> Float -> IO ()
+    sfShader_setFloatParameter :: Shader -> CString -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShader_setFloatParameter(sfShader* shader, const char* name, float x);
 
@@ -166,10 +166,10 @@ setFloat2Parameter
 
 setFloat2Parameter shader name f1 f2 =
     withCString name $ \cname ->
-    sfShader_setFloat2Parameter shader cname f1 f2
+    sfShader_setFloat2Parameter shader cname (realToFrac f1) (realToFrac f2)
 
 foreign import ccall unsafe "sfShader_setFloat2Parameter"
-    sfShader_setFloat2Parameter :: Shader -> CString -> Float -> Float -> IO ()
+    sfShader_setFloat2Parameter :: Shader -> CString -> CFloat -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShader_setFloat2Parameter(sfShader* shader, const char* name, float x, float y);
 
@@ -185,10 +185,10 @@ setFloat3Parameter
 
 setFloat3Parameter shader name f1 f2 f3 =
     withCString name $ \cname ->
-    sfShader_setFloat3Parameter shader cname f1 f2 f3
+    sfShader_setFloat3Parameter shader cname (realToFrac f1) (realToFrac f2) (realToFrac f3)
 
 foreign import ccall unsafe "sfShader_setFloat3Parameter"
-    sfShader_setFloat3Parameter :: Shader -> CString -> Float -> Float -> Float -> IO ()
+    sfShader_setFloat3Parameter :: Shader -> CString -> CFloat -> CFloat -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShader_setFloat3Parameter(sfShader* shader, const char* name, float x, float y, float z);
 
@@ -205,10 +205,10 @@ setFloat4Parameter
 
 setFloat4Parameter shader name f1 f2 f3 f4 =
     withCString name $ \cname ->
-    sfShader_setFloat4Parameter shader cname f1 f2 f3 f4
+    sfShader_setFloat4Parameter shader cname (realToFrac f1) (realToFrac f2) (realToFrac f3) (realToFrac f4)
 
 foreign import ccall unsafe "sfShader_setFloat4Parameter"
-    sfShader_setFloat4Parameter :: Shader -> CString -> Float -> Float -> Float -> Float -> IO ()
+    sfShader_setFloat4Parameter :: Shader -> CString -> CFloat -> CFloat -> CFloat -> CFloat -> IO ()
 
 --CSFML_GRAPHICS_API void sfShader_setFloat4Parameter(sfShader* shader, const char* name, float x, float y, float z, float w);
 
