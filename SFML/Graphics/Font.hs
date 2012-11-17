@@ -101,7 +101,7 @@ getGlyph font codePoint size bold =
         peek glyphPtr
 
 foreign import ccall unsafe "sfFont_getGlyph_helper"
-    sfFont_getGlyph_helper :: Font -> Word32 -> CUInt -> Int -> Ptr Glyph -> IO ()
+    sfFont_getGlyph_helper :: Font -> Word32 -> CUInt -> CInt -> Ptr Glyph -> IO ()
 
 --CSFML_GRAPHICS_API sfGlyph sfFont_getGlyph(sfFont* font, sfUint32 codePoint, unsigned int characterSize, sfBool bold);
 

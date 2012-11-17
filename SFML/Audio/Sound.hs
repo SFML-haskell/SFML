@@ -114,7 +114,7 @@ instance SFSound Sound where
     getAttenuation = sfSound_getAttenuation
     
     {-# INLINABLE getLoop #-}
-    getLoop = sfSound_getLoop >=> return . toEnum
+    getLoop = sfSound_getLoop >=> return . toEnum . fromIntegral
     
     {-# INLINABLE getMinDistance #-}
     getMinDistance = sfSound_getMinDistance
@@ -183,7 +183,7 @@ foreign import ccall unsafe "sfSound_getAttenuation"
 -- CSFML_AUDIO_API float sfSound_getAttenuation(const sfSound* sound);
 
 foreign import ccall unsafe "sfSound_getLoop"
-    sfSound_getLoop :: Sound -> IO Int
+    sfSound_getLoop :: Sound -> IO CInt
 
 -- CSFML_AUDIO_API sfBool sfSound_getLoop(const sfSound* sound);
 

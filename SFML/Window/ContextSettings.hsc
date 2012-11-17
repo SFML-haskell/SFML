@@ -31,17 +31,18 @@ instance Storable ContextSettings where
     alignment _ = alignment (undefined :: CUInt)
     
     peek ptr = do
-        db <- #{peek sfContextSettings, depthBits} ptr
-        sb <- #{peek sfContextSettings, stencilBits} ptr
-        al <- #{peek sfContextSettings, antialiasingLevel} ptr
-        ma <- #{peek sfContextSettings, majorVersion} ptr
-        mi <- #{peek sfContextSettings, minorVersion} ptr
-        return $ ContextSettings db sb al ma mi
+        db <- #{peek sfContextSettings, depthBits} ptr :: IO CInt
+        sb <- #{peek sfContextSettings, stencilBits} ptr :: IO CInt
+        al <- #{peek sfContextSettings, antialiasingLevel} ptr :: IO CInt
+        ma <- #{peek sfContextSettings, majorVersion} ptr :: IO CInt
+        mi <- #{peek sfContextSettings, minorVersion} ptr :: IO CInt
+        return $ ContextSettings (fromIntegral db) (fromIntegral sb) (fromIntegral al)
+            (fromIntegral ma) (fromIntegral mi)
     
     poke ptr (ContextSettings db sb al ma mi) = do
-        #{poke sfContextSettings, depthBits} ptr db
-        #{poke sfContextSettings, stencilBits} ptr sb
-        #{poke sfContextSettings, antialiasingLevel} ptr al
-        #{poke sfContextSettings, majorVersion} ptr ma
-        #{poke sfContextSettings, minorVersion} ptr mi
+        #{poke sfContextSettings, depthBits} ptr (fromIntegral db :: CInt)
+        #{poke sfContextSettings, stencilBits} ptr (fromIntegral sb :: CInt)
+        #{poke sfContextSettings, antialiasingLevel} ptr (fromIntegral al :: CInt)
+        #{poke sfContextSettings, majorVersion} ptr (fromIntegral ma :: CInt)
+        #{poke sfContextSettings, minorVersion} ptr (fromIntegral mi :: CInt)
 

@@ -65,17 +65,17 @@ instance Storable IntRect where
     alignment _ = alignment (undefined :: CInt)
     
     peek ptr = do
-        l <- #{peek sfIntRect, left} ptr
-        t <- #{peek sfIntRect, top} ptr
-        w <- #{peek sfIntRect, width} ptr
-        h <- #{peek sfIntRect, height} ptr
-        return $ IntRect l t w h
+        l <- #{peek sfIntRect, left} ptr   :: IO CInt
+        t <- #{peek sfIntRect, top} ptr    :: IO CInt
+        w <- #{peek sfIntRect, width} ptr  :: IO CInt
+        h <- #{peek sfIntRect, height} ptr :: IO CInt
+        return $ IntRect (fromIntegral l) (fromIntegral t) (fromIntegral w) (fromIntegral h)
     
     poke ptr (IntRect l t w h) = do
-        #{poke sfIntRect, left} ptr l
-        #{poke sfIntRect, top} ptr t
-        #{poke sfIntRect, width} ptr w
-        #{poke sfIntRect, height} ptr h
+        #{poke sfIntRect, left} ptr (fromIntegral l :: CInt)
+        #{poke sfIntRect, top} ptr (fromIntegral t :: CInt)
+        #{poke sfIntRect, width} ptr (fromIntegral w :: CInt)
+        #{poke sfIntRect, height} ptr (fromIntegral h :: CInt)
 
 
 -- | Check if a point is inside a rectangle's area.
@@ -100,10 +100,11 @@ intRectContains
     -> IntRect -- ^ Rectangle to test
     -> Bool
 
-intRectContains x y r = unsafeDupablePerformIO $ fmap (/=0) . with r $ \ptr -> sfIntRect_contains ptr x y
+intRectContains x y r = unsafeDupablePerformIO $ fmap (/=0) . with r $
+    \ptr -> sfIntRect_contains ptr (fromIntegral x) (fromIntegral y)
 
 foreign import ccall unsafe "sfIntRect_contains"
-    sfIntRect_contains :: Ptr IntRect -> Int -> Int -> IO CInt
+    sfIntRect_contains :: Ptr IntRect -> CInt -> CInt -> IO CInt
 
 --CSFML_GRAPHICS_API sfBool sfIntRect_contains(const sfIntRect* rect, int x, int y);
 

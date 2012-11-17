@@ -15,7 +15,7 @@ where
 
 import Foreign.C.Types
 import Foreign.Storable
-import Foreign.Ptr (castPtr)
+import Foreign.Ptr (Ptr, castPtr)
 
 
 -- | Global joysticks capabilities
@@ -57,8 +57,8 @@ instance Storable JoystickAxis where
     sizeOf _ = sizeInt
     alignment _ = alignment (undefined :: CInt)
     
-    peek ptr = peek (castPtr ptr) >>= return . toEnum
-    poke ptr bt = poke (castPtr ptr) (fromEnum bt)
+    peek ptr = peek (castPtr ptr :: Ptr CInt) >>= return . toEnum . fromIntegral
+    poke ptr bt = poke (castPtr ptr :: Ptr CInt) (fromIntegral . fromEnum $ bt)
 
 
 -- | Check if a joystick is connected.

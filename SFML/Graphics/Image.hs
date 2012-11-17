@@ -183,7 +183,7 @@ saveImage :: Image -> FilePath -> IO Bool
 saveImage image path = fmap (/=0) . withCAString path $ sfImage_saveToFile image
 
 foreign import ccall unsafe "sfImage_saveToFile"
-    sfImage_saveToFile :: Image -> CString -> IO Int
+    sfImage_saveToFile :: Image -> CString -> IO CInt
 
 --CSFML_GRAPHICS_API sfBool sfImage_saveToFile(const sfImage* image, const char* filename);
 

@@ -73,12 +73,12 @@ instance Storable SoundStreamChunk where
     
     peek ptr = do
         samples <- #{peek sfSoundStreamChunk, samples} ptr
-        sampleCount <- #{peek sfSoundStreamChunk, sampleCount} ptr
-        return $ SoundStreamChunk samples sampleCount
+        sampleCount <- #{peek sfSoundStreamChunk, sampleCount} ptr :: IO CUInt
+        return $ SoundStreamChunk samples (fromIntegral sampleCount)
     
     poke ptr (SoundStreamChunk samples sampleCount) = do
         #{poke sfSoundStreamChunk, samples} ptr samples
-        #{poke sfSoundStreamChunk, sampleCount} ptr sampleCount
+        #{poke sfSoundStreamChunk, sampleCount} ptr (fromIntegral sampleCount :: CUInt)
 
 
 -- | Type of the callback used to get a sound stream data.
