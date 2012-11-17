@@ -126,8 +126,11 @@ instance Storable KeyCode where
     sizeOf _ = sizeInt
     alignment _ = alignment (undefined :: CInt)
     
-    peek ptr = peek (castPtr ptr :: Ptr CInt) >>= return . toEnum . min (fromEnum Undefined) . max 0 . fromIntegral
+    peek ptr = peek (castPtr ptr :: Ptr CInt) >>= return . toEnum . checkUndef . fromIntegral
     poke ptr bt = poke (castPtr ptr :: Ptr CInt) (fromIntegral . fromEnum $ bt)
+
+
+checkUndef = min (fromEnum Undefined) . (\k -> if k < 0 then (fromEnum Undefined) else k)
 
 
 -- | Check if a key is pressed
