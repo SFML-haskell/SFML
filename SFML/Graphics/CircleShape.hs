@@ -1,7 +1,9 @@
-{-# LANGUAGE CPP, ForeignFunctionInterface #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.CircleShape
 (
-    createCircleShape
+    module SFML.Utils
+,   CircleShapeException(..)
+,   createCircleShape
 ,   copy
 ,   destroy
 ,   setPosition
@@ -50,8 +52,11 @@ import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Marshal.Alloc (alloca)
@@ -59,16 +64,29 @@ import Foreign.Marshal.Utils (with)
 import Foreign.Storable (peek)
 
 
+checkNull :: CircleShape -> Maybe CircleShape
+checkNull cs@(CircleShape ptr) = if ptr == nullPtr then Nothing else Just cs
+
+
 checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
+data CircleShapeException = CircleShapeException String deriving (Show, Typeable)
+
+instance Exception CircleShapeException
+
+
 -- | Create a new circle shape.
-createCircleShape :: IO CircleShape
-createCircleShape = sfCircleShape_create
+createCircleShape :: IO (Either CircleShapeException CircleShape)
+createCircleShape =
+    let err = CircleShapeException "Failed creating circle shape"
+    in fmap (tagErr err . checkNull) sfCircleShape_create
 
 foreign import ccall unsafe "sfCircleShape_create"
     sfCircleShape_create :: IO CircleShape
+
+-- \return A new sfCircleShape object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfCircleShape* sfCircleShape_create(void);
 

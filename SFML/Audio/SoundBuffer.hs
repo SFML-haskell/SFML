@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.SoundBuffer
 (
-    soundBufferFromFile
+    module SFML.Utils
+,   SoundBufferException(..)
+,   soundBufferFromFile
 ,   soundBufferFromMemory
 ,   soundBufferFromStream
 ,   soundBufferFromSamples
@@ -22,8 +25,11 @@ import SFML.Audio.Types
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Time
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
@@ -36,13 +42,20 @@ checkNull :: SoundBuffer -> Maybe SoundBuffer
 checkNull buf@(SoundBuffer ptr) = if ptr == nullPtr then Nothing else Just buf
 
 
+data SoundBufferException = SoundBufferException String deriving (Show, Typeable)
+
+instance Exception SoundBufferException
+
+
 -- | Create a new sound buffer and load it from a file.
 --
 -- Here is a complete list of all the supported audio formats:
 -- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 -- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-soundBufferFromFile :: FilePath -> IO (Maybe SoundBuffer)
-soundBufferFromFile path = fmap checkNull $ withCAString path sfSoundBuffer_createFromFile
+soundBufferFromFile :: FilePath -> IO (Either SoundBufferException SoundBuffer)
+soundBufferFromFile path =
+    let err = SoundBufferException $ "Failed loading sound buffer from file: " ++ show path
+    in fmap (tagErr err . checkNull) $ withCAString path sfSoundBuffer_createFromFile
 
 foreign import ccall unsafe "sfSoundBuffer_createFromFile"
     sfSoundBuffer_createFromFile :: CString -> IO SoundBuffer
@@ -60,9 +73,11 @@ foreign import ccall unsafe "sfSoundBuffer_createFromFile"
 soundBufferFromMemory
     :: Ptr a -- ^ Pointer to the file data in memory
     -> Int   -- ^ Size of the data to load, in bytes
-    -> IO (Maybe SoundBuffer) -- ^ A new sfSoundBuffer object ('Nothing' if failed)
+    -> IO (Either SoundBufferException SoundBuffer) -- ^ A new sfSoundBuffer object ('Nothing' if failed)
 
-soundBufferFromMemory ptr size = sfSoundBuffer_createFromMemory ptr (fromIntegral size) >>= return . checkNull
+soundBufferFromMemory ptr size =
+    let err = SoundBufferException $ "Failed loading sound buffer from memory address " ++ show ptr
+    in sfSoundBuffer_createFromMemory ptr (fromIntegral size) >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfSoundBuffer_createFromMemory"
     sfSoundBuffer_createFromMemory :: Ptr a -> CUInt -> IO SoundBuffer
@@ -77,9 +92,11 @@ foreign import ccall unsafe "sfSoundBuffer_createFromMemory"
 -- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
 soundBufferFromStream
     :: InputStream
-    -> IO (Maybe SoundBuffer) -- ^ A new sfSoundBuffer object ('Nothing' if failed)
+    -> IO (Either SoundBufferException SoundBuffer) -- ^ A new sfSoundBuffer object ('Nothing' if failed)
 
-soundBufferFromStream is = with is sfSoundBuffer_createFromStream >>= return . checkNull
+soundBufferFromStream is =
+    let err = SoundBufferException $ "Failed loading sound buffer from input stream " ++ show is
+    in with is sfSoundBuffer_createFromStream >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfSoundBuffer_createFromStream"
     sfSoundBuffer_createFromStream :: Ptr InputStream -> IO SoundBuffer

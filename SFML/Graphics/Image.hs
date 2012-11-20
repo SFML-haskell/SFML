@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Image
 (
-    createImage
+    module SFML.Utils
+,   ImageException(..)
+,   createImage
 ,   imageFromColor
 ,   imageFromPixels
 ,   imageFromFile
@@ -28,7 +31,10 @@ import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
+import Data.Typeable
 import Data.Word (Word8)
 import Foreign.Ptr
 import Foreign.C.String
@@ -42,15 +48,22 @@ checkNull :: Image -> Maybe Image
 checkNull img@(Image ptr) = if ptr == nullPtr then Nothing else Just img
 
 
+data ImageException = ImageException String deriving (Show, Typeable)
+
+instance Exception ImageException
+
+
 -- | Create an image.
 --
 -- This image is filled with black pixels.
 createImage
     :: Int -- ^ Width of the image
     -> Int -- ^ Height of the image
-    -> IO Image
+    -> IO (Either ImageException Image)
 
-createImage w h = sfImage_create (fromIntegral w) (fromIntegral h)
+createImage w h =
+    let err = ImageException "Failed creating image"
+    in fmap (tagErr err . checkNull) $ sfImage_create (fromIntegral w) (fromIntegral h)
 
 foreign import ccall unsafe "sfImage_create"
     sfImage_create :: CUInt -> CUInt -> IO Image

@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Font
 (
-    fontFromFile
+    module SFML.Utils
+,   FontException(..)
+,   fontFromFile
 ,   fontFromMemory
 ,   fontFromStream
 ,   copy
@@ -18,7 +21,10 @@ import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.InputStream
+import SFML.Utils
 
+import Control.Exception
+import Data.Typeable
 import Data.Word
 import Foreign.C.String
 import Foreign.C.Types
@@ -32,12 +38,21 @@ checkNull :: Font -> Maybe Font
 checkNull font@(Font ptr) = if ptr == nullPtr then Nothing else Just font
 
 
+data FontException = FontException String deriving (Show, Typeable)
+
+instance Exception FontException
+
+
 -- | Create a new font from a file.
-fontFromFile :: FilePath -> IO (Maybe Font)
-fontFromFile path = fmap checkNull $ withCAString path sfFont_createFromFile
+fontFromFile :: FilePath -> IO (Either FontException Font)
+fontFromFile path =
+    let err = FontException $ "Failed loading font from file " ++ show path
+    in fmap (tagErr err . checkNull) $ withCAString path sfFont_createFromFile
 
 foreign import ccall unsafe "sfFont_createFromFile"
     sfFont_createFromFile :: CString -> IO Font
+
+-- \return A new sfFont object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfFont* sfFont_createFromFile(const char* filename);
 
@@ -46,22 +61,30 @@ foreign import ccall unsafe "sfFont_createFromFile"
 fontFromMemory
     :: Ptr Char -- ^ Pointer to the file data in memory
     -> Int -- ^ Size of the data to load, in bytes
-    -> IO (Maybe Font)
+    -> IO (Either FontException Font)
 
-fontFromMemory pixels size = fmap checkNull $ sfFont_createFromMemory pixels (fromIntegral size)
+fontFromMemory pixels size =
+    let err = FontException $ "Failed loading font from memory address " ++ show pixels
+    in fmap (tagErr err . checkNull) $ sfFont_createFromMemory pixels (fromIntegral size)
 
 foreign import ccall unsafe "sfFont_createFromMemory"
     sfFont_createFromMemory :: Ptr a -> CInt -> IO Font
+
+-- \return A new sfFont object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfFont* sfFont_createFromMemory(const void* data, size_t sizeInBytes);
 
 
 -- | Create a new image font a custom stream.
-fontFromStream :: InputStream -> IO Font
-fontFromStream stream = with stream sfFont_createFromStream
+fontFromStream :: InputStream -> IO (Either FontException Font)
+fontFromStream stream =
+    let err = FontException $ "Failed loading font from stream " ++ show stream
+    in fmap (tagErr err . checkNull) $ with stream sfFont_createFromStream
 
 foreign import ccall "sfFont_createFromStream"
     sfFont_createFromStream :: Ptr InputStream -> IO Font
+
+-- \return A new sfFont object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfFont* sfFont_createFromStream(sfInputStream* stream);
 

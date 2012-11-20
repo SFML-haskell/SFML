@@ -2,7 +2,6 @@ import SFML.Audio
 import SFML.Graphics
 import SFML.Window
 
-import Data.Maybe (fromJust)
 import Foreign.Ptr (nullPtr)
 import Paths_sfml_demos
 
@@ -21,8 +20,8 @@ main = do
     let ctxSettings = Just $ ContextSettings 24 8 0 1 2
     wnd <- createRenderWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
     fontPath  <- getDataFileName "Vera.ttf"
-    fnt <- fmap fromJust $ fontFromFile fontPath
-    txt <- fmap fromJust $ createText
+    fnt <- err $ fontFromFile fontPath
+    txt <- err $ createText
     setTextFont txt fnt
     setTextCharacterSize txt txtSize
     setTextColor txt blue

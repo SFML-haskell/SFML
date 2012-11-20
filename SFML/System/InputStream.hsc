@@ -74,3 +74,14 @@ instance Storable InputStream where
 
 size_InputStream = #{size sfInputStream}
 
+
+instance Show InputStream where
+    
+    show (InputStream read seek tell getSize userData) =
+        "InputStream { read = " ++ show read ++
+                    ", seek = " ++ show seek ++
+                    ", tell = " ++ show tell ++
+                    ", getSize = " ++ show getSize ++
+                    ", userData = " ++ show userData ++
+                    "}"
+

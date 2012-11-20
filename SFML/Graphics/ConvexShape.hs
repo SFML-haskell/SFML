@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.ConvexShape
 (
-    createConvexShape
+    module SFML.Utils
+,   ConvexShapeException(..)
+,   createConvexShape
 ,   copy
 ,   destroy
 ,   setPosition
@@ -48,8 +51,11 @@ import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Marshal.Alloc (alloca)
@@ -57,16 +63,29 @@ import Foreign.Marshal.Utils (with)
 import Foreign.Storable (peek)
 
 
+checkNull :: ConvexShape -> Maybe ConvexShape
+checkNull cs@(ConvexShape ptr) = if ptr == nullPtr then Nothing else Just cs
+
+
 checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
+data ConvexShapeException = ConvexShapeException String deriving (Show, Typeable)
+
+instance Exception ConvexShapeException
+
+
 -- | Create a new convex shape.
-createConvexShape :: IO ConvexShape
-createConvexShape = sfConvexShape_create
+createConvexShape :: IO (Either ConvexShapeException ConvexShape)
+createConvexShape =
+    let err = ConvexShapeException "Failed creating convex shape"
+    in fmap (tagErr err . checkNull) sfConvexShape_create
 
 foreign import ccall unsafe "sfConvexShape_create"
     sfConvexShape_create :: IO ConvexShape
+
+-- \return A new sfConvexShape object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfConvexShape* sfConvexShape_create(void);
 

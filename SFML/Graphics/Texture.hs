@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Texture
 (
-    createTexture
+    module SFML.Utils
+,   TextureException(..)
+,   createTexture
 ,   textureFromFile
 ,   textureFromMemory
 ,   textureFromStream
@@ -31,7 +34,10 @@ import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
+import Data.Typeable
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
@@ -45,16 +51,25 @@ checkNull :: Texture -> Maybe Texture
 checkNull tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
+data TextureException = TextureException String deriving (Show, Typeable)
+
+instance Exception TextureException
+
+
 -- | Create a new texture.
 createTexture
     :: Int -- ^ Texture width
     -> Int -- ^ Texture height
-    -> IO (Maybe Texture)
+    -> IO (Either TextureException Texture)
 
-createTexture w h = fmap checkNull $ sfTexture_create (fromIntegral w) (fromIntegral h)
+createTexture w h =
+    let err = TextureException "Failed creating texture"
+    in fmap (tagErr err . checkNull) $ sfTexture_create (fromIntegral w) (fromIntegral h)
 
 foreign import ccall unsafe "sfTexture_create"
     sfTexture_create :: CUInt -> CUInt -> IO Texture
+
+-- \return A new sfTexture object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfTexture* sfTexture_create(unsigned int width, unsigned int height);
 
@@ -63,17 +78,20 @@ foreign import ccall unsafe "sfTexture_create"
 textureFromFile
     :: FilePath -- ^ Path of the image file to load
     -> Maybe IntRect  -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Maybe Texture)
+    -> IO (Either TextureException Texture)
 
 textureFromFile path rect =
-    withCAString path $ \cpath ->
-    fmap checkNull $
-        case rect of
-            Nothing -> sfTexture_createFromFile cpath nullPtr
-            Just r  -> with r $ sfTexture_createFromFile cpath
+    let err = TextureException $ "Failed loading texture from file " ++ show path
+    in withCAString path $ \cpath ->
+       fmap (tagErr err . checkNull) $
+           case rect of
+               Nothing -> sfTexture_createFromFile cpath nullPtr
+               Just r  -> with r $ sfTexture_createFromFile cpath
 
 foreign import ccall unsafe "sfTexture_createFromFile"
     sfTexture_createFromFile :: CString -> Ptr IntRect -> IO Texture
+
+-- \return A new sfTexture object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfTexture* sfTexture_createFromFile(const char* filename, const sfIntRect* area);
 
@@ -83,15 +101,18 @@ textureFromMemory
     :: Ptr a   -- ^ Pointer to the file data in memory
     -> Int     -- ^ Size of the data to load, in bytes
     -> Maybe IntRect -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Maybe Texture)
+    -> IO (Either TextureException Texture)
 
 textureFromMemory pixels size rect =
-    fmap checkNull $ case rect of
-        Nothing -> sfTexture_createFromMemory pixels (fromIntegral size) nullPtr
-        Just r  -> with r $ sfTexture_createFromMemory pixels (fromIntegral size)
+    let err = TextureException $ "Failed creating texture from memory address " ++ show pixels
+    in fmap (tagErr err . checkNull) $ case rect of
+           Nothing -> sfTexture_createFromMemory pixels (fromIntegral size) nullPtr
+           Just r  -> with r $ sfTexture_createFromMemory pixels (fromIntegral size)
 
 foreign import ccall unsafe "sfTexture_createFromMemory"
     sfTexture_createFromMemory :: Ptr a -> CUInt -> Ptr IntRect -> IO Texture
+
+-- \return A new sfTexture object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfTexture* sfTexture_createFromMemory(const void* data, size_t sizeInBytes, const sfIntRect* area);
 
@@ -100,34 +121,41 @@ foreign import ccall unsafe "sfTexture_createFromMemory"
 textureFromStream
     :: InputStream -- ^ Source stream to read from
     -> Maybe IntRect     -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Maybe Texture)
+    -> IO (Either TextureException Texture)
 
 textureFromStream stream rect =
-    fmap checkNull $
-    with stream $ \streamPtr ->
-    case rect of
-        Nothing -> sfTexture_createFromStream streamPtr nullPtr
-        Just r  -> with r $ sfTexture_createFromStream streamPtr
+    let err = TextureException $ "Failed creating texture from input stream " ++ show stream
+    in fmap (tagErr err . checkNull) $
+       with stream $ \streamPtr ->
+       case rect of
+           Nothing -> sfTexture_createFromStream streamPtr nullPtr
+           Just r  -> with r $ sfTexture_createFromStream streamPtr
 
 foreign import ccall "sfTexture_createFromStream"
      sfTexture_createFromStream :: Ptr InputStream -> Ptr IntRect -> IO Texture
+
+-- \return A new sfTexture object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfTexture* sfTexture_createFromStream(sfInputStream* stream, const sfIntRect* area);
 
 
 -- | Create a new texture from an image.
 textureFromImage
-    :: Image   -- ^ Image to upload to the texture
+    :: Image -- ^ Image to upload to the texture
     -> Maybe IntRect -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Maybe Texture)
+    -> IO (Either TextureException Texture)
 
 textureFromImage image rect =
-    fmap checkNull $ case rect of
-        Nothing -> sfTexture_createFromImage image nullPtr
-        Just r  -> with r $ sfTexture_createFromImage image
+    let (Image addr) = image
+        err = TextureException $ "Failed creating texture from image " ++ show addr
+    in fmap (tagErr err . checkNull) $ case rect of
+           Nothing -> sfTexture_createFromImage image nullPtr
+           Just r  -> with r $ sfTexture_createFromImage image
 
 foreign import ccall unsafe "sfTexture_createFromImage"
     sfTexture_createFromImage :: Image -> Ptr IntRect -> IO Texture
+
+-- \return A new sfTexture object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfTexture* sfTexture_createFromImage(const sfImage* image, const sfIntRect* area);
 

@@ -2,7 +2,6 @@ import SFML.Audio
 import SFML.Graphics
 import SFML.Window
 
-import Data.Maybe (fromJust)
 import Paths_sfml_demos
 
 
@@ -12,10 +11,10 @@ main = do
     logoPath  <- getDataFileName "Haskell-Logo.png"
     fontPath  <- getDataFileName "Vera.ttf"
     musicPath <- getDataFileName "DST-BreakOut.ogg"
-    tex <- fmap fromJust $ textureFromFile logoPath Nothing
-    spr <- fmap fromJust $ createSprite
-    fnt <- fmap fromJust $ fontFromFile fontPath
-    txt <- fmap fromJust $ createText
+    tex <- err $ textureFromFile logoPath Nothing
+    spr <- err $ createSprite
+    fnt <- err $ fontFromFile fontPath
+    txt <- err $ createText
     setTextString txt "Hello world!"
     setTextFont txt fnt
     setTextCharacterSize txt 50

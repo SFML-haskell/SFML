@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.SoundBufferRecorder
 (
-    createSoundBufferRecorder
+    module SFML.Utils
+,   SoundBufferRecorderException(..)
+,   createSoundBufferRecorder
 ,   destroy
 ,   startRecording
 ,   stopRecording
@@ -14,8 +17,11 @@ import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
 import SFML.SFResource
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.Ptr (nullPtr)
 
@@ -24,9 +30,16 @@ checkNull :: SoundBufferRecorder -> Maybe SoundBufferRecorder
 checkNull sbr@(SoundBufferRecorder ptr) = if ptr == nullPtr then Nothing else Just sbr
 
 
+data SoundBufferRecorderException = SoundBufferRecorderException String deriving (Show, Typeable)
+
+instance Exception SoundBufferRecorderException
+
+
 -- | Create a new sound buffer recorder.
-createSoundBufferRecorder :: IO (Maybe SoundBufferRecorder)
-createSoundBufferRecorder = fmap checkNull sfSoundBufferRecorder_create
+createSoundBufferRecorder :: IO (Either SoundBufferRecorderException SoundBufferRecorder)
+createSoundBufferRecorder =
+    let err = SoundBufferRecorderException $ "Failed creating sound buffer recorder"
+    in fmap (tagErr err . checkNull) sfSoundBufferRecorder_create
 
 foreign import ccall unsafe "sfSoundBufferRecorder_create"
     sfSoundBufferRecorder_create :: IO SoundBufferRecorder

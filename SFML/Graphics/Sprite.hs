@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Sprite
 (
-    createSprite
+    module SFML.Utils
+,   SpriteException(..)
+,   createSprite
 ,   copy
 ,   destroy
 ,   setPosition
@@ -39,8 +42,11 @@ import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
@@ -56,9 +62,16 @@ checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
+data SpriteException = SpriteException String deriving (Show, Typeable)
+
+instance Exception SpriteException
+
+
 -- | Create a new sprite.
-createSprite :: IO (Maybe Sprite)
-createSprite = fmap checkNull sfSprite_create
+createSprite :: IO (Either SpriteException Sprite)
+createSprite =
+    let err = SpriteException "Failed creating sprite"
+    in fmap (tagErr err . checkNull) sfSprite_create
 
 foreign import ccall unsafe "sfSprite_create"
     sfSprite_create :: IO Sprite

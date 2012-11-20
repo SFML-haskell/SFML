@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Shader
 (
-    shaderFromFile
+    module SFML.Utils
+,   ShaderException(..)
+,   shaderFromFile
 ,   shaderFromMemory
 ,   shaderFromStream
 ,   destroy
@@ -27,7 +30,10 @@ import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
 import SFML.System.Vector3
+import SFML.Utils
 
+import Control.Exception
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.Marshal.Utils (with)
@@ -36,6 +42,24 @@ import Foreign.Ptr
 
 checkNull :: Shader -> Maybe Shader
 checkNull shader@(Shader ptr) = if ptr == nullPtr then Nothing else Just shader
+
+
+data ShaderException = ShaderException String deriving (Show, Typeable)
+
+instance Exception ShaderException
+
+
+exf :: Show a => Maybe a -> Maybe a -> ShaderException
+exf vs fs = ShaderException $ "Failed loading shader program from files " ++ show vs ++ ", " ++ show fs
+
+exs :: Show a => Maybe a -> Maybe a -> ShaderException
+exs vs fs = ShaderException $ "Failed loading shader program from sources " ++ show vs ++ ", " ++ show fs
+
+exi :: Show a => Maybe a -> Maybe a -> ShaderException
+exi vs fs = ShaderException $ "Failed loading shader program from input streams " ++ show vs ++ ", " ++ show fs
+
+nullstr = Nothing :: Maybe String
+nullis  = Nothing :: Maybe InputStream
 
 
 -- | Load both the vertex and fragment shaders from files.
@@ -51,14 +75,18 @@ checkNull shader@(Shader ptr) = if ptr == nullPtr then Nothing else Just shader
 shaderFromFile
     :: Maybe FilePath -- ^ Path of the vertex shader file to load, or 'Nothing' to skip this shader
     -> Maybe FilePath -- ^ Path of the fragment shader file to load, or 'Nothing' to skip this shader
-    -> IO (Maybe Shader)
+    -> IO (Either ShaderException Shader)
 
-shaderFromFile  Nothing     Nothing    = fmap checkNull $ sfShader_createFromFile nullPtr nullPtr
-shaderFromFile  Nothing    (Just frag) = fmap checkNull . withCString frag $ sfShader_createFromFile nullPtr
-shaderFromFile (Just vert)  Nothing    = fmap checkNull . withCString vert $ flip sfShader_createFromFile nullPtr
-shaderFromFile (Just vert) (Just frag) = fmap checkNull $
-                                     withCString vert $ \cvert ->
-                                     withCString frag $ sfShader_createFromFile cvert
+shaderFromFile Nothing Nothing = fmap (tagErr (exf nullstr nullstr) . checkNull) $ sfShader_createFromFile nullPtr nullPtr
+
+shaderFromFile Nothing fs@(Just frag) =
+    fmap (tagErr (exf Nothing fs) . checkNull) . withCString frag $ sfShader_createFromFile nullPtr
+
+shaderFromFile vs@(Just vert) Nothing =
+    fmap (tagErr (exf vs Nothing) . checkNull) . withCString vert $ flip sfShader_createFromFile nullPtr
+
+shaderFromFile vs@(Just vert) fs@(Just frag) =
+    fmap (tagErr (exf vs fs) . checkNull) $ withCString vert $ \cvert -> withCString frag $ sfShader_createFromFile cvert
 
 foreign import ccall unsafe "sfShader_createFromFile"
     sfShader_createFromFile :: CString -> CString -> IO Shader
@@ -81,14 +109,19 @@ foreign import ccall unsafe "sfShader_createFromFile"
 shaderFromMemory
     :: Maybe String -- ^ String containing the source code of the vertex shader, or 'Nothing' to skip this shader
     -> Maybe String -- ^ String containing the source code of the fragment shader, or 'Nothing' to skip this shader
-    -> IO (Maybe Shader)
+    -> IO (Either ShaderException Shader)
 
-shaderFromMemory  Nothing     Nothing    = fmap checkNull $ sfShader_createFromMemory nullPtr nullPtr
-shaderFromMemory  Nothing    (Just frag) = fmap checkNull . withCString frag $ sfShader_createFromMemory nullPtr
-shaderFromMemory (Just vert)  Nothing    = fmap checkNull . withCString vert $ flip sfShader_createFromMemory nullPtr
-shaderFromMemory (Just vert) (Just frag) = fmap checkNull $
-                                     withCString vert $ \cvert ->
-                                     withCString frag $ sfShader_createFromMemory cvert
+shaderFromMemory Nothing Nothing
+    = fmap (tagErr (exs nullstr nullstr) . checkNull) $ sfShader_createFromMemory nullPtr nullPtr
+
+shaderFromMemory Nothing fs@(Just frag) =
+    fmap (tagErr (exs Nothing fs) . checkNull) . withCString frag $ sfShader_createFromMemory nullPtr
+
+shaderFromMemory vs@(Just vert) Nothing =
+    fmap (tagErr (exs vs Nothing) . checkNull) . withCString vert $ flip sfShader_createFromMemory nullPtr
+
+shaderFromMemory vs@(Just vert) fs@(Just frag)
+    = fmap (tagErr (exs vs fs) . checkNull) $ withCString vert $ \cvert -> withCString frag $ sfShader_createFromMemory cvert
 
 foreign import ccall unsafe "sfShader_createFromMemory"
     sfShader_createFromMemory :: CString -> CString -> IO Shader
@@ -111,14 +144,19 @@ foreign import ccall unsafe "sfShader_createFromMemory"
 shaderFromStream
     :: Maybe InputStream -- ^ Source stream to read the vertex shader from, or 'Nothing' to skip this shader
     -> Maybe InputStream -- ^ Source stream to read the fragment shader from, or 'Nothing' to skip this shader
-    -> IO (Maybe Shader)
+    -> IO (Either ShaderException Shader)
 
-shaderFromStream  Nothing     Nothing    = fmap checkNull $ sfShader_createFromStream nullPtr nullPtr
-shaderFromStream  Nothing    (Just frag) = fmap checkNull . with frag $ sfShader_createFromStream nullPtr
-shaderFromStream (Just vert)  Nothing    = fmap checkNull . with vert $ flip sfShader_createFromStream nullPtr
-shaderFromStream (Just vert) (Just frag) = fmap checkNull $
-                                     with vert $ \cvert ->
-                                     with frag $ sfShader_createFromStream cvert
+shaderFromStream Nothing Nothing
+    = fmap (tagErr (exi nullis nullis) . checkNull) $ sfShader_createFromStream nullPtr nullPtr
+
+shaderFromStream Nothing fs@(Just frag)
+    = fmap (tagErr (exi Nothing fs) . checkNull) . with frag $ sfShader_createFromStream nullPtr
+
+shaderFromStream vs@(Just vert) Nothing
+    = fmap (tagErr (exi vs Nothing) . checkNull) . with vert $ flip sfShader_createFromStream nullPtr
+
+shaderFromStream vs@(Just vert) fs@(Just frag)
+    = fmap (tagErr (exi vs fs) . checkNull) $ with vert $ \cvert -> with frag $ sfShader_createFromStream cvert
 
 foreign import ccall unsafe "sfShader_createFromStream"
     sfShader_createFromStream :: Ptr InputStream -> Ptr InputStream -> IO Shader

@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.RenderTexture
 (
-    createRenderTexture
+    module SFML.Utils
+,   RenderTextureException(..)
+,   createRenderTexture
 ,   destroy
 ,   getTextureSize
 ,   setActive
@@ -44,7 +47,10 @@ import SFML.Graphics.Vertex
 import SFML.SFDisplayable
 import SFML.SFResource
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Array (withArray)
@@ -57,15 +63,21 @@ checkNull :: RenderTexture -> Maybe RenderTexture
 checkNull tex@(RenderTexture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
+data RenderTextureException = RenderTextureException String deriving (Show, Typeable)
+
+instance Exception RenderTextureException
+
+
 -- | Construct a new render texture.
 createRenderTexture
     :: Int -- ^ Width of the render texture
     -> Int -- ^ Height of the render texture
-    -> Bool -- ^ Do you want a depth-buffer attached? (useful only if you're doing 3D OpenGL on the rendertexture)
-    -> IO (Maybe RenderTexture)
+    -> Bool -- ^ Do you want a depth-buffer attached? (useful only if you're doing 3D OpenGL on the render texture)
+    -> IO (Either RenderTextureException RenderTexture)
 
 createRenderTexture w h d =
-    fmap checkNull $ sfRenderTexture_create (fromIntegral w) (fromIntegral h) (fromIntegral . fromEnum $ d)
+    let err = RenderTextureException "Failed creating render texture"
+    in fmap (tagErr err . checkNull) $ sfRenderTexture_create (fromIntegral w) (fromIntegral h) (fromIntegral . fromEnum $ d)
 
 foreign import ccall unsafe "sfRenderTexture_create"
     sfRenderTexture_create :: CUInt -> CUInt -> CInt -> IO RenderTexture

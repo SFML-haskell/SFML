@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.RectangleShape
 (
-    createRectangleShape
+    module SFML.Utils
+,   RectangleShapeException(..)
+,   createRectangleShape
 ,   copy
 ,   destroy
 ,   setPosition
@@ -49,8 +52,11 @@ import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.C.Types
 import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Marshal.Alloc (alloca)
@@ -58,16 +64,29 @@ import Foreign.Marshal.Utils (with)
 import Foreign.Storable (peek)
 
 
+checkNull :: RectangleShape -> Maybe RectangleShape
+checkNull rs@(RectangleShape ptr) = if ptr == nullPtr then Nothing else Just rs
+
+
 checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
+data RectangleShapeException = RectangleShapeException String deriving (Show, Typeable)
+
+instance Exception RectangleShapeException
+
+
 -- | Create a new rectangle shape.
-createRectangleShape :: IO RectangleShape
-createRectangleShape = sfRectangleShape_create
+createRectangleShape :: IO (Either RectangleShapeException RectangleShape)
+createRectangleShape =
+    let err = RectangleShapeException "Failed creating rectangle shape"
+    in fmap (tagErr err . checkNull) sfRectangleShape_create
 
 foreign import ccall unsafe "sfRectangleShape_create"
     sfRectangleShape_create :: IO RectangleShape
+
+-- \return A new sfRectangleShape object, or NULL if it failed
 
 --CSFML_GRAPHICS_API sfRectangleShape* sfRectangleShape_create(void);
 

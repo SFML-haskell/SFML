@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.Music
 (
-    musicFromFile
+    module SFML.Utils
+,   MusicException(..)
+,   musicFromFile
 ,   musicFromMemory
 ,   musicFromStream
 ,   destroy
@@ -40,8 +43,11 @@ import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Time
 import SFML.System.Vector3
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Foreign.Marshal.Utils (with)
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.C.String
@@ -54,16 +60,23 @@ checkNull :: Music -> Maybe Music
 checkNull music@(Music ptr) = if ptr == nullPtr then Nothing else Just music
 
 
+data MusicException = MusicException String deriving (Show, Typeable)
+
+instance Exception MusicException
+
+
 -- | Create a new music and load it from a file.
 -- 
 -- This function doesn't start playing the music (call
--- sfMusic_play to do so).
+-- 'play' to do so).
 -- 
 -- Here is a complete list of all the supported audio formats:
 -- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 -- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-musicFromFile :: FilePath -> IO (Maybe Music)
-musicFromFile path = withCAString path $ \cstr -> sfMusic_createFromFile cstr >>= return . checkNull
+musicFromFile :: FilePath -> IO (Either MusicException Music)
+musicFromFile path =
+    let err = MusicException $ "Failed loading music from file " ++ path
+    in withCAString path $ \cstr -> sfMusic_createFromFile cstr >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfMusic_createFromFile"
     sfMusic_createFromFile :: CString -> IO Music
@@ -76,7 +89,7 @@ foreign import ccall unsafe "sfMusic_createFromFile"
 -- | Create a new music and load it from a file in memory.
 -- 
 -- This function doesn't start playing the music (call
--- sfMusic_play to do so).
+-- 'play' to do so).
 -- 
 -- Here is a complete list of all the supported audio formats:
 -- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
@@ -84,9 +97,11 @@ foreign import ccall unsafe "sfMusic_createFromFile"
 musicFromMemory
     :: Ptr a -- ^ Pointer to the file data in memory
     -> Int   -- ^ Size of the data to load, in bytes
-    -> IO (Maybe Music)
+    -> IO (Either MusicException Music)
 
-musicFromMemory ptr size = fmap checkNull $ sfMusic_createFromMemory ptr (fromIntegral size)
+musicFromMemory ptr size =
+    let err = MusicException $ "Failed loading music from memory address " ++ show ptr
+    in fmap (tagErr err . checkNull) $ sfMusic_createFromMemory ptr (fromIntegral size)
 
 foreign import ccall unsafe "sfMusic_createFromMemory"
     sfMusic_createFromMemory :: Ptr a -> CUInt -> IO Music
@@ -99,13 +114,15 @@ foreign import ccall unsafe "sfMusic_createFromMemory"
 -- | Create a new music and load it from a custom stream.
 -- 
 -- This function doesn't start playing the music (call
--- sfMusic_play to do so).
+-- 'play' to do so).
 -- 
 -- Here is a complete list of all the supported audio formats:
 -- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 -- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-musicFromStream :: InputStream -> IO (Maybe Music)
-musicFromStream is = with is $ \ptr -> sfMusic_createFromStream ptr >>= return . checkNull
+musicFromStream :: InputStream -> IO (Either MusicException Music)
+musicFromStream is =
+    let err = MusicException $ "Failed loading music from input stream " ++ show is
+    in with is $ \ptr -> sfMusic_createFromStream ptr >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfMusic_createFromStream"
     sfMusic_createFromStream :: Ptr InputStream -> IO Music

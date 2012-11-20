@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Text
 (
-    TextStyle(..)
+    module SFML.Utils
+,   TextException(..)
+,   TextStyle(..)
 ,   createText
 ,   copy
 ,   destroy
@@ -31,8 +34,11 @@ import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFResource
 import SFML.System.Vector2
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad
+import Data.Typeable
 import Data.Bits ((.|.))
 import Data.List (foldl')
 import Foreign.C.String
@@ -65,6 +71,11 @@ instance Enum TextStyle where
     toEnum 4 = TextUnderlined
 
 
+data TextException = TextException String deriving (Show, Typeable)
+
+instance Exception TextException
+
+
 checkNull :: Text -> Maybe Text
 checkNull text@(Text ptr) = if ptr == nullPtr then Nothing else Just text
 
@@ -74,8 +85,10 @@ checkNullFont font@(Font ptr) = if ptr == nullPtr then Nothing else Just font
 
 
 -- | Create a new text.
-createText :: IO (Maybe Text)
-createText = fmap checkNull sfText_create
+createText :: IO (Either TextException Text)
+createText =
+    let err = TextException "Failed creating text"
+    in fmap (tagErr err . checkNull) sfText_create
 
 foreign import ccall unsafe "sfText_create"
     sfText_create :: IO Text

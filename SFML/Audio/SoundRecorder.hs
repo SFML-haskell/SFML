@@ -1,6 +1,9 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.SoundRecorder
 (
-    SoundRecorderStartCallback
+    module SFML.Utils
+,   SoundRecorderException(..)
+,   SoundRecorderStartCallback
 ,   SoundRecorderProcessCallback
 ,   SoundRecorderStopCallback
 ,   createSoundRecorder
@@ -17,8 +20,11 @@ import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
 import SFML.SFResource
+import SFML.Utils
 
+import Control.Exception
 import Control.Monad ((>=>))
+import Data.Typeable
 import Data.Word (Word16)
 import Foreign.C.Types
 import Foreign.Ptr (Ptr, nullPtr)
@@ -28,19 +34,24 @@ checkNull :: SoundRecorder -> Maybe SoundRecorder
 checkNull sr@(SoundRecorder ptr) = if ptr == nullPtr then Nothing else Just sr
 
 
+data SoundRecorderException = SoundRecorderException String deriving (Show, Typeable)
+
+instance Exception SoundRecorderException
+
+
+-- | Type of the callback used when starting a capture.
 type SoundRecorderStartCallback a = Ptr a -> IO CInt
 
+-- | Type of the callback used to process audio data.
 type SoundRecorderProcessCallback a = Ptr Word16 -> CUInt -> Ptr a -> IO Bool
 
+-- | Type of the callback used when stopping a capture.
 type SoundRecorderStopCallback a = Ptr a -> IO ()
 
--- Type of the callback used when starting a capture
 -- typedef sfBool (*sfSoundRecorderStartCallback)(void*);
 
--- Type of the callback used to process audio data
 -- typedef sfBool (*sfSoundRecorderProcessCallback)(const sfInt16*, size_t, void*);
 
--- Type of the callback used when stopping a capture
 -- typedef void   (*sfSoundRecorderStopCallback)(void*);
 
 
@@ -51,9 +62,15 @@ createSoundRecorder
     -> Ptr (SoundRecorderProcessCallback a) -- ^ Callback function which will be called each time there's audio data to process
     -> Ptr (SoundRecorderStopCallback a)    -- ^ Callback function which will be called when the current capture stops (can be NULL)
     -> Ptr a -- ^ Data to pass to the callback function (can be NULL)
-    -> IO (Maybe SoundRecorder) -- ^ A new sfSoundRecorder object ('Nothing' if failed)
+    -> IO (Either SoundRecorderException SoundRecorder) -- ^ A new sfSoundRecorder object ('Nothing' if failed)
 
-createSoundRecorder c1 c2 c3 d = sfSoundRecorder_create c1 c2 c3 d >>= return . checkNull
+createSoundRecorder c1 c2 c3 d =
+    let err = SoundRecorderException $
+            "Failed creating sound recorder: onStart = " ++ show c1 ++
+                                           " onProcess = " ++ show c2 ++
+                                           " onStop = " ++ show c3 ++
+                                           " userData = " ++ show d
+    in sfSoundRecorder_create c1 c2 c3 d >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfSoundRecorder_create"
     sfSoundRecorder_create
