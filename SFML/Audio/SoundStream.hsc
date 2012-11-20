@@ -48,7 +48,7 @@ import Foreign.Storable
 #include <SFML/Audio/SoundStream.h>
 
 
--- | Defines the data to fill by the OnGetData callback.
+-- | Defines the data to fill by the onGetData callback.
 data SoundStreamChunk = SoundStreamChunk
     { samples :: Ptr Word16 -- ^ Pointer to the audio samples
     , sampleCount :: Int -- ^ Number of samples pointed by Samples
@@ -98,8 +98,8 @@ typedef void   (*sfSoundStreamSeekCallback)(sfTime, void*);                 --< 
 
 -- | Create a new sound stream.
 createSoundStream
-    :: Ptr (SoundStreamGetDataCallback a) -- ^ Function called when the stream needs more data (can't be NULL)
-    -> Ptr (SoundStreamSeekCallback a) -- ^ Function called when the stream seeks (can't be NULL)
+    :: Ptr (SoundStreamGetDataCallback a) -- ^ (onGetData) Function called when the stream needs more data (can't be NULL)
+    -> Ptr (SoundStreamSeekCallback a) -- ^ (onSeek) Function called when the stream seeks (can't be NULL)
     -> Int -- ^ Number of channels to use (1 = mono, 2 = stereo)
     -> Int -- ^ Sample rate of the sound (44100 = CD quality)
     -> Ptr a -- ^ Data to pass to the callback functions

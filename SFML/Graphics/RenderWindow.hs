@@ -541,7 +541,7 @@ foreign import ccall unsafe "sfRenderWindow_resetGLStates"
 -- This is a slow operation, whose main purpose is to make
 -- screenshots of the application. If you want to update an
 -- image with the contents of the window and then use it for
--- drawing, you should rather use a sfTexture and its
+-- drawing, you should rather use a 'Texture' and its
 -- update(sfWindow*) function.
 --
 -- You can also draw things directly to a texture with the

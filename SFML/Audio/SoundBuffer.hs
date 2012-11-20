@@ -167,7 +167,7 @@ foreign import ccall unsafe "sfSoundBuffer_saveToFile"
 --
 -- The format of the returned samples is 16 bits signed integer
 -- (sfInt16). The total number of samples in this array
--- is given by the sfSoundBuffer_getSampleCount function.
+-- is given by the 'getSampleCount' function.
 getSamples
     :: SoundBuffer
     -> IO (Ptr a) -- ^ Read-only pointer to the array of sound samples

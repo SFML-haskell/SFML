@@ -14,6 +14,7 @@ class SFSound a where
     -- This function starts the sound if it was stopped, resumes
     -- it if it was paused, and restarts it from beginning if it
     -- was it already playing.
+    -- 
     -- This function uses its own thread so that it doesn't block
     -- the rest of the program while the sound is played.
     play :: a -> IO ()
@@ -28,13 +29,14 @@ class SFSound a where
     -- 
     -- This function stops the sound if it was playing or paused,
     -- and does nothing if it was already stopped.
-    -- It also resets the playing position (unlike sfSound_pause).
+    -- 
+    -- It also resets the playing position (unlike 'pause').
     stop :: a -> IO ()
     
     -- | Get the attenuation factor of a sound.
     getAttenuation :: a -> IO Float
     
-    -- | Tell whether or not a soud is in loop mode.
+    -- | Tell whether or not a sound is in loop mode.
     getLoop :: a -> IO Bool
     
     -- | Get the minimum distance of a sound.
@@ -49,7 +51,7 @@ class SFSound a where
     -- | Get the 3D position of a sound in the audio scene.
     getPosition :: a -> IO Vec3f
     
-    -- | Get the current status of a sound (stopped, paused, playing)
+    -- | Get the current status of a sound (stopped, paused, playing).
     getStatus :: a -> IO SoundStatus
     
     -- | Get the volume of a sound.
@@ -75,18 +77,18 @@ class SFSound a where
     -- 
     -- If set, the sound will restart from beginning after
     -- reaching the end and so on, until it is stopped or
-    -- sfSound_setLoop(sound, sfFalse) is called.
+    -- 'setLoop' 'False' is called.
     -- 
     -- The default looping state for sounds is false.
     setLoop :: a -> Bool -> IO ()
     
     -- | Set the minimum distance of a sound.
     -- 
-    -- The "minimum distance" of a sound is the maximum
+    -- The minimum distance of a sound is the maximum
     -- distance at which it is heard at its maximum volume. Further
     -- than the minimum distance, it will start to fade out according
-    -- to its attenuation factor. A value of 0 ("inside the head
-    -- of the listener") is an invalid value and is forbidden.
+    -- to its attenuation factor. A value of 0 (inside the head
+    -- of the listener) is an invalid value and is forbidden.
     -- 
     -- The default value of the minimum distance is 1.
     setMinDistance :: a -> Float -> IO ()

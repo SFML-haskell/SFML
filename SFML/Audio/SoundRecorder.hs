@@ -58,11 +58,11 @@ type SoundRecorderStopCallback a = Ptr a -> IO ()
 
 -- | Construct a new sound recorder from callback functions.
 createSoundRecorder
-    :: Ptr (SoundRecorderStartCallback a)   -- ^ Callback function which will be called when a new capture starts (can be NULL)
-    -> Ptr (SoundRecorderProcessCallback a) -- ^ Callback function which will be called each time there's audio data to process
-    -> Ptr (SoundRecorderStopCallback a)    -- ^ Callback function which will be called when the current capture stops (can be NULL)
+    :: Ptr (SoundRecorderStartCallback a)   -- ^ (onStart) Callback function which will be called when a new capture starts (can be NULL)
+    -> Ptr (SoundRecorderProcessCallback a) -- ^ (onProcess) Callback function which will be called each time there's audio data to process
+    -> Ptr (SoundRecorderStopCallback a)    -- ^ (onStop) Callback function which will be called when the current capture stops (can be NULL)
     -> Ptr a -- ^ Data to pass to the callback function (can be NULL)
-    -> IO (Either SoundRecorderException SoundRecorder) -- ^ A new sfSoundRecorder object ('Nothing' if failed)
+    -> IO (Either SoundRecorderException SoundRecorder) -- ^ A new 'SoundRecorder' object ('Nothing' if failed)
 
 createSoundRecorder c1 c2 c3 d =
     let err = SoundRecorderException $
@@ -130,7 +130,7 @@ foreign import ccall unsafe "sfSoundRecorder_getSampleRate"
 --
 -- This function should always be called before using
 -- the audio capture features. If it returns false, then
--- any attempt to use sfSoundRecorder will fail.
+-- any attempt to use 'SoundRecorder' will fail.
 isSoundRecorderAvailable :: IO Bool
 isSoundRecorderAvailable = fmap (toEnum . fromIntegral) sfSoundRecorder_isAvailable
 

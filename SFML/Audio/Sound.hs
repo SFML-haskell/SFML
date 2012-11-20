@@ -78,7 +78,7 @@ foreign import ccall unsafe "sfSound_destroy"
 -- | Set the source buffer containing the audio data to play.
 -- 
 -- It is important to note that the sound buffer is not copied,
--- thus the sfSoundBuffer object must remain alive as long
+-- thus the 'SoundBuffer' object must remain alive as long
 -- as it is attached to the sound.
 setSoundBuffer :: Sound -> SoundBuffer -> IO ()
 setSoundBuffer = sfSound_setBuffer
