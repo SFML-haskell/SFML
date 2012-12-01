@@ -29,7 +29,7 @@ module SFML.Graphics.RenderWindow
 ,   getView
 ,   getDefaultView
 ,   getViewport
-,   convertCoords
+,   mapPixelToCoords
 ,   drawSprite
 ,   drawText
 ,   drawShape
@@ -408,19 +408,19 @@ foreign import ccall unsafe "sfRenderWindow_getViewport_helper"
 
 instance SFCoordSpace RenderWindow where
     
-    {-# INLINABLE convertCoords #-}
-    convertCoords wnd p view =
+    {-# INLINABLE mapPixelToCoords #-}
+    mapPixelToCoords wnd p view =
         alloca $ \ptr ->
         with p $ \posPtr -> case view of
-            Nothing -> sfRenderWindow_convertCoords_helper wnd posPtr (View nullPtr) ptr >> peek ptr
-            Just v  -> sfRenderWindow_convertCoords_helper wnd posPtr v ptr >> peek ptr
+            Nothing -> sfRenderWindow_mapPixelToCoords_helper wnd posPtr (View nullPtr) ptr >> peek ptr
+            Just v  -> sfRenderWindow_mapPixelToCoords_helper wnd posPtr v ptr >> peek ptr
 
-foreign import ccall unsafe "sfRenderWindow_convertCoords_helper"
-    sfRenderWindow_convertCoords_helper :: RenderWindow -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()
+foreign import ccall unsafe "sfRenderWindow_mapPixelToCoords_helper"
+    sfRenderWindow_mapPixelToCoords_helper :: RenderWindow -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()
 
 -- \return The converted point, in "world" units
 
---CSFML_GRAPHICS_API sfVector2f sfRenderWindow_convertCoords(const sfRenderWindow* renderWindow, sfVector2i point, const sfView* targetView);
+--CSFML_GRAPHICS_API sfVector2f sfRenderWindow_mapPixelToCoords(const sfRenderWindow* renderWindow, sfVector2i point, const sfView* targetView);
 
 
 instance SFRenderTarget RenderWindow where

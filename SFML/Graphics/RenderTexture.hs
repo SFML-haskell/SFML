@@ -13,7 +13,7 @@ module SFML.Graphics.RenderTexture
 ,   getView
 ,   getDefaultView
 ,   getViewport
-,   convertCoords
+,   mapPixelToCoords
 ,   drawSprite
 ,   drawText
 ,   drawShape
@@ -189,17 +189,17 @@ foreign import ccall unsafe "sfRenderTexture_getViewport_helper"
 
 instance SFCoordSpace RenderTexture where
     
-    {-# INLINABLE convertCoords #-}
-    convertCoords tex point view =
+    {-# INLINABLE mapPixelToCoords #-}
+    mapPixelToCoords tex point view =
         alloca $ \out ->
         with point $ \ptr -> case view of
-            Nothing -> sfRenderTexture_convertCoords_helper tex ptr (View nullPtr) out >> peek out
-            Just v  -> sfRenderTexture_convertCoords_helper tex ptr v out >> peek out
+            Nothing -> sfRenderTexture_mapPixelToCoords_helper tex ptr (View nullPtr) out >> peek out
+            Just v  -> sfRenderTexture_mapPixelToCoords_helper tex ptr v out >> peek out
 
-foreign import ccall unsafe "sfRenderTexture_convertCoords_helper"
-    sfRenderTexture_convertCoords_helper :: RenderTexture -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()
+foreign import ccall unsafe "sfRenderTexture_mapPixelToCoords_helper"
+    sfRenderTexture_mapPixelToCoords_helper :: RenderTexture -> Ptr Vec2i -> View -> Ptr Vec2f -> IO ()
 
---CSFML_GRAPHICS_API sfVector2f sfRenderTexture_convertCoords(const sfRenderTexture* renderTexture, sfVector2i point, const sfView* targetView);
+--CSFML_GRAPHICS_API sfVector2f sfRenderTexture_mapPixelToCoords(const sfRenderTexture* renderTexture, sfVector2i point, const sfView* targetView);
 
 
 instance SFRenderTarget RenderTexture where

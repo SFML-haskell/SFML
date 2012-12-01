@@ -50,10 +50,10 @@ void sfRenderWindow_getViewport_helper (const sfRenderWindow* renderWindow, cons
 }
 
 
-void sfRenderWindow_convertCoords_helper
+void sfRenderWindow_mapPixelToCoords_helper
 (const sfRenderWindow* renderWindow, sfVector2i point, const sfView* targetView, sfVector2f* out)
 {
-    *out = sfRenderWindow_convertCoords (renderWindow, point, targetView);
+    *out = sfRenderWindow_mapPixelToCoords (renderWindow, point, targetView);
 }
 
 

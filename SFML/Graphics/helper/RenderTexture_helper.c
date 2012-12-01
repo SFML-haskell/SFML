@@ -19,9 +19,9 @@ void sfRenderTexture_getViewport_helper (const sfRenderTexture* renderTexture, c
 }
 
 
-void sfRenderTexture_convertCoords_helper
+void sfRenderTexture_mapPixelToCoords_helper
 (const sfRenderTexture* renderTexture, sfVector2i* point, const sfView* targetView, sfVector2f* coords)
 {
-    *coords = sfRenderTexture_convertCoords (renderTexture, *point, targetView);
+    *coords = sfRenderTexture_mapPixelToCoords (renderTexture, *point, targetView);
 }
 
