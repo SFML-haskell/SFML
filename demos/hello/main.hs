@@ -2,6 +2,8 @@ import SFML.Audio
 import SFML.Graphics
 import SFML.Window
 
+import Foreign.Ptr (nullPtr)
+
 import Paths_sfml_demos
 
 
@@ -15,10 +17,10 @@ main = do
     spr <- err $ createSprite
     fnt <- err $ fontFromFile fontPath
     txt <- err $ createText
-    setTextString txt "Hello world!"
+    setTextString txt "Haskell SFML\n  Version 2.0"
     setTextFont txt fnt
-    setTextCharacterSize txt 50
-    setTextColor txt green
+    setTextCharacterSize txt 20
+    setTextColor txt blue
     msc <- err $ musicFromFile musicPath
     play msc
     setTexture spr tex True
@@ -34,11 +36,11 @@ main = do
 loop :: RenderWindow -> Sprite -> Text -> IO ()
 loop wnd spr txt = do
     drawSprite wnd spr Nothing
-    drawText   wnd txt Nothing
+    drawText   wnd txt $ Just (RenderStates BlendAlpha (translation 460 40) (Texture nullPtr) (Shader nullPtr))
     display wnd
     evt <- waitEvent wnd
     case evt of
         Nothing -> return ()
         Just SFEvtClosed -> return ()
         _ -> loop wnd spr txt
-
+        
