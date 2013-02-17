@@ -3,6 +3,7 @@ module SFML.Graphics.Shader
 (
     module SFML.Utils
 ,   ShaderException(..)
+,   nullShader
 ,   shaderFromFile
 ,   shaderFromMemory
 ,   shaderFromStream
@@ -60,6 +61,10 @@ exi vs fs = ShaderException $ "Failed loading shader program from input streams 
 
 nullstr = Nothing :: Maybe String
 nullis  = Nothing :: Maybe InputStream
+
+
+-- | A null shader.
+nullShader = Shader nullPtr
 
 
 -- | Load both the vertex and fragment shaders from files.

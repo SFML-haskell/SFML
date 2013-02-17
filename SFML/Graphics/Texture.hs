@@ -3,6 +3,7 @@ module SFML.Graphics.Texture
 (
     module SFML.Utils
 ,   TextureException(..)
+,   nullTexture
 ,   createTexture
 ,   textureFromFile
 ,   textureFromMemory
@@ -54,6 +55,10 @@ checkNull tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 data TextureException = TextureException String deriving (Show, Typeable)
 
 instance Exception TextureException
+
+
+-- | A null texture.
+nullTexture = Texture nullPtr
 
 
 -- | Create a new texture.
