@@ -36,11 +36,10 @@ main = do
 loop :: RenderWindow -> Sprite -> Text -> IO ()
 loop wnd spr txt = do
     drawSprite wnd spr Nothing
-    drawText   wnd txt $ Just (RenderStates BlendAlpha (translation 460 40) (Texture nullPtr) (Shader nullPtr))
+    drawText   wnd txt $ Just (renderStates { transform = translation 460 40 })
     display wnd
     evt <- waitEvent wnd
     case evt of
         Nothing -> return ()
         Just SFEvtClosed -> return ()
         _ -> loop wnd spr txt
-        

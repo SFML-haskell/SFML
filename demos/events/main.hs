@@ -42,7 +42,7 @@ loop wnd txt ds = do
             setTextString txt $ "Mouse: " ++ show (xmouse ds') ++ ", " ++ show (ymouse ds')
             drawText wnd txt Nothing
             setTextString txt $ "Keyboard: " ++ key ds'
-            let rs = RenderStates BlendAlpha (translation 0 $ 2 * fromIntegral txtSize) (Texture nullPtr) (Shader nullPtr)
+            let rs = renderStates { transform = (translation 0 $ 2 * fromIntegral txtSize) }
             drawText wnd txt $ Just rs
             display wnd
             loop wnd txt ds'
@@ -56,4 +56,3 @@ processEvt wnd ds = do
         Just (SFEvtMouseMoved x y) -> return . Just $ ds { xmouse = x, ymouse = y }
         Just e@SFEvtKeyPressed{} -> return . Just $ ds { key = show . code $ e }
         _ -> return . Just $ ds
-
