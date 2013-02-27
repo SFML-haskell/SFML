@@ -35,7 +35,7 @@ module SFML.Graphics.Shape
 where
 
 
-import SFML.Graphics.SFBoundable
+import SFML.Graphics.SFBounded
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
@@ -75,7 +75,7 @@ foreign import ccall unsafe "sfShape_create"
 
 
 instance SFResource Shape where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfShape_destroy
 
@@ -86,43 +86,43 @@ foreign import ccall unsafe "sfShape_destroy"
 
 
 instance Transformable Shape where
-    
+
     {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfShape_setPosition_helper c
-    
+
     {-# INLINABLE setRotation #-}
     setRotation s r = sfShape_setRotation s (realToFrac r)
-    
+
     {-# INLINABLE setScale #-}
     setScale c s = with s $ sfShape_setScale_helper c
-    
+
     {-# INLINABLE setOrigin #-}
     setOrigin c o = with o $ sfShape_setOrigin_helper c
-    
+
     {-# INLINABLE getPosition #-}
     getPosition c = alloca $ \ptr -> sfShape_getPosition_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getRotation #-}
     getRotation = sfShape_getRotation >=> return . realToFrac
-    
+
     {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfShape_getScale_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getOrigin #-}
     getOrigin c = alloca $ \ptr -> sfShape_getOrigin_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE move #-}
     move c off = with off $ sfShape_move_helper c
-    
+
     {-# INLINABLE rotate #-}
     rotate s a = sfShape_rotate s (realToFrac a)
-    
+
     {-# INLINABLE scale #-}
     scale c s = with s $ sfShape_scale_helper c
-    
+
     {-# INLINABLE getTransform #-}
     getTransform c = alloca $ \ptr -> sfShape_getTransform_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getInverseTransform #-}
     getInverseTransform c = alloca $ \ptr -> sfShape_getInverseTransform_helper c ptr >> peek ptr
 
@@ -194,16 +194,16 @@ foreign import ccall unsafe "sfShape_getInverseTransform_helper"
 
 
 instance SFTexturable Shape where
-    
+
     {-# INLINABLE setTexture #-}
     setTexture c tex reset = sfShape_setTexture c tex (fromIntegral . fromEnum $ reset)
-    
+
     {-# INLINABLE setTextureRect #-}
     setTextureRect c rect = with rect $ sfShape_setTextureRect_helper c
-    
+
     {-# INLINABLE getTexture #-}
     getTexture = sfShape_getTexture >=> return . checkNullTexture
-    
+
     {-# INLINABLE getTextureRect #-}
     getTextureRect c = alloca $ \ptr -> sfShape_getTextureRect_helper c ptr >> peek ptr
 
@@ -230,28 +230,28 @@ foreign import ccall unsafe "sfShape_getTextureRect_helper"
 
 
 instance SFShape Shape where
-    
+
     {-# INLINABLE setFillColor #-}
     setFillColor c color = with color $ sfShape_setFillColor_helper c
-    
+
     {-# INLINABLE setOutlineColor #-}
     setOutlineColor c color = with color $ sfShape_setOutlineColor_helper c
-    
+
     {-# INLINABLE setOutlineThickness #-}
     setOutlineThickness s t = sfShape_setOutlineThickness s (realToFrac t)
-    
+
     {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfShape_getFillColor_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getOutlineColor #-}
     getOutlineColor c = alloca $ \ptr -> sfShape_getOutlineColor_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getOutlineThickness #-}
     getOutlineThickness = sfShape_getOutlineThickness >=> return . realToFrac
-    
+
     {-# INLINABLE getPointCount #-}
     getPointCount = sfShape_getPointCount >=> return . fromIntegral
-    
+
     {-# INLINABLE getPoint #-}
     getPoint c idx = alloca $ \ptr -> sfShape_getPoint_helper c (fromIntegral idx) ptr >> peek ptr
 
@@ -297,11 +297,11 @@ foreign import ccall "sfShape_getPoint_helper"
 --CSFML_GRAPHICS_API sfVector2f sfShape_getPoint(const sfShape* shape, unsigned int index);
 
 
-instance SFBoundable Shape where
+instance SFBounded Shape where
 
     {-# INLINABLE getLocalBounds #-}
     getLocalBounds c = alloca $ \ptr -> sfShape_getLocalBounds_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds c = alloca $ \ptr -> sfShape_getGlobalBounds_helper c ptr >> peek ptr
 
@@ -328,4 +328,3 @@ foreign import ccall unsafe "sfShape_update"
     sfShape_update :: Shape -> IO ()
 
 --CSFML_GRAPHICS_API void sfShape_update(sfShape* shape);
-

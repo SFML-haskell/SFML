@@ -32,7 +32,7 @@ where
 
 
 import SFML.Graphics.BlendMode
-import SFML.Graphics.SFBoundable
+import SFML.Graphics.SFBounded
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFTexturable
@@ -82,7 +82,7 @@ foreign import ccall unsafe "sfSprite_create"
 
 
 instance SFCopyable Sprite where
-    
+
     {-# INLINABLE copy #-}
     copy = sfSprite_copy
 
@@ -94,7 +94,7 @@ foreign import ccall unsafe "sfSprite_copy"
 
 
 instance SFResource Sprite where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfSprite_destroy
 
@@ -105,43 +105,43 @@ foreign import ccall unsafe "sfSprite_destroy"
 
 
 instance Transformable Sprite where
-    
+
     {-# INLINABLE setPosition #-}
     setPosition sprite pos = with pos $ sfSprite_setPosition_helper sprite
-    
+
     {-# INLINABLE setRotation #-}
     setRotation s r = sfSprite_setRotation s (realToFrac r)
-    
+
     {-# INLINABLE setScale #-}
     setScale sprite s = with s $ sfSprite_setScale_helper sprite
-    
+
     {-# INLINABLE setOrigin #-}
     setOrigin sprite o = with o $ sfSprite_setOrigin_helper sprite
-    
+
     {-# INLINABLE getPosition #-}
     getPosition sprite = alloca $ \ptr -> sfSprite_getPosition_helper sprite ptr >> peek ptr
-    
+
     {-# INLINABLE getRotation #-}
     getRotation = sfSprite_getRotation >=> return . realToFrac
-    
+
     {-# INLINABLE getScale #-}
     getScale sprite = alloca $ \ptr -> sfSprite_getScale_helper sprite ptr >> peek ptr
-    
+
     {-# INLINABLE getOrigin #-}
     getOrigin sprite = alloca $ \ptr -> sfSprite_getOrigin_helper sprite ptr >> peek ptr
-    
+
     {-# INLINABLE move #-}
     move sprite off = with off $ sfSprite_move_helper sprite
-    
+
     {-# INLINABLE rotate #-}
     rotate s a = sfSprite_rotate s (realToFrac a)
-    
+
     {-# INLINABLE scale #-}
     scale sprite s = with s $ sfSprite_scale_helper sprite
-    
+
     {-# INLINABLE getTransform #-}
     getTransform sprite = alloca $ \ptr -> sfSprite_getTransform_helper sprite ptr >> peek ptr
-    
+
     {-# INLINABLE getInverseTransform #-}
     getInverseTransform sprite = alloca $ \ptr -> sfSprite_getInverseTransform_helper sprite ptr >> peek ptr
 
@@ -238,16 +238,16 @@ foreign import ccall unsafe "sfSprite_getColor_helper"
 
 
 instance SFTexturable Sprite where
-    
+
     {-# INLINABLE setTexture #-}
     setTexture sprite tex reset = sfSprite_setTexture sprite tex (fromIntegral . fromEnum $ reset)
-    
+
     {-# INLINABLE setTextureRect #-}
     setTextureRect sprite rect = with rect $ sfSprite_setTextureRect_helper sprite
-    
+
     {-# INLINABLE getTexture #-}
     getTexture = fmap checkNullTexture . sfSprite_getTexture
-    
+
     {-# INLINABLE getTextureRect #-}
     getTextureRect sprite = alloca $ \ptr -> sfSprite_getTextureRect_helper sprite ptr >> peek ptr
 
@@ -277,11 +277,11 @@ foreign import ccall unsafe "sfSprite_getTextureRect_helper"
 --CSFML_GRAPHICS_API sfIntRect sfSprite_getTextureRect(const sfSprite* sprite);
 
 
-instance SFBoundable Sprite where
-    
+instance SFBounded Sprite where
+
     {-# INLINABLE getLocalBounds #-}
     getLocalBounds sprite = alloca $ \ptr -> sfSprite_getLocalBounds_helper sprite ptr >> peek ptr
-    
+
     {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds sprite = alloca $ \ptr -> sfSprite_getGlobalBounds_helper sprite ptr >> peek ptr
 
@@ -294,4 +294,3 @@ foreign import ccall unsafe "sfSprite_getGlobalBounds_helper"
     sfSprite_getGlobalBounds_helper :: Sprite -> Ptr FloatRect -> IO ()
 
 --CSFML_GRAPHICS_API sfFloatRect sfSprite_getGlobalBounds(const sfSprite* sprite);
-

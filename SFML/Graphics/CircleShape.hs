@@ -40,7 +40,7 @@ module SFML.Graphics.CircleShape
 where
 
 
-import SFML.Graphics.SFBoundable
+import SFML.Graphics.SFBounded
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFShape
@@ -92,7 +92,7 @@ foreign import ccall unsafe "sfCircleShape_create"
 
 
 instance SFCopyable CircleShape where
-    
+
     {-# INLINABLE copy #-}
     copy = sfCircleShape_copy
 
@@ -104,7 +104,7 @@ foreign import ccall unsafe "sfCircleShape_copy"
 
 
 instance SFResource CircleShape where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfCircleShape_destroy
 
@@ -115,43 +115,43 @@ foreign import ccall unsafe "sfCircleShape_destroy"
 
 
 instance Transformable CircleShape where
-    
+
     {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfCircleShape_setPosition_helper c
-    
+
     {-# INLINABLE setRotation #-}
     setRotation c r = sfCircleShape_setRotation c (realToFrac r)
-    
+
     {-# INLINABLE setScale #-}
     setScale c s = with s $ sfCircleShape_setScale_helper c
-    
+
     {-# INLINABLE setOrigin #-}
     setOrigin c o = with o $ sfCircleShape_setOrigin_helper c
-    
+
     {-# INLINABLE getPosition #-}
     getPosition c = alloca $ \ptr -> sfCircleShape_getPosition_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getRotation #-}
     getRotation = sfCircleShape_getRotation >=> return . realToFrac
-    
+
     {-# INLINABLE getScale #-}
     getScale c = alloca $ \ptr -> sfCircleShape_getScale_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getOrigin #-}
     getOrigin c = alloca $ \ptr -> sfCircleShape_getOrigin_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE move #-}
     move c off = with off $ sfCircleShape_move_helper c
-    
+
     {-# INLINABLE rotate #-}
     rotate c a = sfCircleShape_rotate c (realToFrac a)
-    
+
     {-# INLINABLE scale #-}
     scale c s = with s $ sfCircleShape_scale_helper c
-    
+
     {-# INLINABLE getTransform #-}
     getTransform c = alloca $ \ptr -> sfCircleShape_getTransform_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getInverseTransform #-}
     getInverseTransform c = alloca $ \ptr -> sfCircleShape_getInverseTransform_helper c ptr >> peek ptr
 
@@ -223,16 +223,16 @@ foreign import ccall unsafe "sfCircleShape_getInverseTransform_helper"
 
 
 instance SFTexturable CircleShape where
-    
+
     {-# INLINABLE setTexture #-}
     setTexture c tex reset = sfCircleShape_setTexture c tex (fromIntegral . fromEnum $ reset)
-    
+
     {-# INLINABLE setTextureRect #-}
     setTextureRect c rect = with rect $ sfCircleShape_setTextureRect_helper c
-    
+
     {-# INLINABLE getTexture #-}
     getTexture = sfCircleShape_getTexture >=> return . checkNullTexture
-    
+
     {-# INLINABLE getTextureRect #-}
     getTextureRect c = alloca $ \ptr -> sfCircleShape_getTextureRect_helper c ptr >> peek ptr
 
@@ -259,28 +259,28 @@ foreign import ccall unsafe "sfCircleShape_getTextureRect_helper"
 
 
 instance SFShape CircleShape where
-    
+
     {-# INLINABLE setFillColor #-}
     setFillColor c color = with color $ sfCircleShape_setFillColor_helper c
-    
+
     {-# INLINABLE setOutlineColor #-}
     setOutlineColor c color = with color $ sfCircleShape_setOutlineColor_helper c
-    
+
     {-# INLINABLE setOutlineThickness #-}
     setOutlineThickness c t = sfCircleShape_setOutlineThickness c (realToFrac t)
-    
+
     {-# INLINABLE getFillColor #-}
     getFillColor c = alloca $ \ptr -> sfCircleShape_getFillColor_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getOutlineColor #-}
     getOutlineColor c = alloca $ \ptr -> sfCircleShape_getOutlineColor_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getOutlineThickness #-}
     getOutlineThickness = sfCircleShape_getOutlineThickness >=> return . realToFrac
-    
+
     {-# INLINABLE getPointCount #-}
     getPointCount = sfCircleShape_getPointCount >=> return . fromIntegral
-    
+
     {-# INLINABLE getPoint #-}
     getPoint c idx = alloca $ \ptr -> sfCircleShape_getPoint_helper c (fromIntegral idx) ptr >> peek ptr
 
@@ -365,11 +365,11 @@ foreign import ccall unsafe "sfCircleShape_setPointCount"
 --CSFML_GRAPHICS_API void sfCircleShape_setPointCount(sfCircleShape* shape, unsigned int count);
 
 
-instance SFBoundable CircleShape where
+instance SFBounded CircleShape where
 
     {-# INLINABLE getLocalBounds #-}
     getLocalBounds c = alloca $ \ptr -> sfCircleShape_getLocalBounds_helper c ptr >> peek ptr
-    
+
     {-# INLINABLE getGlobalBounds #-}
     getGlobalBounds c = alloca $ \ptr -> sfCircleShape_getGlobalBounds_helper c ptr >> peek ptr
 
@@ -382,4 +382,3 @@ foreign import ccall unsafe "sfCircleShape_getGlobalBounds_helper"
     sfCircleShape_getGlobalBounds_helper :: CircleShape -> Ptr FloatRect -> IO ()
 
 --CSFML_GRAPHICS_API sfFloatRect sfCircleShape_getGlobalBounds(const sfCircleShape* shape);
-

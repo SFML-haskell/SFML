@@ -17,7 +17,7 @@ module SFML.Graphics.Texture
 ,   updateTextureFromImage
 ,   updateTextureFromWindow
 ,   updateTextureFromRenderWindow
-,   bindTexture
+,   bind
 ,   setSmooth
 ,   isSmooth
 ,   setRepeated
@@ -28,6 +28,7 @@ where
 
 
 import SFML.Graphics.Rect
+import SFML.Graphics.SFBindable
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Types
 import SFML.Window.Types
@@ -278,13 +279,9 @@ foreign import ccall unsafe "sfTexture_updateFromRenderWindow"
 --CSFML_GRAPHICS_API void sfTexture_updateFromRenderWindow(sfTexture* texture, const sfRenderWindow* renderWindow, unsigned int x, unsigned int y);
 
 
--- | Activate a texture for rendering.
---
--- This function is not part of the graphics API, it mustn't be
--- used when drawing SFML entities. It must be used only if you
--- mix sfTexture with OpenGL code.
-bindTexture :: Texture -> IO ()
-bindTexture = sfTexture_bind
+instance SFBindable Texture where
+         {-# INLINABLE bind #-}
+         bind = sfTexture_bind
 
 foreign import ccall unsafe "sfTexture_bind"
     sfTexture_bind :: Texture -> IO ()

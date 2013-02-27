@@ -27,6 +27,7 @@ where
 import SFML.Graphics.Color
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
+import SFML.Graphics.SFBindable
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
@@ -363,15 +364,9 @@ foreign import ccall unsafe "sfShader_setCurrentTextureParameter"
 --CSFML_GRAPHICS_API void sfShader_setCurrentTextureParameter(sfShader* shader, const char* name);
 
 
--- | Bind a shader for rendering (activate it).
---
--- This function is not part of the graphics API, it mustn't be
--- used when drawing SFML entities. It must be used only if you
--- mix sfShader with OpenGL code.
---
--- Passing a null shader deactivates any current active shader.
-bind :: Shader -> IO ()
-bind = sfShader_bind
+instance SFBindable Shader where
+         {-# INLINABLE bind #-}
+         bind = sfShader_bind
 
 foreign import ccall unsafe "sfShader_bind"
     sfShader_bind :: Shader -> IO ()

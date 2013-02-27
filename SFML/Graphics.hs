@@ -13,7 +13,8 @@ module SFML.Graphics
 ,   module SFML.Graphics.RenderStates
 ,   module SFML.Graphics.RenderTexture
 ,   module SFML.Graphics.RenderWindow
-,   module SFML.Graphics.SFBoundable
+,   module SFML.Graphics.SFBindable
+,   module SFML.Graphics.SFBounded
 ,   module SFML.Graphics.SFCoordSpace
 ,   module SFML.Graphics.SFRenderTarget
 ,   module SFML.Graphics.SFShape
@@ -49,7 +50,8 @@ import SFML.Graphics.RectangleShape
 import SFML.Graphics.RenderStates
 import SFML.Graphics.RenderTexture
 import SFML.Graphics.RenderWindow
-import SFML.Graphics.SFBoundable
+import SFML.Graphics.SFBindable
+import SFML.Graphics.SFBounded
 import SFML.Graphics.SFCoordSpace
 import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFShape
@@ -68,4 +70,3 @@ import SFML.Graphics.Types
 import SFML.Graphics.Vertex
 import SFML.Graphics.VertexArray
 import SFML.Graphics.View
-

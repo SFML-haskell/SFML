@@ -1,12 +1,12 @@
-module SFML.Graphics.SFBoundable
+module SFML.Graphics.SFBounded
 where
 
 
 import SFML.Graphics.Rect
 
 
-class SFBoundable a where
-    
+class SFBounded a where
+
     -- | Get the local bounding rectangle of a boundable.
     --
     -- The returned rectangle is in local coordinates, which means
@@ -15,7 +15,7 @@ class SFBoundable a where
     -- In other words, this function returns the bounds of the
     -- entity in the entity's coordinate system.
     getLocalBounds :: a -> IO FloatRect
-    
+
     -- | Get the global bounding rectangle of a shape.
     --
     -- The returned rectangle is in global coordinates, which means
@@ -24,4 +24,3 @@ class SFBoundable a where
     -- In other words, this function returns the bounds of the
     -- sprite in the global 2D world's coordinate system.
     getGlobalBounds :: a -> IO FloatRect
-
