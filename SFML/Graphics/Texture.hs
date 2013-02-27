@@ -166,7 +166,7 @@ foreign import ccall unsafe "sfTexture_createFromImage"
 
 
 instance SFCopyable Texture where
-    
+
     {-# INLINABLE copy #-}
     copy = sfTexture_copy
 
@@ -178,7 +178,7 @@ foreign import ccall unsafe "sfTexture_copy"
 
 
 instance SFResource Texture where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfTexture_destroy
 
@@ -279,6 +279,10 @@ foreign import ccall unsafe "sfTexture_updateFromRenderWindow"
 
 
 -- | Activate a texture for rendering.
+--
+-- This function is not part of the graphics API, it mustn't be
+-- used when drawing SFML entities. It must be used only if you
+-- mix sfTexture with OpenGL code.
 bindTexture :: Texture -> IO ()
 bindTexture = sfTexture_bind
 
@@ -289,10 +293,10 @@ foreign import ccall unsafe "sfTexture_bind"
 
 
 instance SFSmoothTexture Texture where
-    
+
     {-# INLINABLE setSmooth #-}
     setSmooth tex val  = sfTexture_setSmooth tex (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE isSmooth #-}
     isSmooth = fmap (/=0) . sfTexture_isSmooth
 
@@ -351,4 +355,3 @@ foreign import ccall unsafe "sfTexture_getMaximumSize"
     sfTexture_getMaximumSize :: IO CUInt
 
 --CSFML_GRAPHICS_API unsigned int sfTexture_getMaximumSize();
-

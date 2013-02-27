@@ -172,7 +172,7 @@ foreign import ccall unsafe "sfShader_createFromStream"
 
 
 instance SFResource Shader where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfShader_destroy
 
@@ -285,7 +285,7 @@ setVector3Parameter shader name vec =
     with vec $ sfShader_setVector3Parameter_helper shader cname
 
 foreign import ccall unsafe "sfShader_setVector3Parameter_helper"
-    sfShader_setVector3Parameter_helper :: Shader -> CString -> Ptr Vec3f -> IO ()    
+    sfShader_setVector3Parameter_helper :: Shader -> CString -> Ptr Vec3f -> IO ()
 
 --CSFML_GRAPHICS_API void sfShader_setVector3Parameter(sfShader* shader, const char* name, sfVector3f vector);
 
@@ -363,11 +363,13 @@ foreign import ccall unsafe "sfShader_setCurrentTextureParameter"
 --CSFML_GRAPHICS_API void sfShader_setCurrentTextureParameter(sfShader* shader, const char* name);
 
 
--- | Bind a shader for rendering (activate it)
+-- | Bind a shader for rendering (activate it).
 --
--- This function is normally for internal use only, unless
--- you want to use the shader with a custom OpenGL rendering
--- instead of a SFML drawable.
+-- This function is not part of the graphics API, it mustn't be
+-- used when drawing SFML entities. It must be used only if you
+-- mix sfShader with OpenGL code.
+--
+-- Passing a null shader deactivates any current active shader.
 bind :: Shader -> IO ()
 bind = sfShader_bind
 
@@ -389,4 +391,3 @@ foreign import ccall unsafe "sfShader_isAvailable"
     sfShader_isAvailable :: IO CInt
 
 --CSFML_GRAPHICS_API sfBool sfShader_isAvailable(void);
-
