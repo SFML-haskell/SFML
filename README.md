@@ -3,10 +3,6 @@ SFML
 
 Low level Haskell bindings for SFML 2.x
 
-### Haddocks
-http://shellblade.net/docs/SFML/index.html
-
-
 ### What's been wrapped:
 
 * Window module
