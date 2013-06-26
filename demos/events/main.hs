@@ -19,7 +19,7 @@ data DemoState = DemoState
 main = do
     let ctxSettings = Just $ ContextSettings 24 8 0 1 2
     wnd <- createRenderWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
-    fontPath  <- getDataFileName "Vera.ttf"
+    fontPath <- getDataFileName "Vera.ttf"
     fnt <- err $ fontFromFile fontPath
     txt <- err $ createText
     setTextFont txt fnt
@@ -50,9 +50,10 @@ loop wnd txt ds = do
 
 processEvt :: RenderWindow -> DemoState -> IO (Maybe DemoState)
 processEvt wnd ds = do
-    evt <- waitEvent wnd
+    evt <- pollEvent wnd
     case evt of
         Just SFEvtClosed -> return Nothing
-        Just (SFEvtMouseMoved x y) -> return . Just $ ds { xmouse = x, ymouse = y }
-        Just e@SFEvtKeyPressed{} -> return . Just $ ds { key = show . code $ e }
-        _ -> return . Just $ ds
+        Just (SFEvtMouseMoved x y) -> processEvt wnd $ ds { xmouse = x, ymouse = y }
+        Just e@SFEvtKeyPressed{} -> processEvt wnd $ ds { key = show . code $ e }
+        Nothing -> return . Just $ ds
+        _ -> processEvt wnd ds
