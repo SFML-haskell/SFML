@@ -41,9 +41,11 @@ import Control.Monad
 import Data.Typeable
 import Data.Bits ((.|.))
 import Data.List (foldl')
+import Data.Word
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
+import Foreign.Marshal.Array (peekArray0, withArray0)
 import Foreign.Marshal.Utils (with)
 import Foreign.Ptr
 import Foreign.Storable
@@ -243,12 +245,12 @@ foreign import ccall unsafe "sfText_setString"
 
 -- | Set the string of a text (from a unicode string).
 setTextStringU :: Text -> String -> IO ()
-
--- withCString is locale dependent. SFML expects UTF-32. Needs fix.
-setTextStringU text str = withCString str $ sfText_setUnicodeString text
+setTextStringU text str = withArray0 0 str' $ sfText_setUnicodeString text
+        where
+            str' = map (fromIntegral . fromEnum) str
 
 foreign import ccall unsafe "sfText_setUnicodeString"
-    sfText_setUnicodeString :: Text -> CString -> IO ()
+    sfText_setUnicodeString :: Text -> Ptr Word32 -> IO ()
 
 --CSFML_GRAPHICS_API void sfText_setUnicodeString(sfText* text, const sfUint32* string);
 
@@ -326,11 +328,12 @@ foreign import ccall unsafe "sfText_getString"
 
 -- | Get the string of a text as a UTF-32 string.
 getTextUnicodeString :: Text -> IO String
--- Fix: peekCString is locale-dependent. SFML will return a UTF-32 string.
-getTextUnicodeString = sfText_getString >=> peekCString
+getTextUnicodeString = liftM toString . peekArray0 0 <=< sfText_getUnicodeString
+    where
+        toString = map $ toEnum . fromIntegral
 
 foreign import ccall unsafe "sfText_getUnicodeString"
-    sfText_getUnicodeString :: Text -> IO CString
+    sfText_getUnicodeString :: Text -> IO (Ptr Word32)
 
 --CSFML_GRAPHICS_API const sfUint32* sfText_getUnicodeString(const sfText* text);
 

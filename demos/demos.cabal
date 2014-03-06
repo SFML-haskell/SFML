@@ -45,3 +45,10 @@ executable sfml-events
     buildable:          True
     ghc-options:        -debug
 
+executable sfml-unicode
+    hs-source-dirs:     unicode
+    build-depends:      base, SFML
+    main-is:            main.hs
+    buildable:          True
+    ghc-options:        -debug
+
