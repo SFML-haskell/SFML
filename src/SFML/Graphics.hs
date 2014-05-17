@@ -16,6 +16,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.SFBindable
 ,   module SFML.Graphics.SFBounded
 ,   module SFML.Graphics.SFCoordSpace
+,	module SFML.Graphics.SFDrawable
 ,   module SFML.Graphics.SFRenderTarget
 ,   module SFML.Graphics.SFShape
 ,   module SFML.Graphics.SFShapeResizable
@@ -53,6 +54,7 @@ import SFML.Graphics.RenderWindow
 import SFML.Graphics.SFBindable
 import SFML.Graphics.SFBounded
 import SFML.Graphics.SFCoordSpace
+import SFML.Graphics.SFDrawable
 import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable

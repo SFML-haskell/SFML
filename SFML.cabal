@@ -50,6 +50,7 @@ library
       SFML.Graphics.RenderWindow
       SFML.Graphics.SFBindable
       SFML.Graphics.SFBounded
+      SFML.Graphics.SFDrawable
       SFML.Graphics.SFCoordSpace
       SFML.Graphics.SFRenderTarget
       SFML.Graphics.SFShape
