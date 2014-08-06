@@ -15,7 +15,6 @@ cabal-version:       >=1.8
 
 Flag OfficialCSFMLForWindows
   Description: Use the official CSFML bundle for Windows from http://www.sfml-dev.org/download/csfml/
-  --Default:     False
 
 
 library
