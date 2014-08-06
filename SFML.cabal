@@ -13,6 +13,11 @@ category:            Game
 build-type:          Simple
 cabal-version:       >=1.8
 
+Flag OfficialCSFMLForWindows {
+  Description: Use the official CSFML bundle for Windows from http://www.sfml-dev.org/download/csfml/
+  Default:     False
+}
+
 library
   hs-source-dirs:
       src
@@ -125,9 +130,17 @@ library
   extensions:
       ForeignFunctionInterface
 
-  extra-libraries:
-      csfml-window,
-      csfml-system,
-      csfml-graphics,
-      csfml-network,
-      csfml-audio
+  if flag(OfficialCSFMLForWindows)
+      extra-libraries:
+          csfml-window-2,
+          csfml-system-2,
+          csfml-graphics-2,
+          csfml-network-2,
+          csfml-audio-2
+  else
+      extra-libraries:
+          csfml-window,
+          csfml-system,
+          csfml-graphics,
+          csfml-network,
+          csfml-audio
