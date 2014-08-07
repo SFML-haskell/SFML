@@ -3,7 +3,7 @@ version: 0.1.0.0
 cabal-version: >=1.8
 build-type: Simple
 license: AllRightsReserved
-license-file: ""
+license-file: "LICENSE"
 synopsis: SFML demos
 category: Game
 author: Marc Sunet
