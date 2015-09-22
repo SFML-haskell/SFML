@@ -22,6 +22,8 @@ module SFML.Window.Window
 ,   setVSync
 ,   setKeyRepeat
 ,   setWindowActive
+,   requestFocus
+,   hasFocus
 ,   display
 ,   setFramerateLimit
 ,   setJoystickThreshold
@@ -65,21 +67,20 @@ data WindowStyle
 
 
 instance Enum WindowStyle where
-    
+
     fromEnum SFNone         = 0
     fromEnum SFTitlebar     = 1
     fromEnum SFResize       = 2
     fromEnum SFClose        = 4
     fromEnum SFFullscreen   = 8
     fromEnum SFDefaultStyle = 7
-    
+
     toEnum 0 = SFNone
     toEnum 1 = SFTitlebar
     toEnum 2 = SFResize
     toEnum 4 = SFClose
     toEnum 8 = SFFullscreen
     toEnum 7 = SFDefaultStyle
-
 
 -- | Construct a new window.
 --
@@ -140,7 +141,7 @@ foreign import ccall unsafe "sfWindow_createFromHandle"
 
 
 instance SFResource Window where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfWindow_destroy
 
@@ -151,25 +152,25 @@ foreign import ccall unsafe "sfWindow_destroy"
 
 
 instance SFDisplayable Window where
-    
+
     {-# INLINABLE display #-}
     display = sfWindow_display
 
 
 instance SFWindow Window where
-    
+
     {-# INLINABLE close #-}
     close = sfWindow_close
-    
+
     {-# INLINABLE isWindowOpen #-}
     isWindowOpen wnd = sfWindow_isOpen wnd >>= return . (/=0)
-    
+
     {-# INLINABLE getWindowSettings #-}
     getWindowSettings wnd =
         alloca $ \ptrCtxSettings -> do
         sfWindow_getSettings_helper wnd ptrCtxSettings
         peek ptrCtxSettings
-    
+
     {-# INLINABLE pollEvent #-}
     pollEvent wnd =
         alloca $ \ptrEvt -> do
@@ -177,7 +178,7 @@ instance SFWindow Window where
         case result of
             True  -> peek ptrEvt >>= return . Just
             False -> return Nothing
-    
+
     {-# INLINABLE waitEvent #-}
     waitEvent wnd =
         alloca $ \ptr -> do
@@ -185,53 +186,59 @@ instance SFWindow Window where
         case result of
             0 -> return Nothing
             _ -> peek ptr >>= return . Just
-    
+
     {-# INLINABLE getWindowPosition #-}
     getWindowPosition wnd = alloca $ \vecPtr -> sfWindow_getPosition_helper wnd vecPtr >> peek vecPtr
-    
+
     {-# INLINABLE setWindowPosition #-}
     setWindowPosition wnd pos = with pos $ \posPtr -> sfWindow_setPosition_helper wnd posPtr
-    
+
     {-# INLINABLE getWindowSize #-}
     getWindowSize wnd = alloca $ \vecPtr -> sfWindow_getSize_helper wnd vecPtr >> peek vecPtr
-    
+
     {-# INLINABLE setWindowSize #-}
     setWindowSize wnd size = with size $ \ptrSize -> sfWindow_setSize_helper wnd ptrSize
-    
+
     {-# INLINABLE setWindowTitle #-}
     setWindowTitle wnd title = withCAString title $ \ptrTitle -> sfWindow_setTitle wnd ptrTitle
-    
+
     {-# INLINABLE setWindowIcon #-}
     setWindowIcon = sfWindow_setIcon
-    
+
     {-# INLINABLE setWindowVisible #-}
     setWindowVisible wnd val = sfWindow_setVisible wnd (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE setMouseVisible #-}
     setMouseVisible wnd val = sfWindow_setMouseCursorVisible wnd (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE setVSync #-}
     setVSync wnd val = sfWindow_setVerticalSyncEnabled wnd (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE setKeyRepeat #-}
     setKeyRepeat wnd val = sfWindow_setKeyRepeatEnabled wnd (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE setWindowActive #-}
     setWindowActive wnd val = sfWindow_setActive wnd (fromIntegral . fromEnum $ val)
-    
+
+    {-# INLINABLE requestFocus #-}
+    requestFocus wnd = sfWindow_requestFocus wnd
+
+    {-# INLINABLE hasFocus #-}
+    hasFocus wnd = ((/=0) . fromIntegral) <$> sfWindow_hasFocus wnd
+
     {-# INLINABLE setFramerateLimit #-}
     setFramerateLimit wnd val = sfWindow_setFramerateLimit wnd (fromIntegral val)
-    
+
     {-# INLINABLE setJoystickThreshold #-}
     setJoystickThreshold w t = sfWindow_setJoystickThreshold w (realToFrac t)
-    
+
     {-# INLINABLE getSystemHandle #-}
     getSystemHandle = sfWindow_getSystemHandle
-    
+
     {-# INLINABLE getMousePosition #-}
     getMousePosition Nothing    = alloca $ \ptr -> sfMouse_getPosition_helper (Window nullPtr) ptr >> peek ptr
     getMousePosition (Just wnd) = alloca $ \ptr -> sfMouse_getPosition_helper wnd ptr >> peek ptr
-    
+
     {-# INLINABLE setMousePosition #-}
     setMousePosition pos Nothing    = with pos $ \ptr -> sfMouse_setPosition_helper ptr (Window nullPtr)
     setMousePosition pos (Just wnd) = with pos $ \ptr -> sfMouse_setPosition_helper ptr wnd
@@ -307,15 +314,23 @@ foreign import ccall unsafe "sfWindow_setVisible"
 
 --CSFML_WINDOW_API void sfWindow_setVisible(sfWindow* window, sfBool visible);
 
+
 foreign import ccall unsafe "sfWindow_setMouseCursorVisible"
     sfWindow_setMouseCursorVisible :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setMouseCursorVisible(sfWindow* window, sfBool visible);
 
+
 foreign import ccall unsafe "sfWindow_setVerticalSyncEnabled"
     sfWindow_setVerticalSyncEnabled :: Window -> CChar -> IO ()
 
 --CSFML_WINDOW_API void sfWindow_setVerticalSyncEnabled(sfWindow* window, sfBool enabled);
+
+
+foreign import ccall unsafe "sfWindow_setKeyRepeatEnabled"
+    sfWindow_setKeyRepeatEnabled :: Window -> CChar -> IO ()
+
+--CSFML_WINDOW_API void sfWindow_setKeyRepeatEnabled(sfWindow* window, sfBool enabled);
 
 
 foreign import ccall unsafe "sfWindow_setActive"
@@ -324,10 +339,16 @@ foreign import ccall unsafe "sfWindow_setActive"
 --CSFML_WINDOW_API sfBool sfWindow_setActive(sfWindow* window, sfBool active);
 
 
-foreign import ccall unsafe "sfWindow_setKeyRepeatEnabled"
-    sfWindow_setKeyRepeatEnabled :: Window -> CChar -> IO ()
+foreign import ccall unsafe "sfWindow_requestFocus"
+    sfWindow_requestFocus :: Window -> IO ()
 
---CSFML_WINDOW_API void sfWindow_setKeyRepeatEnabled(sfWindow* window, sfBool enabled);
+-- CSFML_WINDOW_API void sfWindow_requestFocus(sfWindow* window);
+
+
+foreign import ccall unsafe "sfWindow_hasFocus"
+    sfWindow_hasFocus :: Window -> IO CInt
+
+--CSFML_WINDOW_API sfBool sfWindow_hasFocus(const sfWindow* window);
 
 
 foreign import ccall unsafe "sfWindow_display"
@@ -347,6 +368,7 @@ foreign import ccall unsafe "sfWindow_setJoystickThreshold"
 
 --CSFML_WINDOW_API void sfWindow_setJoystickThreshold(sfWindow* window, float threshold);
 
+
 foreign import ccall unsafe "sfWindow_getSystemHandle"
     sfWindow_getSystemHandle :: Window -> IO WindowHandle
 
@@ -358,8 +380,8 @@ foreign import ccall unsafe "sfMouse_getPosition_helper"
 
 --CSFML_WINDOW_API sfVector2i sfMouse_getPosition(const sfWindow* relativeTo);
 
+
 foreign import ccall unsafe "sfMouse_setPosition_helper"
     sfMouse_setPosition_helper :: Ptr Vec2i -> Window -> IO ()
 
 --CSFML_WINDOW_API void sfMouse_setPosition(sfVector2i position, const sfWindow* relativeTo);
-

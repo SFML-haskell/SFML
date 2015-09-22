@@ -124,6 +124,23 @@ class (SFResource a, SFDisplayable a) => SFWindow a where
     -- Only one window can be active on a thread at a time, thus
     -- the window previously active (if any) automatically gets deactivated.
     setWindowActive :: a -> Bool -> IO ()
+    
+    -- | Request the current window to be made the active foreground window.
+    --
+    -- At any given time, only one window may have the input focus
+    -- to receive input events such as keystrokes or mouse events.
+    -- If a window requests focus, it only hints to the operating
+    -- system, that it would like to be focused. The operating system
+    -- is free to deny the request.
+    -- This is not to be confused with 'setWindowActive'.
+    requestFocus :: a -> IO ()
+    
+    -- | Check whether the render window has the input focus.
+    --
+    -- At any given time, only one window may have the input focus
+    -- to receive input events such as keystrokes or most mouse
+    -- events.
+    hasFocus :: a -> IO Bool
         
     -- | Limit the framerate to a maximum fixed frequency.
     --
