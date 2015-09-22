@@ -11,11 +11,15 @@ module SFML.Graphics.Font
 ,   getGlyph
 ,   getKerning
 ,   getLineSpacing
+,   getUnderlinePosition
+,   getUnderlineThickness
 ,   getFontTexture
+,   getInfo
 )
 where
 
 
+import SFML.Graphics.FontInfo
 import SFML.Graphics.Glyph
 import SFML.Graphics.Types
 import SFML.SFCopyable
@@ -90,7 +94,7 @@ foreign import ccall "sfFont_createFromStream"
 
 
 instance SFCopyable Font where
-    
+
     {-# INLINABLE copy #-}
     copy = sfFont_copy
 
@@ -102,7 +106,7 @@ foreign import ccall unsafe "sfFont_copy"
 
 
 instance SFResource Font where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfFont_destroy
 
@@ -138,13 +142,13 @@ getKerning
     -> Int  -- ^ Unicode code point of the first character
     -> Int  -- ^ Unicode code point of the second characte.r
     -> Int  -- ^ Character size, in pixels
-    -> IO Int
+    -> IO Float
 
 getKerning font first second size =
-    fmap fromIntegral $ sfFont_getKerning font (fromIntegral first) (fromIntegral second) (fromIntegral size)
+    fmap realToFrac $ sfFont_getKerning font (fromIntegral first) (fromIntegral second) (fromIntegral size)
 
 foreign import ccall unsafe "sfFont_getKerning"
-    sfFont_getKerning :: Font -> Word32 -> Word32 -> CUInt -> IO CInt
+    sfFont_getKerning :: Font -> Word32 -> Word32 -> CUInt -> IO CFloat
 
 --CSFML_GRAPHICS_API int sfFont_getKerning(sfFont* font, sfUint32 first, sfUint32 second, unsigned int characterSize);
 
@@ -152,15 +156,50 @@ foreign import ccall unsafe "sfFont_getKerning"
 -- | Get the line spacing value.
 getLineSpacing
     :: Font -- ^ Source font
-    -> Int    -- ^ Character size, in pixels
-    -> IO Int
+    -> Int  -- ^ Character size, in pixels
+    -> IO Float
 
-getLineSpacing font size = fmap fromIntegral $ sfFont_getLineSpacing font (fromIntegral size)
+getLineSpacing font size = fmap realToFrac $ sfFont_getLineSpacing font (fromIntegral size)
 
 foreign import ccall unsafe "sfFont_getLineSpacing"
-    sfFont_getLineSpacing :: Font -> CUInt -> IO CInt
+    sfFont_getLineSpacing :: Font -> CUInt -> IO CFloat
 
 --CSFML_GRAPHICS_API int sfFont_getLineSpacing(sfFont* font, unsigned int characterSize);
+
+
+-- | Get the position of the underline.
+--
+-- Underline position is the vertical offset to apply between the
+-- baseline and the underline.
+getUnderlinePosition
+    :: Font -- ^ Source font
+    -> Int  -- ^ Reference character size
+    -> IO Float
+
+getUnderlinePosition font size
+    = fmap realToFrac $ sfFont_getUnderlinePosition font (fromIntegral size)
+
+foreign import ccall unsafe "sfFont_getUnderlinePosition"
+    sfFont_getUnderlinePosition :: Font -> CUInt -> IO CFloat
+
+--CSFML_GRAPHICS_API float sfFont_getUnderlinePosition(sfFont* font, unsigned int characterSize);
+
+
+-- | Get the thickness of the underline.
+--
+-- Underline thickness is the vertical size of the underline.
+getUnderlineThickness
+    :: Font -- ^ Source font
+    -> Int  -- ^ Reference character size
+    -> IO Float
+
+getUnderlineThickness font size
+    = fmap realToFrac $ sfFont_getUnderlineThickness font (fromIntegral size)
+
+foreign import ccall unsafe "sfFont_getUnderlineThickness"
+    sfFont_getUnderlineThickness :: Font -> CUInt -> IO CFloat
+
+--CSFML_GRAPHICS_API float sfFont_getUnderlineThickness(sfFont* font, unsigned int characterSize);
 
 
 -- | Get the texture containing the glyphs of a given size in a font.
@@ -176,3 +215,16 @@ foreign import ccall unsafe "sfFont_getTexture"
 
 --CSFML_GRAPHICS_API const sfTexture* sfFont_getTexture(sfFont* font, unsigned int characterSize);
 
+
+-- | Get the font information.
+--
+-- The returned structure will remain valid only if the font
+-- is still valid. If the font is invalid an invalid structure
+-- is returned.
+getInfo :: Font -> IO FontInfo
+getInfo font = alloca $ \ptr -> sfFont_getInfo_helper font ptr >> peek ptr
+
+foreign import ccall unsafe "sfFont_getInfo_helper"
+    sfFont_getInfo_helper :: Font -> Ptr FontInfo -> IO ()
+
+--CSFML_GRAPHICS_API sfFontInfo sfFont_getInfo(const sfFont* font);

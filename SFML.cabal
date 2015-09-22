@@ -45,6 +45,7 @@ library
       SFML.Graphics.Color
       SFML.Graphics.ConvexShape
       SFML.Graphics.Font
+      SFML.Graphics.FontInfo
       SFML.Graphics.Glyph
       SFML.Graphics.Image
       SFML.Graphics.PrimitiveType
