@@ -12,6 +12,11 @@ module SFML.Audio.SoundRecorder
 ,   stopRecording
 ,   getSampleRate
 ,   isSoundRecorderAvailable
+,   setProcessingInterval
+,   getAvailableSoundRecordingDevices
+,   getDefaultSoundRecordingDevice
+,   setSoundRecordingDevice
+,   getSoundRecordingDevice
 )
 where
 
@@ -20,14 +25,19 @@ import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
 import SFML.SFResource
+import SFML.System.Time
 import SFML.Utils
 
 import Control.Exception
-import Control.Monad ((>=>))
+import Control.Monad ((>=>), forM)
 import Data.Typeable
 import Data.Word (Word16)
+import Foreign.C.String
 import Foreign.C.Types
-import Foreign.Ptr (Ptr, nullPtr)
+import Foreign.Marshal.Alloc (alloca)
+import Foreign.Marshal.Array (advancePtr)
+import Foreign.Storable
+import Foreign.Ptr
 
 
 checkNull :: SoundRecorder -> Maybe SoundRecorder
@@ -138,4 +148,92 @@ foreign import ccall unsafe "sfSoundRecorder_isAvailable"
     sfSoundRecorder_isAvailable :: IO CInt
 
 -- CSFML_AUDIO_API sfBool sfSoundRecorder_isAvailable(void);
+
+
+-- | Set the processing interval.
+--
+-- The processing interval controls the period
+-- between calls to the onProcessSamples function. You may
+-- want to use a small interval if you want to process the
+-- recorded data in real time, for example.
+--
+-- Note: this is only a hint, the actual period may vary.
+-- So don't rely on this parameter to implement precise timing.
+--
+-- The default processing interval is 100 ms.
+setProcessingInterval
+    :: SoundRecorder
+    -> Time -- ^ Processing interval
+    -> IO ()
+
+setProcessingInterval = sfSoundRecorder_setProcessingInterval
+
+foreign import ccall unsafe "sfSoundRecorder_setProcessingInterval"
+    sfSoundRecorder_setProcessingInterval :: SoundRecorder -> Time -> IO ()
+
+--CSFML_AUDIO_API void sfSoundRecorder_setProcessingInterval(sfSoundRecorder* soundRecorder, sfTime interval);
+
+
+-- | Get a list of the names of all availabe audio capture devices.
+--
+-- This function returns an array of strings (null terminated),
+-- containing the names of all availabe audio capture devices.
+-- If no devices are available then 'Nothing' is returned.
+getAvailableSoundRecordingDevices :: IO [String]
+getAvailableSoundRecordingDevices = alloca $ \pCount -> do
+    pNames <- sfSoundRecorder_getAvailableDevices pCount
+    count  <- fromIntegral <$> peek pCount :: IO Int
+    forM [1..count] $ peekCString . advancePtr (castPtr pNames)
+
+foreign import ccall unsafe "sfSoundRecorder_getAvailableDevices"
+    sfSoundRecorder_getAvailableDevices :: Ptr CSize -> IO (Ptr CString)
+
+--CSFML_AUDIO_API const char** sfSoundRecorder_getAvailableDevices(size_t* count);
+
+
+-- | Get the name of the default audio capture device.
+--
+-- This function returns the name of the default audio
+-- capture device. If none is available, NULL is returned.
+
+getDefaultSoundRecordingDevice :: IO String
+getDefaultSoundRecordingDevice = sfSoundRecorder_getDefaultDevice >>= peekCString
+
+foreign import ccall unsafe "sfSoundRecorder_getDefaultDevice"
+    sfSoundRecorder_getDefaultDevice :: IO CString
+
+--CSFML_AUDIO_API const char* sfSoundRecorder_getDefaultDevice();
+
+
+-- | Set the audio capture device.
+--
+-- This function sets the audio capture device to the device
+-- with the given name. It can be called on the fly (i.e:
+-- while recording). If you do so while recording and
+-- opening the device fails, it stops the recording.
+--
+-- Return 'True if it was able to set the requested device, 'False' otherwise.
+setSoundRecordingDevice
+    :: SoundRecorder
+    -> String -- ^ The name of the audio capture device
+    -> IO Bool
+
+setSoundRecordingDevice rec name = withCString name $ \cname ->
+    ((/=0) . fromIntegral) <$> sfSoundRecorder_setDevice rec cname
+
+foreign import ccall unsafe "sfSoundRecorder_setDevice"
+    sfSoundRecorder_setDevice :: SoundRecorder -> CString -> IO CInt
+
+--CSFML_AUDIO_API sfBool sfSoundRecorder_setDevice(sfSoundRecorder* soundRecorder, const char* name);
+
+
+-- | Get the name of the current audio capture device.
+getSoundRecordingDevice :: SoundRecorder -> IO String
+getSoundRecordingDevice rec = sfSoundRecorder_getDevice rec >>= peekCString
+
+foreign import ccall unsafe "sfSoundRecorder_getDevice"
+    sfSoundRecorder_getDevice :: SoundRecorder -> IO CString
+
+--CSFML_AUDIO_API const char* sfSoundRecorder_getDevice(sfSoundRecorder* soundRecorder);
+
 
