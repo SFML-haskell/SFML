@@ -6,6 +6,8 @@ module SFML.Audio.Listener
 ,   getListenerPosition
 ,   setListenerDirection
 ,   getListenerDirection
+,   setListenerUpVector
+,   getListenerUpVector
 )
 where
 
@@ -70,13 +72,15 @@ foreign import ccall unsafe "sfListener_getPosition_helper"
 --CSFML_AUDIO_API sfVector3f sfListener_getPosition();
 
 
--- | Set the orientation of the listener in the scene.
+-- | Set the orientation of the forward vector in the scene.
 --
--- The orientation defines the 3D axes of the listener
--- (left, up, front) in the scene. The orientation vector
--- doesn't have to be normalized.
+-- The direction (also called "at vector") is the vector
+-- pointing forward from the listener's perspective. Together
+-- with the up vector, it defines the 3D orientation of the
+-- listener in the scene. The direction vector doesn't
+-- have to be normalized.
 --
--- The default listener's orientation is (0, 0, -1).
+-- The default listener's direction is (0, 0, -1).
 setListenerDirection :: Vec3f -> IO ()
 setListenerDirection dir = with dir sfListener_setDirection_helper
 
@@ -95,3 +99,29 @@ foreign import ccall unsafe "sfListener_getDirection_helper"
 
 --CSFML_AUDIO_API sfVector3f sfListener_getDirection();
 
+
+-- | Set the upward vector of the listener in the scene
+--
+-- The up vector is the vector that points upward from the
+-- listener's perspective. Together with the direction, it
+-- defines the 3D orientation of the listener in the scene.
+-- The up vector doesn't have to be normalized.
+-- The default listener's up vector is (0, 1, 0). It is usually
+-- not necessary to change it, especially in 2D scenarios.
+setListenerUpVector :: Vec3f -> IO ()
+setListenerUpVector dir = with dir sfListener_setUpVector_helper
+
+foreign import ccall unsafe "sfListener_setUpVector_helper"
+    sfListener_setUpVector_helper :: Ptr Vec3f -> IO ()
+
+--CSFML_AUDIO_API void sfListener_setUpVector(sfVector3f upVector);
+
+
+-- | Get the current upward vector (unnormalised) of the listener in the scene.
+getListenerUpVector :: IO Vec3f
+getListenerUpVector = alloca $ \ptr -> sfListener_getUpVector_helper ptr >> peek ptr
+
+foreign import ccall unsafe "sfListener_getUpVector_helper"
+    sfListener_getUpVector_helper :: Ptr Vec3f -> IO ()
+
+--CSFML_AUDIO_API sfVector3f sfListener_getUpVector();
