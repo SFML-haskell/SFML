@@ -8,7 +8,7 @@ import Paths_sfml_demos
 
 
 main = do
-    let ctxSettings = Just $ ContextSettings 24 8 0 1 2
+    let ctxSettings = Just $ ContextSettings 24 8 0 1 2 [ContextDefault]
     wnd <- createRenderWindow (VideoMode 640 480 32) "SFML Haskell Demo" [SFDefaultStyle] ctxSettings
     logoPath  <- getDataFileName "Haskell-Logo.png"
     fontPath  <- getDataFileName "Vera.ttf"
