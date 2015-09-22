@@ -35,9 +35,9 @@ sizeFloat = #{size float}
 
 -- | Encapsulate a 3x3 transform matrix.
 data Transform = Transform
-    { m00 :: !Float, m10 :: !Float, m20 :: !Float
-    , m01 :: !Float, m11 :: !Float, m21 :: !Float
-    , m02 :: !Float, m12 :: !Float, m22 :: !Float
+    { m00 :: Float, m10 :: Float, m20 :: Float
+    , m01 :: Float, m11 :: Float, m21 :: Float
+    , m02 :: Float, m12 :: Float, m22 :: Float
     }
 
 
