@@ -11,11 +11,14 @@ import SFML.Graphics.BlendMode
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
 
-import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CIntPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Storable
 
 #include <SFML/Graphics/RenderStates.h>
+
+
+#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
 
 
 -- | Define the states used for drawing to a RenderTarget.
@@ -28,8 +31,8 @@ data RenderStates = RenderStates
 
 
 instance Storable RenderStates where
-    sizeOf _ = size_sfRenderStates
-    alignment _ = alignment (undefined :: CFloat)
+    sizeOf _ = #{size sfRenderStates}
+    alignment _ = #{alignment sfRenderStates}
 
     peek ptr = do
         bm <- #{peek sfRenderStates, blendMode} ptr
@@ -44,20 +47,17 @@ instance Storable RenderStates where
         #{poke sfRenderStates, texture} ptr tx
         #{poke sfRenderStates, shader} ptr sh
 
-
-size_sfRenderStates = #{size sfRenderStates}
-
 -- | Default render states, defined as
 --
 -- @
--- renderStates = RenderStates 'BlendAlpha' 'idTransform' (Texture 'nullPtr') (Shader 'nullPtr')
+-- renderStates = RenderStates 'blendAlpha' 'idTransform' (Texture 'nullPtr') (Shader 'nullPtr')
 -- @
 --
 -- This constant tries to mimic the C++ RenderStates default constructor to ease
 -- the construction of render states. For example, instead of typing
 --
 -- @
--- states = RenderStates BlendAlpha idTransform tex (Shader nullptr)
+-- states = RenderStates blendAlpha idTransform tex (Shader nullptr)
 -- @
 --
 -- Now we can simply type
@@ -65,7 +65,7 @@ size_sfRenderStates = #{size sfRenderStates}
 -- @
 -- states = renderStates { texture = tex }
 -- @
-renderStates = RenderStates BlendAlpha idTransform (Texture nullPtr) (Shader nullPtr)
+renderStates = RenderStates blendAlpha idTransform (Texture nullPtr) (Shader nullPtr)
 
 {-typedef struct
 {
