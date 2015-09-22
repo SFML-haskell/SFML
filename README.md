@@ -29,12 +29,11 @@ Low level Haskell bindings for SFML 2.x
 
 ### Installation (brief)
 
-Install SFML and CSFML on your system. You have to install them off the git repositories; the 2.0 RC snapshot won't work.
-
-Make sure your compiler can find SFML's and CSFML's headers and libraries, and then run
+- Download latest CSFML 2.x
+- Make sure your compiler can find CSFML's headers and libraries, then run:
 
 ```
-$ git clone https://github.com/jeannekamikaze/SFML.git
+$ git clone https://github.com/SFML-haskell/SFML.git
 $ cd SFML
 $ cabal install
 ```
