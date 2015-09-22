@@ -53,24 +53,27 @@ import Foreign.Storable
 
 -- | Text styles.
 data TextStyle
-    = TextRegular    -- ^ Regular characters, no style
-    | TextBold       -- ^ Characters are bold
-    | TextItalic     -- ^ Characters are in italic
-    | TextUnderlined -- ^ Characters are underlined
+    = TextRegular       -- ^ Regular characters, no style
+    | TextBold          -- ^ Characters are bold
+    | TextItalic        -- ^ Characters are in italic
+    | TextUnderlined    -- ^ Characters are underlined
+    | TextStrikeThrough -- ^ Strike through characters
     deriving (Eq, Bounded, Show)
 
 
 instance Enum TextStyle where
     
-    fromEnum TextRegular    = 0
-    fromEnum TextBold       = 1
-    fromEnum TextItalic     = 2
-    fromEnum TextUnderlined = 4
+    fromEnum TextRegular       = 0
+    fromEnum TextBold          = 1
+    fromEnum TextItalic        = 2
+    fromEnum TextUnderlined    = 4
+    fromEnum TextStrikeThrough = 8
     
     toEnum 0 = TextRegular
     toEnum 1 = TextBold
     toEnum 2 = TextItalic
     toEnum 4 = TextUnderlined
+    toEnum 8 = TextStrikeThrough
 
 
 data TextException = TextException String deriving (Show, Typeable)
