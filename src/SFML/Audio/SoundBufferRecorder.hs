@@ -50,7 +50,7 @@ foreign import ccall unsafe "sfSoundBufferRecorder_create"
 
 
 instance SFResource SoundBufferRecorder where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfSoundBufferRecorder_destroy
 
@@ -61,16 +61,16 @@ foreign import ccall unsafe "sfSoundBufferRecorder_destroy"
 
 
 instance SFSoundRecorder SoundBufferRecorder where
-    
+
     {-# INLINABLE startRecording #-}
-    startRecording rec rate = sfSoundBufferRecorder_start rec (fromIntegral rate)
-    
+    startRecording rec rate = ((/=0) . fromIntegral) <$> sfSoundBufferRecorder_start rec (fromIntegral rate)
+
     {-# INLINABLE stopRecording #-}
     stopRecording = sfSoundBufferRecorder_stop
 
 
 foreign import ccall unsafe "sfSoundBufferRecorder_start"
-    sfSoundBufferRecorder_start :: SoundBufferRecorder -> CUInt -> IO ()
+    sfSoundBufferRecorder_start :: SoundBufferRecorder -> CUInt -> IO CInt
 
 -- CSFML_AUDIO_API void sfSoundBufferRecorder_start(sfSoundBufferRecorder* soundBufferRecorder, unsigned int sampleRate);
 
@@ -81,7 +81,7 @@ foreign import ccall unsafe "sfSoundBufferRecorder_stop"
 
 
 instance SFSampled SoundBufferRecorder where
-    
+
     {-# INLINABLE getSampleRate #-}
     getSampleRate = sfSoundBufferRecorder_getSampleRate >=> return . fromIntegral
 
