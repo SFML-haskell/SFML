@@ -19,6 +19,7 @@ import SFML.Audio.Types
 import SFML.SFResource
 import SFML.Utils
 
+import Control.Applicative ((<$>), (<*>))
 import Control.Exception
 import Control.Monad ((>=>))
 import Data.Typeable

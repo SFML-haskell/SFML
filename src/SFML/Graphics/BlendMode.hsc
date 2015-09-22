@@ -11,6 +11,7 @@ module SFML.Graphics.BlendMode
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.Types (CInt)
 import Foreign.Ptr
 import Foreign.Storable

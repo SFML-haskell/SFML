@@ -4,11 +4,12 @@ module SFML.Graphics.FontInfo
 )
 where
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.String
 import Foreign.Ptr
 import Foreign.Storable
 
-#include <SFML/Graphics/FontInfo.h>>
+#include <SFML/Graphics/FontInfo.h>
 
 
 #let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)

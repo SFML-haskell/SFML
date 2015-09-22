@@ -70,6 +70,7 @@ import SFML.SFDisplayable
 import SFML.SFResource
 import SFML.System.Vector2
 
+import Control.Applicative ((<$>), (<*>))
 import Data.Bits ((.|.))
 import Data.List (foldl')
 import Foreign.C.String

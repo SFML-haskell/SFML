@@ -146,4 +146,9 @@ library
           csfml-system,
           csfml-graphics,
           csfml-network,
-          csfml-audio
+          csfml-audio,
+          sfml-window,
+          sfml-system,
+          sfml-graphics,
+          sfml-network,
+          sfml-audio
