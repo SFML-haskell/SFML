@@ -88,6 +88,7 @@ library
       SFML.Window.ContextSettings
       SFML.Window.Event
       SFML.Window.Joystick
+      SFML.Window.JoystickIdentification
       SFML.Window.Keyboard
       SFML.Window.Mouse
       SFML.Window.SFWindow
@@ -119,6 +120,7 @@ library
       cbits/SFML/System/Clock_helper.c
       cbits/SFML/System/Time_helper.c
       cbits/SFML/System/Sleep_helper.c
+      cbits/SFML/Window/Joystick_helper.c
       cbits/SFML/Window/VideoMode_helper.c
       cbits/SFML/Window/Window_helper.c
 

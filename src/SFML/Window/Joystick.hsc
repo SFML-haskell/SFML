@@ -8,12 +8,16 @@ module SFML.Window.Joystick
 ,   hasAxis
 ,   isJoystickButtonPressed
 ,   getAxisPosition
+,   getJoystickIdentification
 ,   updateJoystick
 )
 where
 
 
+import SFML.Window.JoystickIdentification
+
 import Foreign.C.Types
+import Foreign.Marshal.Alloc (alloca)
 import Foreign.Storable
 import Foreign.Ptr (Ptr, castPtr)
 
@@ -27,11 +31,11 @@ data JoystickCap
 
 
 instance Enum JoystickCap where
-    
+
     fromEnum JoystickCount       = 8
     fromEnum JoystickButtonCount = 32
     fromEnum JoystickAxisCount   = 8
-    
+
     toEnum 8  = JoystickCount
     toEnum 32 = JoystickButtonCount
     --toEnum 8  = JoystickAxisCount
@@ -56,7 +60,7 @@ sizeInt = #{size int}
 instance Storable JoystickAxis where
     sizeOf _ = sizeInt
     alignment _ = alignment (undefined :: CInt)
-    
+
     peek ptr = peek (castPtr ptr :: Ptr CInt) >>= return . toEnum . fromIntegral
     poke ptr bt = poke (castPtr ptr :: Ptr CInt) (fromIntegral . fromEnum $ bt)
 
@@ -135,6 +139,23 @@ foreign import ccall unsafe "sfJoystick_getAxisPosition"
     sfJoystick_getAxisPosition :: CUInt -> CUInt -> IO CFloat
 
 --CSFML_WINDOW_API float sfJoystick_getAxisPosition(unsigned int joystick, sfJoystickAxis axis);
+
+
+-- | Get the joystick information.
+--
+-- The result of this function will only remain valid until
+-- the next time the function is called.
+getJoystickIdentification
+    :: Int -- ^ Index of the joystick
+    -> IO JoystickIdentification
+
+getJoystickIdentification j
+    = alloca $ \ptr -> sfJoystick_getIdentification_helper (fromIntegral j) ptr >> peek ptr
+
+foreign import ccall unsafe "sfJoystick_getIdentification_helper"
+    sfJoystick_getIdentification_helper :: CUInt -> Ptr JoystickIdentification -> IO ()
+
+--CSFML_WINDOW_API sfJoystickIdentification sfJoystick_getIdentification(unsigned int joystick);
 
 
 -- | Update the states of all joysticks.
