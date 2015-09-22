@@ -38,7 +38,7 @@ $ cd SFML
 $ cabal install
 ```
 
-For detailed installation instructions head to the [wiki][1].
+For detailed installation instructions, please head to the [wiki][1].
 
 [0]: https://github.com/jeannekamikaze/SFML/blob/master/demos/demos.cabal
 [1]: https://github.com/jeannekamikaze/SFML/wiki
