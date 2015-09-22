@@ -14,7 +14,8 @@ module SFML.Graphics.Color
 where
 
 
-import Data.Word (Word8)
+import Data.Bits ((.&.), shiftR)
+import Data.Word (Word8, Word32)
 import Foreign.Storable
 
 #include <SFML/Graphics/Color.h>
@@ -33,14 +34,14 @@ data Color = Color
 instance Storable Color where
     sizeOf _ = 4 * sizeOf (undefined :: Word8)
     alignment _ = alignment (undefined :: Word8)
-    
+
     peek ptr = do
         r <- #{peek sfColor, r} ptr
         g <- #{peek sfColor, g} ptr
         b <- #{peek sfColor, b} ptr
         a <- #{peek sfColor, a} ptr
         return $ Color r g b a
-    
+
     poke ptr (Color r g b a) = do
         #{poke sfColor, r} ptr r
         #{poke sfColor, g} ptr g
@@ -60,13 +61,17 @@ transparent = Color   0   0   0 0
 
 
 instance Num Color where
-    
+
     (Color r1 g1 b1 a1) + (Color r2 g2 b2 a2) = Color (r1+r2) (g1+g2) (b1+b2) (a1+a2)
     (Color r1 g1 b1 a1) - (Color r2 g2 b2 a2) = Color (r1-r2) (g1-g2) (b1-b2) (a1-a2)
     (Color r1 g1 b1 a1) * (Color r2 g2 b2 a2) = Color (r1*r2) (g1*g2) (b1*b2) (a1*a2)
     negate (Color r g b a) = Color (-r) (-g) (-b) (-a)
     abs (Color r g b a) = Color (abs r) (abs g) (abs b) (abs a)
     signum (Color r g b a) = Color (signum r) (signum g) (signum b) (signum a)
-    fromInteger i = let i' = fromIntegral i in Color i' i' i' i'
-
-
+    fromInteger i' =
+        let i = fromIntegral i' :: Word32
+            r = fromIntegral $ (i .&. 0xFF000000) `shiftR` 24
+            g = fromIntegral $ (i .&. 0x00FF0000) `shiftR` 16
+            b = fromIntegral $ (i .&. 0x0000FF00) `shiftR` 8
+            a = fromIntegral $  i .&. 0x000000FF
+        in Color r g b a
