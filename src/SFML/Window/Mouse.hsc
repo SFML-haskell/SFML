@@ -2,6 +2,7 @@
 module SFML.Window.Mouse
 (
     MouseButton(..)
+,   MouseWheel(..)
 ,   isMouseButtonPressed
 )
 where
@@ -15,6 +16,11 @@ import Foreign.Marshal.Alloc (alloca)
 import Foreign.Ptr
 import Foreign.Storable
 
+#include <SFML/Window/Mouse.h>
+
+
+#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
+
 
 data MouseButton
     = MouseLeft
@@ -25,13 +31,24 @@ data MouseButton
     deriving (Eq, Enum, Bounded, Show)
 
 
-sizeInt = #{size int}
+data MouseWheel
+    = MouseVerticalWheel   -- ^ The vertical mouse wheel
+    | MouseHorizontalWheel -- ^ The horizontal mouse wheel
+    deriving (Eq, Enum, Bounded, Show)
+
+
+instance Storable MouseWheel where
+    sizeOf _ = #{size sfMouseWheel}
+    alignment _ = #{alignment sfMouseWheel}
+
+    peek ptr = peek (castPtr ptr :: Ptr CInt) >>= return . toEnum . fromIntegral
+    poke ptr mw = poke (castPtr ptr :: Ptr CInt) (fromIntegral . fromEnum $ mw)
 
 
 instance Storable MouseButton where
-    sizeOf _ = sizeInt
-    alignment _ = alignment (undefined :: CInt)
-    
+    sizeOf _ = #{size sfMouseButton}
+    alignment _ = #{alignment sfMouseButton}
+
     peek ptr = peek (castPtr ptr :: Ptr CInt) >>= return . toEnum . fromIntegral
     poke ptr bt = poke (castPtr ptr :: Ptr CInt) (fromIntegral . fromEnum $ bt)
 

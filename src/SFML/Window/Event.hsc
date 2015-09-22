@@ -45,9 +45,15 @@ data SFEvent
     , sys   :: Bool
     }
     | SFEvtMouseWheelMoved
-    { delta :: Int
-    , x     :: Int
-    , y     :: Int
+    { moveDelta :: Int
+    , x         :: Int
+    , y         :: Int
+    }
+    | SFEvtMouseWheelScrolled
+    { wheel       :: MouseWheel
+    , scrollDelta :: Float
+    , x           :: Int
+    , y           :: Int
     }
     | SFEvtMouseButtonPressed
     { button :: MouseButton
@@ -129,37 +135,43 @@ instance Storable SFEvent where
                     x     <- #{peek sfMouseWheelEvent, x} ptr :: IO CInt
                     y     <- #{peek sfMouseWheelEvent, y} ptr :: IO CInt
                     return $ SFEvtMouseWheelMoved (fromIntegral delta) (fromIntegral x) (fromIntegral y)
-                8  -> do
-                    button <- #{peek sfMouseButtonEvent, button} ptr
-                    x      <- #{peek sfMouseButtonEvent, x} ptr :: IO CInt
-                    y      <- #{peek sfMouseButtonEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseButtonPressed button (fromIntegral x) (fromIntegral y)
+                8 -> do
+                    wheel <- #{peek sfMouseWheelScrollEvent, wheel} ptr :: IO MouseWheel
+                    delta <- #{peek sfMouseWheelScrollEvent, delta} ptr :: IO CFloat
+                    x     <- #{peek sfMouseWheelScrollEvent, x} ptr :: IO CInt
+                    y     <- #{peek sfMouseWheelScrollEvent, y} ptr :: IO CInt
+                    return $ SFEvtMouseWheelScrolled wheel (realToFrac delta) (fromIntegral x) (fromIntegral y)
                 9  -> do
                     button <- #{peek sfMouseButtonEvent, button} ptr
                     x      <- #{peek sfMouseButtonEvent, x} ptr :: IO CInt
                     y      <- #{peek sfMouseButtonEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseButtonReleased button (fromIntegral x) (fromIntegral y)
+                    return $ SFEvtMouseButtonPressed button (fromIntegral x) (fromIntegral y)
                 10 -> do
+                    button <- #{peek sfMouseButtonEvent, button} ptr
+                    x      <- #{peek sfMouseButtonEvent, x} ptr :: IO CInt
+                    y      <- #{peek sfMouseButtonEvent, y} ptr :: IO CInt
+                    return $ SFEvtMouseButtonReleased button (fromIntegral x) (fromIntegral y)
+                11 -> do
                     x <- #{peek sfMouseMoveEvent, x} ptr :: IO CInt
                     y <- #{peek sfMouseMoveEvent, y} ptr :: IO CInt
                     return $ SFEvtMouseMoved (fromIntegral x) (fromIntegral y)
-                11 -> return SFEvtMouseEntered
-                12 -> return SFEvtMouseLeft
-                13 -> do
-                    j  <- #{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt
-                    bt <- #{peek sfJoystickButtonEvent, button} ptr :: IO CUInt
-                    return $ SFEvtJoystickButtonPressed (fromIntegral j) (fromIntegral bt)
+                12 -> return SFEvtMouseEntered
+                13 -> return SFEvtMouseLeft
                 14 -> do
                     j  <- #{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt
                     bt <- #{peek sfJoystickButtonEvent, button} ptr :: IO CUInt
-                    return $ SFEvtJoystickButtonReleased (fromIntegral j) (fromIntegral bt)
+                    return $ SFEvtJoystickButtonPressed (fromIntegral j) (fromIntegral bt)
                 15 -> do
+                    j  <- #{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt
+                    bt <- #{peek sfJoystickButtonEvent, button} ptr :: IO CUInt
+                    return $ SFEvtJoystickButtonReleased (fromIntegral j) (fromIntegral bt)
+                16 -> do
                     j    <- #{peek sfJoystickMoveEvent, joystickId} ptr :: IO CUInt
                     axis <- #{peek sfJoystickMoveEvent, axis} ptr
                     pos  <- fmap realToFrac (#{peek sfJoystickMoveEvent, position} ptr :: IO CFloat)
                     return $ SFEvtJoystickMoved (fromIntegral j) axis pos
-                16 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickConnected
-                17 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickDisconnected
+                17 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickConnected
+                18 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickDisconnected
     
     poke ptr evt = return ()
 
