@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.SoundBuffer
 (
     module SFML.Utils
@@ -27,9 +26,7 @@ import SFML.System.InputStream
 import SFML.System.Time
 import SFML.Utils
 
-import Control.Exception
 import Control.Monad ((>=>))
-import Data.Typeable
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)

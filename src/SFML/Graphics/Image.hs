@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Image
 (
     module SFML.Utils
@@ -33,8 +32,6 @@ import SFML.System.InputStream
 import SFML.System.Vector2
 import SFML.Utils
 
-import Control.Exception
-import Data.Typeable
 import Data.Word (Word8)
 import Foreign.Ptr
 import Foreign.C.String

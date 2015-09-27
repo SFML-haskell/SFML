@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.Music
 (
     module SFML.Utils
@@ -45,9 +44,7 @@ import SFML.System.Time
 import SFML.System.Vector3
 import SFML.Utils
 
-import Control.Exception
 import Control.Monad ((>=>))
-import Data.Typeable
 import Foreign.Marshal.Utils (with)
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.C.String

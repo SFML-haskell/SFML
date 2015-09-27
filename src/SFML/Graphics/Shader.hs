@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Shader
 (
     module SFML.Utils
@@ -34,8 +33,6 @@ import SFML.System.Vector2
 import SFML.System.Vector3
 import SFML.Utils
 
-import Control.Exception
-import Data.Typeable
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.Marshal.Utils (with)

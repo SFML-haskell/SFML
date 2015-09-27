@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.ConvexShape
 (
     module SFML.Utils
@@ -53,9 +52,7 @@ import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
 
-import Control.Exception
 import Control.Monad ((>=>))
-import Data.Typeable
 import Foreign.C.Types
 import Foreign.Ptr (Ptr, nullPtr)
 import Foreign.Marshal.Alloc (alloca)

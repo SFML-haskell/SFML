@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.SoundBufferRecorder
 (
     module SFML.Utils
@@ -22,7 +21,6 @@ import SFML.Utils
 import Control.Applicative ((<$>), (<*>))
 import Control.Exception
 import Control.Monad ((>=>))
-import Data.Typeable
 import Foreign.C.Types
 import Foreign.Ptr (nullPtr)
 

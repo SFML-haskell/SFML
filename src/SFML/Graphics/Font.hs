@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Font
 (
     module SFML.Utils
@@ -27,8 +26,6 @@ import SFML.SFResource
 import SFML.System.InputStream
 import SFML.Utils
 
-import Control.Exception
-import Data.Typeable
 import Data.Word
 import Foreign.C.String
 import Foreign.C.Types

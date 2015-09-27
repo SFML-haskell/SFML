@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Audio.SoundRecorder
 (
     module SFML.Utils
@@ -29,9 +28,7 @@ import SFML.System.Time
 import SFML.Utils
 
 import Control.Applicative ((<$>), (<*>))
-import Control.Exception
 import Control.Monad ((>=>), forM)
-import Data.Typeable
 import Data.Word (Word16)
 import Foreign.C.String
 import Foreign.C.Types

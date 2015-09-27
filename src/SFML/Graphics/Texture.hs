@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Texture
 (
     module SFML.Utils
@@ -38,8 +37,6 @@ import SFML.System.InputStream
 import SFML.System.Vector2
 import SFML.Utils
 
-import Control.Exception
-import Data.Typeable
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)

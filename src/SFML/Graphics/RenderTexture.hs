@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.RenderTexture
 (
     module SFML.Utils
@@ -49,8 +48,6 @@ import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
 
-import Control.Exception
-import Data.Typeable
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Array (withArray)

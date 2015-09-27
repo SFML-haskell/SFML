@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module SFML.Graphics.Sprite
 (
     module SFML.Utils
@@ -44,9 +43,7 @@ import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
 
-import Control.Exception
 import Control.Monad ((>=>))
-import Data.Typeable
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
