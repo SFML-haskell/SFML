@@ -134,6 +134,7 @@ library
 
   extensions:
       ForeignFunctionInterface
+      DeriveDataTypeable
 
   if os(windows)
       extra-libraries:

@@ -9,7 +9,7 @@ module SFML.Window.VideoMode
 where
 
 
-import Control.Applicative ((<$>), (<*>), liftA2)
+import Control.Applicative ((<$>), (<*>), (*>), liftA2)
 import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.Marshal.Alloc (alloca)
