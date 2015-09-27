@@ -11,6 +11,7 @@ import SFML.Graphics.BlendMode
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.Types (CIntPtr)
 import Foreign.Ptr (nullPtr)
 import Foreign.Storable
@@ -34,12 +35,11 @@ instance Storable RenderStates where
     sizeOf _ = #{size sfRenderStates}
     alignment _ = #{alignment sfRenderStates}
 
-    peek ptr = do
-        bm <- #{peek sfRenderStates, blendMode} ptr
-        tr <- #{peek sfRenderStates, transform} ptr
-        tx <- #{peek sfRenderStates, texture} ptr
-        sh <- #{peek sfRenderStates, shader} ptr
-        return $ RenderStates bm tr tx sh
+    peek ptr = RenderStates
+            <$> #{peek sfRenderStates, blendMode} ptr
+            <*> #{peek sfRenderStates, transform} ptr
+            <*> #{peek sfRenderStates, texture} ptr
+            <*> #{peek sfRenderStates, shader} ptr
 
     poke ptr (RenderStates bm tr tx sh) = do
         #{poke sfRenderStates, blendMode} ptr  bm

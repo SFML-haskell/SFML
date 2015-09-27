@@ -14,6 +14,7 @@ module SFML.Graphics.Color
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Data.Bits ((.&.), shiftR)
 import Data.Word (Word8, Word32)
 import Foreign.Storable
@@ -35,12 +36,11 @@ instance Storable Color where
     sizeOf _ = 4 * sizeOf (undefined :: Word8)
     alignment _ = alignment (undefined :: Word8)
 
-    peek ptr = do
-        r <- #{peek sfColor, r} ptr
-        g <- #{peek sfColor, g} ptr
-        b <- #{peek sfColor, b} ptr
-        a <- #{peek sfColor, a} ptr
-        return $ Color r g b a
+    peek ptr = Color
+            <$> #{peek sfColor, r} ptr
+            <*> #{peek sfColor, g} ptr
+            <*> #{peek sfColor, b} ptr
+            <*> #{peek sfColor, a} ptr
 
     poke ptr (Color r g b a) = do
         #{poke sfColor, r} ptr r

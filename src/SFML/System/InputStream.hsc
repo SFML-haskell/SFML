@@ -10,6 +10,7 @@ module SFML.System.InputStream
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Data.Word (Word64)
 import Foreign.C.Types (CInt)
 import Foreign.Ptr (Ptr)
@@ -55,15 +56,14 @@ data InputStream = forall a. InputStream
 instance Storable InputStream where
     sizeOf _ = size_InputStream
     alignment _ = alignment (undefined :: CInt)
-    
-    peek ptr = do
-        read  <- #{peek sfInputStream, read} ptr
-        seek  <- #{peek sfInputStream, seek} ptr
-        tell  <- #{peek sfInputStream, tell} ptr
-        gets  <- #{peek sfInputStream, getSize} ptr
-        udata <- #{peek sfInputStream, userData} ptr
-        return $ InputStream read seek tell gets udata
-    
+
+    peek ptr = InputStream
+            <$> #{peek sfInputStream, read} ptr
+            <*> #{peek sfInputStream, seek} ptr
+            <*> #{peek sfInputStream, tell} ptr
+            <*> #{peek sfInputStream, getSize} ptr
+            <*> #{peek sfInputStream, userData} ptr
+
     poke ptr (InputStream read seek tell gets udata) = do
         #{poke sfInputStream, read} ptr read
         #{poke sfInputStream, seek} ptr seek
@@ -76,7 +76,7 @@ size_InputStream = #{size sfInputStream}
 
 
 instance Show InputStream where
-    
+
     show (InputStream read seek tell getSize userData) =
         "InputStream { read = " ++ show read ++
                     ", seek = " ++ show seek ++

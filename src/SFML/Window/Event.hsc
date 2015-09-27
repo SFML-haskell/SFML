@@ -10,6 +10,7 @@ import SFML.Window.Joystick
 import SFML.Window.Keyboard
 import SFML.Window.Mouse
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Marshal.Array
@@ -100,7 +101,7 @@ sizeChar = #{size char}
 instance Storable SFEvent where
     sizeOf _ = #{size sfEvent}
     alignment _ = alignment (undefined :: CInt)
-    
+
     peek ptr' =
         let ptr'' = castPtr ptr' :: Ptr CInt
         in do
@@ -108,71 +109,58 @@ instance Storable SFEvent where
             eventType <- peek ptr'' :: IO CInt
             case eventType of
                 0  -> return SFEvtClosed
-                1  -> do
-                    w <- #{peek sfSizeEvent, width} ptr  :: IO CUInt
-                    h <- #{peek sfSizeEvent, height} ptr :: IO CUInt
-                    return $ SFEvtResized (fromIntegral w) (fromIntegral h)
+                1  -> SFEvtResized
+                   <$> fmap fromIntegral (#{peek sfSizeEvent, width}  ptr :: IO CUInt)
+                   <*> fmap fromIntegral (#{peek sfSizeEvent, height} ptr :: IO CUInt)
                 2  -> return SFEvtLostFocus
                 3  -> return SFEvtGainedFocus
                 4  -> peekCAString (plusPtr ptr sizeInt) >>= return . SFEvtTextEntered
-                5  -> do
-                    code  <- #{peek sfKeyEvent, code} ptr
-                    alt   <- #{peek sfKeyEvent, alt} ptr :: IO CInt
-                    ctrl  <- #{peek sfKeyEvent, control} ptr :: IO CInt
-                    shift <- #{peek sfKeyEvent, shift} ptr :: IO CInt
-                    sys   <- #{peek sfKeyEvent, system} ptr :: IO CInt
-                    return $ SFEvtKeyPressed code (toEnum . fromIntegral $ alt) (toEnum . fromIntegral $ ctrl)
-                               (toEnum . fromIntegral $ shift) (toEnum . fromIntegral $ sys)
-                6  -> do
-                    code  <- #{peek sfKeyEvent, code} ptr
-                    alt   <- #{peek sfKeyEvent, alt} ptr :: IO CInt
-                    ctrl  <- #{peek sfKeyEvent, control} ptr :: IO CInt
-                    shift <- #{peek sfKeyEvent, shift} ptr :: IO CInt
-                    sys   <- #{peek sfKeyEvent, system} ptr :: IO CInt
-                    return $ SFEvtKeyReleased code (toEnum . fromIntegral $ alt) (toEnum . fromIntegral $ ctrl)
-                               (toEnum . fromIntegral $ shift) (toEnum . fromIntegral $ sys)
-                7  -> do
-                    delta <- #{peek sfMouseWheelEvent, delta} ptr :: IO CInt
-                    x     <- #{peek sfMouseWheelEvent, x} ptr :: IO CInt
-                    y     <- #{peek sfMouseWheelEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseWheelMoved (fromIntegral delta) (fromIntegral x) (fromIntegral y)
-                8 -> do
-                    wheel <- #{peek sfMouseWheelScrollEvent, wheel} ptr :: IO MouseWheel
-                    delta <- #{peek sfMouseWheelScrollEvent, delta} ptr :: IO CFloat
-                    x     <- #{peek sfMouseWheelScrollEvent, x} ptr :: IO CInt
-                    y     <- #{peek sfMouseWheelScrollEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseWheelScrolled wheel (realToFrac delta) (fromIntegral x) (fromIntegral y)
-                9  -> do
-                    button <- #{peek sfMouseButtonEvent, button} ptr
-                    x      <- #{peek sfMouseButtonEvent, x} ptr :: IO CInt
-                    y      <- #{peek sfMouseButtonEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseButtonPressed button (fromIntegral x) (fromIntegral y)
-                10 -> do
-                    button <- #{peek sfMouseButtonEvent, button} ptr
-                    x      <- #{peek sfMouseButtonEvent, x} ptr :: IO CInt
-                    y      <- #{peek sfMouseButtonEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseButtonReleased button (fromIntegral x) (fromIntegral y)
-                11 -> do
-                    x <- #{peek sfMouseMoveEvent, x} ptr :: IO CInt
-                    y <- #{peek sfMouseMoveEvent, y} ptr :: IO CInt
-                    return $ SFEvtMouseMoved (fromIntegral x) (fromIntegral y)
+                5  -> SFEvtKeyPressed
+                   <$> #{peek sfKeyEvent, code} ptr
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, alt} ptr :: IO CInt)
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, control} ptr :: IO CInt)
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, shift} ptr :: IO CInt)
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, system} ptr :: IO CInt)
+                6  -> SFEvtKeyReleased
+                   <$> #{peek sfKeyEvent, code} ptr
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, alt} ptr :: IO CInt)
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, control} ptr :: IO CInt)
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, shift} ptr :: IO CInt)
+                   <*> fmap (toEnum . fromIntegral) (#{peek sfKeyEvent, system} ptr :: IO CInt)
+                7  -> SFEvtMouseWheelMoved
+                   <$> fmap fromIntegral (#{peek sfMouseWheelEvent, delta} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfMouseWheelEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfMouseWheelEvent, y} ptr :: IO CInt)
+                8 -> SFEvtMouseWheelScrolled
+                  <$> (#{peek sfMouseWheelScrollEvent, wheel} ptr :: IO MouseWheel)
+                  <*> fmap realToFrac   (#{peek sfMouseWheelScrollEvent, delta} ptr :: IO CFloat)
+                  <*> fmap fromIntegral (#{peek sfMouseWheelScrollEvent, x} ptr :: IO CInt)
+                  <*> fmap fromIntegral (#{peek sfMouseWheelScrollEvent, y} ptr :: IO CInt)
+                9  -> SFEvtMouseButtonPressed
+                   <$> #{peek sfMouseButtonEvent, button} ptr
+                   <*> fmap fromIntegral (#{peek sfMouseButtonEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfMouseButtonEvent, y} ptr :: IO CInt)
+                10 -> SFEvtMouseButtonReleased
+                   <$> #{peek sfMouseButtonEvent, button} ptr
+                   <*> fmap fromIntegral (#{peek sfMouseButtonEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfMouseButtonEvent, y} ptr :: IO CInt)
+                11 -> SFEvtMouseMoved
+                   <$> fmap fromIntegral (#{peek sfMouseMoveEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfMouseMoveEvent, y} ptr :: IO CInt)
                 12 -> return SFEvtMouseEntered
                 13 -> return SFEvtMouseLeft
-                14 -> do
-                    j  <- #{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt
-                    bt <- #{peek sfJoystickButtonEvent, button} ptr :: IO CUInt
-                    return $ SFEvtJoystickButtonPressed (fromIntegral j) (fromIntegral bt)
-                15 -> do
-                    j  <- #{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt
-                    bt <- #{peek sfJoystickButtonEvent, button} ptr :: IO CUInt
-                    return $ SFEvtJoystickButtonReleased (fromIntegral j) (fromIntegral bt)
-                16 -> do
-                    j    <- #{peek sfJoystickMoveEvent, joystickId} ptr :: IO CUInt
-                    axis <- #{peek sfJoystickMoveEvent, axis} ptr
-                    pos  <- fmap realToFrac (#{peek sfJoystickMoveEvent, position} ptr :: IO CFloat)
-                    return $ SFEvtJoystickMoved (fromIntegral j) axis pos
+                14 -> SFEvtJoystickButtonPressed
+                   <$> fmap fromIntegral (#{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt)
+                   <*> fmap fromIntegral (#{peek sfJoystickButtonEvent, button} ptr :: IO CUInt)
+                15 -> SFEvtJoystickButtonReleased
+                   <$> fmap fromIntegral (#{peek sfJoystickButtonEvent, joystickId} ptr :: IO CUInt)
+                   <*> fmap fromIntegral (#{peek sfJoystickButtonEvent, button} ptr :: IO CUInt)
+                16 -> SFEvtJoystickMoved
+                   <$> fmap fromIntegral (#{peek sfJoystickMoveEvent, joystickId} ptr :: IO CUInt)
+                   <*> #{peek sfJoystickMoveEvent, axis} ptr
+                   <*> fmap realToFrac (#{peek sfJoystickMoveEvent, position} ptr :: IO CFloat)
                 17 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickConnected
                 18 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickDisconnected
-    
+
     poke ptr evt = return ()
 

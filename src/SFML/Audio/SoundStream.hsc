@@ -36,6 +36,7 @@ import SFML.SFResource
 import SFML.System.Time
 import SFML.System.Vector3
 
+import Control.Applicative ((<$>), (<*>))
 import Control.Monad ((>=>))
 import Data.Word (Word16)
 import Foreign.C.Types
@@ -70,12 +71,11 @@ size_SoundStreamChunk = #{size sfSoundStreamChunk}
 instance Storable SoundStreamChunk where
     sizeOf _ = size_SoundStreamChunk
     alignment _ = alignment (undefined :: CInt)
-    
-    peek ptr = do
-        samples <- #{peek sfSoundStreamChunk, samples} ptr
-        sampleCount <- #{peek sfSoundStreamChunk, sampleCount} ptr :: IO CUInt
-        return $ SoundStreamChunk samples (fromIntegral sampleCount)
-    
+
+    peek ptr = SoundStreamChunk
+            <$> #{peek sfSoundStreamChunk, samples} ptr
+            <*> fmap fromIntegral (#{peek sfSoundStreamChunk, sampleCount} ptr :: IO CUInt)
+
     poke ptr (SoundStreamChunk samples sampleCount) = do
         #{poke sfSoundStreamChunk, samples} ptr samples
         #{poke sfSoundStreamChunk, sampleCount} ptr (fromIntegral sampleCount :: CUInt)
@@ -120,7 +120,7 @@ foreign import ccall unsafe "sfSoundStream_create"
 
 
 instance SFResource SoundStream where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfSoundStream_destroy
 
@@ -131,64 +131,64 @@ foreign import ccall unsafe "sfSoundStream_destroy"
 
 
 instance SFSound SoundStream where
-    
+
     {-# INLINABLE play #-}
     play = sfSoundStream_play
-    
+
     {-# INLINABLE pause #-}
     pause = sfSoundStream_pause
-    
+
     {-# INLINABLE stop #-}
     stop = sfSoundStream_stop
-    
+
     {-# INLINABLE getAttenuation #-}
     getAttenuation = sfSoundStream_getAttenuation >=> return . realToFrac
-    
+
     {-# INLINABLE getLoop #-}
     getLoop music = fmap (toEnum . fromIntegral) $ sfSoundStream_getLoop music
-    
+
     {-# INLINABLE getMinDistance #-}
     getMinDistance = sfSoundStream_getMinDistance >=> return . realToFrac
-    
+
     {-# INLINABLE getPitch #-}
     getPitch = sfSoundStream_getPitch >=> return . realToFrac
-    
+
     {-# INLINABLE getPlayingOffset #-}
     getPlayingOffset music = alloca $ \ptr -> sfSoundStream_getPlayingOffset_helper music ptr >> peek ptr
-    
+
     {-# INLINABLE getPosition #-}
     getPosition music = alloca $ \ptr -> sfSoundStream_getPosition_helper music ptr >> peek ptr
-    
+
     {-# INLINABLE getStatus #-}
     getStatus = sfSoundStream_getStatus >=> return . toEnum . fromIntegral
-    
+
     {-# INLINABLE getVolume #-}
     getVolume = sfSoundStream_getVolume >=> return . realToFrac
-    
+
     {-# INLINABLE isRelativeToListener #-}
     isRelativeToListener = sfSoundStream_isRelativeToListener >=> return . toEnum . fromIntegral
-    
+
     {-# INLINABLE setAttenuation #-}
     setAttenuation m a = sfSoundStream_setAttenuation m (realToFrac a)
-    
+
     {-# INLINABLE setLoop #-}
     setLoop music val = sfSoundStream_setLoop music (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE setMinDistance #-}
     setMinDistance m d = sfSoundStream_setMinDistance m (realToFrac d)
-    
+
     {-# INLINABLE setPitch #-}
     setPitch m p = sfSoundStream_setPitch m (realToFrac p)
-    
+
     {-# INLINABLE setPlayingOffset #-}
     setPlayingOffset = sfSoundStream_setPlayingOffset
-    
+
     {-# INLINABLE setPosition #-}
     setPosition music pos = with pos $ sfSoundStream_setPosition_helper music
-    
+
     {-# INLINABLE setRelativeToListener #-}
     setRelativeToListener music val = sfSoundStream_setRelativeToListener music (fromIntegral . fromEnum $ val)
-    
+
     {-# INLINABLE setVolume #-}
     setVolume m v = sfSoundStream_setVolume m (realToFrac v)
 

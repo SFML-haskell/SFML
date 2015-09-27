@@ -9,7 +9,7 @@ module SFML.Window.VideoMode
 where
 
 
-import Control.Applicative
+import Control.Applicative ((<$>), (<*>), liftA2)
 import Foreign.C.Types
 import Foreign.Ptr
 import Foreign.Marshal.Alloc (alloca)
@@ -34,13 +34,12 @@ data VideoMode = VideoMode
 instance Storable VideoMode where
     sizeOf _ = 3*sizeInt
     alignment _ = alignment (undefined :: CInt)
-    
-    peek ptr = do
-        w <- #{peek sfVideoMode, width} ptr :: IO CUInt
-        h <- #{peek sfVideoMode, height} ptr :: IO CUInt
-        b <- #{peek sfVideoMode, bitsPerPixel} ptr :: IO CUInt
-        return $ VideoMode (fromIntegral w) (fromIntegral h) (fromIntegral b)
-    
+
+    peek ptr = VideoMode
+        <$> fmap fromIntegral (#{peek sfVideoMode, width} ptr :: IO CUInt)
+        <*> fmap fromIntegral (#{peek sfVideoMode, height} ptr :: IO CUInt)
+        <*> fmap fromIntegral (#{peek sfVideoMode, bitsPerPixel} ptr :: IO CUInt)
+
     poke ptr (VideoMode w h b) = do
         #{poke sfVideoMode, width} ptr (fromIntegral w :: CUInt)
         #{poke sfVideoMode, height} ptr (fromIntegral h :: CUInt)

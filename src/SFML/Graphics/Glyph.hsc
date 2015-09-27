@@ -8,6 +8,7 @@ where
 
 import SFML.Graphics.Rect
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.Types
 import Foreign.Storable
 
@@ -29,13 +30,12 @@ data Glyph = Glyph
 instance Storable Glyph where
     sizeOf _ = sizeInt + 2*sizeIntRect
     alignment _ = alignment (undefined :: IntRect)
-    
-    peek ptr = do
-        advance <- #{peek sfGlyph, advance} ptr :: IO CInt
-        bounds  <- #{peek sfGlyph, bounds} ptr
-        rect    <- #{peek sfGlyph, textureRect} ptr
-        return $ Glyph (fromIntegral advance) bounds rect
-    
+
+    peek ptr = Glyph
+            <$> fmap fromIntegral (#{peek sfGlyph, advance} ptr :: IO CInt)
+            <*> #{peek sfGlyph, bounds} ptr
+            <*> #{peek sfGlyph, textureRect} ptr
+
     poke ptr (Glyph advance bounds rect) = do
         #{poke sfGlyph, advance} ptr (fromIntegral advance :: CInt)
         #{poke sfGlyph, bounds} ptr bounds

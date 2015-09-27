@@ -10,6 +10,7 @@ module SFML.Graphics.Rect
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.Types
 import Foreign.Marshal.Alloc (alloca)
 import Foreign.Marshal.Utils (with)
@@ -36,14 +37,13 @@ data FloatRect = FloatRect
 instance Storable FloatRect where
     sizeOf _ = 4 * sizeFloat
     alignment _ = alignment (undefined :: CFloat)
-    
-    peek ptr = do
-        l <- fmap realToFrac (#{peek sfFloatRect, left} ptr :: IO CFloat)
-        t <- fmap realToFrac (#{peek sfFloatRect, top} ptr :: IO CFloat)
-        w <- fmap realToFrac (#{peek sfFloatRect, width} ptr :: IO CFloat)
-        h <- fmap realToFrac (#{peek sfFloatRect, height} ptr :: IO CFloat)
-        return $ FloatRect l t w h
-    
+
+    peek ptr = FloatRect
+            <$> fmap realToFrac (#{peek sfFloatRect, left} ptr :: IO CFloat)
+            <*> fmap realToFrac (#{peek sfFloatRect, top} ptr :: IO CFloat)
+            <*> fmap realToFrac (#{peek sfFloatRect, width} ptr :: IO CFloat)
+            <*> fmap realToFrac (#{peek sfFloatRect, height} ptr :: IO CFloat)
+
     poke ptr (FloatRect l t w h) = do
         #{poke sfFloatRect, left} ptr (realToFrac l :: CFloat)
         #{poke sfFloatRect, top} ptr (realToFrac t :: CFloat)
@@ -63,14 +63,13 @@ data IntRect = IntRect
 instance Storable IntRect where
     sizeOf _ = 4 * sizeInt
     alignment _ = alignment (undefined :: CInt)
-    
-    peek ptr = do
-        l <- #{peek sfIntRect, left} ptr   :: IO CInt
-        t <- #{peek sfIntRect, top} ptr    :: IO CInt
-        w <- #{peek sfIntRect, width} ptr  :: IO CInt
-        h <- #{peek sfIntRect, height} ptr :: IO CInt
-        return $ IntRect (fromIntegral l) (fromIntegral t) (fromIntegral w) (fromIntegral h)
-    
+
+    peek ptr = IntRect
+            <$> fmap fromIntegral (#{peek sfIntRect, left} ptr   :: IO CInt)
+            <*> fmap fromIntegral (#{peek sfIntRect, top} ptr    :: IO CInt)
+            <*> fmap fromIntegral (#{peek sfIntRect, width} ptr  :: IO CInt)
+            <*> fmap fromIntegral (#{peek sfIntRect, height} ptr :: IO CInt)
+
     poke ptr (IntRect l t w h) = do
         #{poke sfIntRect, left} ptr (fromIntegral l :: CInt)
         #{poke sfIntRect, top} ptr (fromIntegral t :: CInt)
@@ -118,7 +117,7 @@ class Rect a where
 
 
 instance Rect FloatRect where
-    
+
     intersectRect r1 r2 = unsafeDupablePerformIO $
         alloca $ \ptr1 ->
         alloca $ \ptr2 ->
@@ -138,7 +137,7 @@ foreign import ccall unsafe "sfFloatRect_intersects"
 
 
 instance Rect IntRect where
-    
+
     intersectRect r1 r2 = unsafeDupablePerformIO $
         alloca $ \ptr1 ->
         alloca $ \ptr2 ->

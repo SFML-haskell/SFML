@@ -6,6 +6,7 @@ module SFML.System.Vector3
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.Types
 import Foreign.Storable
 
@@ -21,13 +22,12 @@ data Vec3f = Vec3f {-# UNPACK #-} !Float {-# UNPACK #-} !Float {-# UNPACK #-} !F
 instance Storable Vec3f where
     sizeOf _ = 3*sizeFloat
     alignment _ = alignment (undefined :: CFloat)
-    
-    peek ptr = do
-        x <- fmap realToFrac (#{peek sfVector3f, x} ptr :: IO CFloat)
-        y <- fmap realToFrac (#{peek sfVector3f, y} ptr :: IO CFloat)
-        z <- fmap realToFrac (#{peek sfVector3f, z} ptr :: IO CFloat)
-        return $ Vec3f x y z
-    
+
+    peek ptr = Vec3f
+            <$> fmap realToFrac (#{peek sfVector3f, x} ptr :: IO CFloat)
+            <*> fmap realToFrac (#{peek sfVector3f, y} ptr :: IO CFloat)
+            <*> fmap realToFrac (#{peek sfVector3f, z} ptr :: IO CFloat)
+
     poke ptr (Vec3f x y z) = do
         #{poke sfVector3f, x} ptr (realToFrac x :: CFloat)
         #{poke sfVector3f, y} ptr (realToFrac y :: CFloat)

@@ -8,6 +8,7 @@ module SFML.System.Vector2
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Data.Word
 import Foreign.C.Types
 import Foreign.Storable
@@ -25,12 +26,11 @@ data Vec2i = Vec2i {-# UNPACK #-} !Int {-# UNPACK #-} !Int deriving Show
 instance Storable Vec2i where
     sizeOf _ = 2*sizeInt
     alignment _ = alignment (undefined :: CInt)
-    
-    peek ptr = do
-        x <- #{peek sfVector2i, x} ptr :: IO CInt
-        y <- #{peek sfVector2i, y} ptr :: IO CInt
-        return $ Vec2i (fromIntegral x) (fromIntegral y)
-    
+
+    peek ptr = Vec2i
+            <$> fmap fromIntegral (#{peek sfVector2i, x} ptr :: IO CInt)
+            <*> fmap fromIntegral (#{peek sfVector2i, y} ptr :: IO CInt)
+
     poke ptr (Vec2i x y) = do
         #{poke sfVector2i, x} ptr (fromIntegral x :: CInt)
         #{poke sfVector2i, y} ptr (fromIntegral y :: CInt)
@@ -51,12 +51,11 @@ data Vec2u = Vec2u {-# UNPACK #-} !Word {-# UNPACK #-} !Word deriving Show
 instance Storable Vec2u where
     sizeOf _ = 2*sizeInt
     alignment _ = alignment (undefined :: CUInt)
-    
-    peek ptr = do
-        x <- #{peek sfVector2u, x} ptr :: IO CUInt
-        y <- #{peek sfVector2u, y} ptr :: IO CUInt
-        return $ Vec2u (fromIntegral x) (fromIntegral y)
-    
+
+    peek ptr = Vec2u
+            <$> fmap fromIntegral (#{peek sfVector2u, x} ptr :: IO CUInt)
+            <*> fmap fromIntegral (#{peek sfVector2u, y} ptr :: IO CUInt)
+
     poke ptr (Vec2u x y) = do
         #{poke sfVector2u, x} ptr (fromIntegral x :: CUInt)
         #{poke sfVector2u, y} ptr (fromIntegral y :: CUInt)
@@ -77,12 +76,11 @@ data Vec2f = Vec2f {-# UNPACK #-} !Float {-# UNPACK #-} !Float deriving Show
 instance Storable Vec2f where
     sizeOf _ = 2*sizeFloat
     alignment _ = alignment (undefined :: CFloat)
-    
-    peek ptr = do
-        x <- fmap realToFrac (#{peek sfVector2f, x} ptr :: IO CFloat)
-        y <- fmap realToFrac (#{peek sfVector2f, y} ptr :: IO CFloat)
-        return $ Vec2f x y
-    
+
+    peek ptr = Vec2f
+            <$> fmap realToFrac (#{peek sfVector2f, x} ptr :: IO CFloat)
+            <*> fmap realToFrac (#{peek sfVector2f, y} ptr :: IO CFloat)
+
     poke ptr (Vec2f x y) = do
         #{poke sfVector2f, x} ptr (realToFrac x :: CFloat)
         #{poke sfVector2f, y} ptr (realToFrac y :: CFloat)

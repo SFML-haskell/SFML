@@ -25,6 +25,7 @@ import SFML.Graphics.Rect
 import SFML.Graphics.Types
 import SFML.System.Vector2
 
+import Control.Applicative ((<$>), (<*>))
 import Data.List (foldl')
 import Foreign.C.Types
 import Foreign.Storable
@@ -44,19 +45,18 @@ data Transform = Transform
 instance Storable Transform where
     sizeOf _ = 9 * sizeFloat
     alignment _ = alignment (undefined :: CFloat)
-    
-    peek ptr = do
-        m00 <- fmap realToFrac $ (peekByteOff ptr 0 :: IO CFloat)
-        m01 <- fmap realToFrac $ (peekByteOff ptr sizeFloat :: IO CFloat)
-        m02 <- fmap realToFrac $ (peekByteOff ptr $ 2*sizeFloat :: IO CFloat)
-        m10 <- fmap realToFrac $ (peekByteOff ptr $ 3*sizeFloat :: IO CFloat)
-        m11 <- fmap realToFrac $ (peekByteOff ptr $ 4*sizeFloat :: IO CFloat)
-        m12 <- fmap realToFrac $ (peekByteOff ptr $ 5*sizeFloat :: IO CFloat)
-        m20 <- fmap realToFrac $ (peekByteOff ptr $ 6*sizeFloat :: IO CFloat)
-        m21 <- fmap realToFrac $ (peekByteOff ptr $ 7*sizeFloat :: IO CFloat)
-        m22 <- fmap realToFrac $ (peekByteOff ptr $ 8*sizeFloat :: IO CFloat)
-        return $ Transform m00 m01 m02 m10 m11 m12 m20 m21 m22
-    
+
+    peek ptr = Transform
+            <$> fmap realToFrac (peekByteOff ptr 0 :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 2*sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 3*sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 4*sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 5*sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 6*sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 7*sizeFloat :: IO CFloat)
+            <*> fmap realToFrac (peekByteOff ptr $ 8*sizeFloat :: IO CFloat)
+
     poke ptr (Transform m00 m01 m02 m10 m11 m12 m20 m21 m22) = do
         pokeByteOff ptr 0 (realToFrac m00 :: CFloat)
         pokeByteOff ptr sizeFloat (realToFrac m01 :: CFloat)
@@ -75,35 +75,35 @@ instance Num Transform where
             = Transform (a00 + b00) (a01 + b01) (a02 + b02)
                         (a03 + b03) (a04 + b04) (a05 + b05)
                         (a06 + b06) (a07 + b07) (a08 + b08)
-    
+
     (Transform a00 a01 a02 a03 a04 a05 a06 a07 a08)
         - (Transform b00 b01 b02 b03 b04 b05 b06 b07 b08)
             = Transform (a00 - b00) (a01 - b01) (a02 - b02)
                         (a03 - b03) (a04 - b04) (a05 - b05)
                         (a06 - b06) (a07 - b07) (a08 - b08)
-    
+
     (Transform a00 a10 a20 a01 a11 a21 a02 a12 a22)
         * (Transform b00 b10 b20 b01 b11 b21 b02 b12 b22)
             = Transform (a00 * b00 + a10 * b01 + a20 * b02)
                         (a00 * b10 + a10 * b11 + a20 * b12)
                         (a00 * b20 + a10 * b21 + a20 * b22)
-                        
+
                         (a01 * b00 + a11 * b01 + a21 * b02)
                         (a01 * b10 + a11 * b11 + a21 * b12)
                         (a01 * b20 + a11 * b21 + a21 * b22)
-                        
+
                         (a02 * b00 + a12 * b01 + a22 * b02)
                         (a02 * b10 + a12 * b11 + a22 * b12)
                         (a02 * b20 + a12 * b21 + a22 * b22)
-    
+
     abs (Transform a00 a01 a02 a03 a04 a05 a06 a07 a08) =
         (Transform (abs a00) (abs a01) (abs a02) (abs a03)
             (abs a04) (abs a05) (abs a06) (abs a07) (abs a08))
-    
+
     signum (Transform a00 a01 a02 a03 a04 a05 a06 a07 a08) =
         (Transform (signum a00) (signum a01) (signum a02) (signum a03)
             (signum a04) (signum a05) (signum a06) (signum a07) (signum a08))
-    
+
     fromInteger i = Transform i' i' i' i' i' i' i' i' i' where i' = fromInteger i
 
 
@@ -288,12 +288,12 @@ transformRect transf (FloatRect l t w h) = FloatRect l' t' w' h'
         p1@(Vec2f p1x p1y) = transformPoint transf (Vec2f l $ t + h)
         p2@(Vec2f p2x p2y) = transformPoint transf (Vec2f (l + w) t)
         p3@(Vec2f p3x p3y) = transformPoint transf (Vec2f (l + w) (t + h))
-        
+
         left   = p0x;
         top    = p0y;
         right  = p0x;
         bottom = p0y;
-        
+
         l' = min p3x $ min p2x $ min p1x p0x
         t' = min p3y $ min p2y $ min p1y p0y
         r' = max p3x $ max p2x $ max p1x p0x

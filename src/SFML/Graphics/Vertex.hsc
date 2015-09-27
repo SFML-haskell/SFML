@@ -9,6 +9,7 @@ where
 import SFML.Graphics.Color
 import SFML.System.Vector2
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.Types (CFloat)
 import Foreign.Storable
 
@@ -27,13 +28,12 @@ data Vertex = Vertex
 instance Storable Vertex where
     sizeOf _ = size_sfVertex
     alignment _ = alignment (undefined :: CFloat)
-    
-    peek ptr = do
-        pos <- #{peek sfVertex, position} ptr
-        col <- #{peek sfVertex, color} ptr
-        tex <- #{peek sfVertex, texCoords} ptr
-        return $ Vertex pos col tex
-    
+
+    peek ptr = Vertex
+            <$> #{peek sfVertex, position} ptr
+            <*> #{peek sfVertex, color} ptr
+            <*> #{peek sfVertex, texCoords} ptr
+
     poke ptr (Vertex pos col tex) = do
         #{poke sfVertex, position} ptr pos
         #{poke sfVertex, color} ptr col
