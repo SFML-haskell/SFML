@@ -90,6 +90,7 @@ data SFEvent
     | SFEvtJoystickDisconnected
     { joystickId :: Int
     }
+    deriving (Eq, Show)
 
 
 sizeInt = #{size int}
