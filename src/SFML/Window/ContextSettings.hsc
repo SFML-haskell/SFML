@@ -7,6 +7,7 @@ module SFML.Window.ContextSettings
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Data.Word (Word32)
 import Foreign.C.Types
 import Foreign.Storable

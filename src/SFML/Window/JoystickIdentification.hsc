@@ -6,6 +6,7 @@ module SFML.Window.JoystickIdentification
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import Foreign.C.String
 import Foreign.C.Types
 import Foreign.Storable

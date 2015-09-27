@@ -28,6 +28,7 @@ import SFML.SFResource
 import SFML.System.Time
 import SFML.Utils
 
+import Control.Applicative ((<$>), (<*>))
 import Control.Exception
 import Control.Monad ((>=>), forM)
 import Data.Typeable

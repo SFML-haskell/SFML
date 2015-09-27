@@ -34,6 +34,7 @@ module SFML.Window.Window
 where
 
 
+import Control.Applicative ((<$>), (<*>))
 import SFML.SFDisplayable
 import SFML.SFResource
 import SFML.System.Vector2
