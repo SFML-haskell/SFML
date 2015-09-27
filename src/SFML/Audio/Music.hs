@@ -2,7 +2,6 @@
 module SFML.Audio.Music
 (
     module SFML.Utils
-,   MusicException(..)
 ,   musicFromFile
 ,   musicFromMemory
 ,   musicFromStream
@@ -39,6 +38,7 @@ import SFML.Audio.SFSound
 import SFML.Audio.SFSoundBuffer
 import SFML.Audio.SoundStatus
 import SFML.Audio.Types
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Time
@@ -60,10 +60,6 @@ checkNull :: Music -> Maybe Music
 checkNull music@(Music ptr) = if ptr == nullPtr then Nothing else Just music
 
 
-data MusicException = MusicException String deriving (Show, Typeable)
-
-instance Exception MusicException
-
 
 -- | Create a new music and load it from a file.
 -- 
@@ -73,9 +69,9 @@ instance Exception MusicException
 -- Here is a complete list of all the supported audio formats:
 -- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 -- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-musicFromFile :: FilePath -> IO (Either MusicException Music)
+musicFromFile :: FilePath -> IO (Either SFException Music)
 musicFromFile path =
-    let err = MusicException $ "Failed loading music from file " ++ path
+    let err = SFException $ "Failed loading music from file " ++ path
     in withCAString path $ \cstr -> sfMusic_createFromFile cstr >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfMusic_createFromFile"
@@ -97,10 +93,10 @@ foreign import ccall unsafe "sfMusic_createFromFile"
 musicFromMemory
     :: Ptr a -- ^ Pointer to the file data in memory
     -> Int   -- ^ Size of the data to load, in bytes
-    -> IO (Either MusicException Music)
+    -> IO (Either SFException Music)
 
 musicFromMemory ptr size =
-    let err = MusicException $ "Failed loading music from memory address " ++ show ptr
+    let err = SFException $ "Failed loading music from memory address " ++ show ptr
     in fmap (tagErr err . checkNull) $ sfMusic_createFromMemory ptr (fromIntegral size)
 
 foreign import ccall unsafe "sfMusic_createFromMemory"
@@ -119,9 +115,9 @@ foreign import ccall unsafe "sfMusic_createFromMemory"
 -- Here is a complete list of all the supported audio formats:
 -- ogg, wav, flac, aiff, au, raw, paf, svx, nist, voc, ircam,
 -- w64, mat4, mat5 pvf, htk, sds, avr, sd2, caf, wve, mpc2k, rf64.
-musicFromStream :: InputStream -> IO (Either MusicException Music)
+musicFromStream :: InputStream -> IO (Either SFException Music)
 musicFromStream is =
-    let err = MusicException $ "Failed loading music from input stream " ++ show is
+    let err = SFException $ "Failed loading music from input stream " ++ show is
     in with is $ \ptr -> sfMusic_createFromStream ptr >>= return . tagErr err . checkNull
 
 foreign import ccall unsafe "sfMusic_createFromStream"

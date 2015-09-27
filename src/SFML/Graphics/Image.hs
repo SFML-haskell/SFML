@@ -2,7 +2,6 @@
 module SFML.Graphics.Image
 (
     module SFML.Utils
-,   ImageException(..)
 ,   createImage
 ,   imageFromColor
 ,   imageFromPixels
@@ -28,6 +27,7 @@ import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
@@ -48,21 +48,16 @@ checkNull :: Image -> Maybe Image
 checkNull img@(Image ptr) = if ptr == nullPtr then Nothing else Just img
 
 
-data ImageException = ImageException String deriving (Show, Typeable)
-
-instance Exception ImageException
-
-
 -- | Create an image.
 --
 -- This image is filled with black pixels.
 createImage
     :: Int -- ^ Width of the image
     -> Int -- ^ Height of the image
-    -> IO (Either ImageException Image)
+    -> IO (Either SFException Image)
 
 createImage w h =
-    let err = ImageException "Failed creating image"
+    let err = SFException "Failed creating image"
     in fmap (tagErr err . checkNull) $ sfImage_create (fromIntegral w) (fromIntegral h)
 
 foreign import ccall unsafe "sfImage_create"

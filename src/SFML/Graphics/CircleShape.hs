@@ -2,7 +2,6 @@
 module SFML.Graphics.CircleShape
 (
     module SFML.Utils
-,   CircleShapeException(..)
 ,   createCircleShape
 ,   copy
 ,   destroy
@@ -50,6 +49,7 @@ import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
@@ -72,15 +72,10 @@ checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
-data CircleShapeException = CircleShapeException String deriving (Show, Typeable)
-
-instance Exception CircleShapeException
-
-
 -- | Create a new circle shape.
-createCircleShape :: IO (Either CircleShapeException CircleShape)
+createCircleShape :: IO (Either SFException CircleShape)
 createCircleShape =
-    let err = CircleShapeException "Failed creating circle shape"
+    let err = SFException "Failed creating circle shape"
     in fmap (tagErr err . checkNull) sfCircleShape_create
 
 foreign import ccall unsafe "sfCircleShape_create"

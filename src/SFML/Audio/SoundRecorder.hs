@@ -2,7 +2,6 @@
 module SFML.Audio.SoundRecorder
 (
     module SFML.Utils
-,   SoundRecorderException(..)
 ,   SoundRecorderStartCallback
 ,   SoundRecorderProcessCallback
 ,   SoundRecorderStopCallback
@@ -24,6 +23,7 @@ where
 import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Time
 import SFML.Utils
@@ -42,11 +42,6 @@ import Foreign.Ptr
 
 checkNull :: SoundRecorder -> Maybe SoundRecorder
 checkNull sr@(SoundRecorder ptr) = if ptr == nullPtr then Nothing else Just sr
-
-
-data SoundRecorderException = SoundRecorderException String deriving (Show, Typeable)
-
-instance Exception SoundRecorderException
 
 
 -- | Type of the callback used when starting a capture.
@@ -72,10 +67,10 @@ createSoundRecorder
     -> Ptr (SoundRecorderProcessCallback a) -- ^ (onProcess) Callback function which will be called each time there's audio data to process
     -> Ptr (SoundRecorderStopCallback a)    -- ^ (onStop) Callback function which will be called when the current capture stops (can be NULL)
     -> Ptr a -- ^ Data to pass to the callback function (can be NULL)
-    -> IO (Either SoundRecorderException SoundRecorder) -- ^ A new 'SoundRecorder' object ('Nothing' if failed)
+    -> IO (Either SFException SoundRecorder) -- ^ A new 'SoundRecorder' object ('Nothing' if failed)
 
 createSoundRecorder c1 c2 c3 d =
-    let err = SoundRecorderException $
+    let err = SFException $
             "Failed creating sound recorder: onStart = " ++ show c1 ++
                                            " onProcess = " ++ show c2 ++
                                            " onStop = " ++ show c3 ++

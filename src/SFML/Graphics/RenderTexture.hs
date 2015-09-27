@@ -2,7 +2,6 @@
 module SFML.Graphics.RenderTexture
 (
     module SFML.Utils
-,   RenderTextureException(..)
 ,   createRenderTexture
 ,   destroy
 ,   getTextureSize
@@ -45,6 +44,7 @@ import SFML.Graphics.SFRenderTarget
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Vertex
 import SFML.SFDisplayable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
@@ -63,20 +63,15 @@ checkNull :: RenderTexture -> Maybe RenderTexture
 checkNull tex@(RenderTexture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
-data RenderTextureException = RenderTextureException String deriving (Show, Typeable)
-
-instance Exception RenderTextureException
-
-
 -- | Construct a new render texture.
 createRenderTexture
     :: Int -- ^ Width of the render texture
     -> Int -- ^ Height of the render texture
     -> Bool -- ^ Do you want a depth-buffer attached? (useful only if you're doing 3D OpenGL on the render texture)
-    -> IO (Either RenderTextureException RenderTexture)
+    -> IO (Either SFException RenderTexture)
 
 createRenderTexture w h d =
-    let err = RenderTextureException "Failed creating render texture"
+    let err = SFException "Failed creating render texture"
     in fmap (tagErr err . checkNull) $ sfRenderTexture_create (fromIntegral w) (fromIntegral h) (fromIntegral . fromEnum $ d)
 
 foreign import ccall unsafe "sfRenderTexture_create"

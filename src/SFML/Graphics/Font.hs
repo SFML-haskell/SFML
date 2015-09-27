@@ -2,7 +2,6 @@
 module SFML.Graphics.Font
 (
     module SFML.Utils
-,   FontException(..)
 ,   fontFromFile
 ,   fontFromMemory
 ,   fontFromStream
@@ -23,6 +22,7 @@ import SFML.Graphics.FontInfo
 import SFML.Graphics.Glyph
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.Utils
@@ -42,15 +42,10 @@ checkNull :: Font -> Maybe Font
 checkNull font@(Font ptr) = if ptr == nullPtr then Nothing else Just font
 
 
-data FontException = FontException String deriving (Show, Typeable)
-
-instance Exception FontException
-
-
 -- | Create a new font from a file.
-fontFromFile :: FilePath -> IO (Either FontException Font)
+fontFromFile :: FilePath -> IO (Either SFException Font)
 fontFromFile path =
-    let err = FontException $ "Failed loading font from file " ++ show path
+    let err = SFException $ "Failed loading font from file " ++ show path
     in fmap (tagErr err . checkNull) $ withCAString path sfFont_createFromFile
 
 foreign import ccall unsafe "sfFont_createFromFile"
@@ -65,10 +60,10 @@ foreign import ccall unsafe "sfFont_createFromFile"
 fontFromMemory
     :: Ptr Char -- ^ Pointer to the file data in memory
     -> Int -- ^ Size of the data to load, in bytes
-    -> IO (Either FontException Font)
+    -> IO (Either SFException Font)
 
 fontFromMemory pixels size =
-    let err = FontException $ "Failed loading font from memory address " ++ show pixels
+    let err = SFException $ "Failed loading font from memory address " ++ show pixels
     in fmap (tagErr err . checkNull) $ sfFont_createFromMemory pixels (fromIntegral size)
 
 foreign import ccall unsafe "sfFont_createFromMemory"
@@ -80,9 +75,9 @@ foreign import ccall unsafe "sfFont_createFromMemory"
 
 
 -- | Create a new image font a custom stream.
-fontFromStream :: InputStream -> IO (Either FontException Font)
+fontFromStream :: InputStream -> IO (Either SFException Font)
 fontFromStream stream =
-    let err = FontException $ "Failed loading font from stream " ++ show stream
+    let err = SFException $ "Failed loading font from stream " ++ show stream
     in fmap (tagErr err . checkNull) $ with stream sfFont_createFromStream
 
 foreign import ccall "sfFont_createFromStream"

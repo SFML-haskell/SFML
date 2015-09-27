@@ -2,7 +2,6 @@
 module SFML.Graphics.Shader
 (
     module SFML.Utils
-,   ShaderException(..)
 ,   nullShader
 ,   shaderFromFile
 ,   shaderFromMemory
@@ -28,6 +27,7 @@ import SFML.Graphics.Color
 import SFML.Graphics.Transform
 import SFML.Graphics.Types
 import SFML.Graphics.SFBindable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
@@ -46,19 +46,14 @@ checkNull :: Shader -> Maybe Shader
 checkNull shader@(Shader ptr) = if ptr == nullPtr then Nothing else Just shader
 
 
-data ShaderException = ShaderException String deriving (Show, Typeable)
+exf :: Show a => Maybe a -> Maybe a -> SFException
+exf vs fs = SFException $ "Failed loading shader program from files " ++ show vs ++ ", " ++ show fs
 
-instance Exception ShaderException
+exs :: Show a => Maybe a -> Maybe a -> SFException
+exs vs fs = SFException $ "Failed loading shader program from sources " ++ show vs ++ ", " ++ show fs
 
-
-exf :: Show a => Maybe a -> Maybe a -> ShaderException
-exf vs fs = ShaderException $ "Failed loading shader program from files " ++ show vs ++ ", " ++ show fs
-
-exs :: Show a => Maybe a -> Maybe a -> ShaderException
-exs vs fs = ShaderException $ "Failed loading shader program from sources " ++ show vs ++ ", " ++ show fs
-
-exi :: Show a => Maybe a -> Maybe a -> ShaderException
-exi vs fs = ShaderException $ "Failed loading shader program from input streams " ++ show vs ++ ", " ++ show fs
+exi :: Show a => Maybe a -> Maybe a -> SFException
+exi vs fs = SFException $ "Failed loading shader program from input streams " ++ show vs ++ ", " ++ show fs
 
 nullstr = Nothing :: Maybe String
 nullis  = Nothing :: Maybe InputStream
@@ -81,7 +76,7 @@ nullShader = Shader nullPtr
 shaderFromFile
     :: Maybe FilePath -- ^ Path of the vertex shader file to load, or 'Nothing' to skip this shader
     -> Maybe FilePath -- ^ Path of the fragment shader file to load, or 'Nothing' to skip this shader
-    -> IO (Either ShaderException Shader)
+    -> IO (Either SFException Shader)
 
 shaderFromFile Nothing Nothing = fmap (tagErr (exf nullstr nullstr) . checkNull) $ sfShader_createFromFile nullPtr nullPtr
 
@@ -115,7 +110,7 @@ foreign import ccall unsafe "sfShader_createFromFile"
 shaderFromMemory
     :: Maybe String -- ^ String containing the source code of the vertex shader, or 'Nothing' to skip this shader
     -> Maybe String -- ^ String containing the source code of the fragment shader, or 'Nothing' to skip this shader
-    -> IO (Either ShaderException Shader)
+    -> IO (Either SFException Shader)
 
 shaderFromMemory Nothing Nothing
     = fmap (tagErr (exs nullstr nullstr) . checkNull) $ sfShader_createFromMemory nullPtr nullPtr
@@ -150,7 +145,7 @@ foreign import ccall unsafe "sfShader_createFromMemory"
 shaderFromStream
     :: Maybe InputStream -- ^ Source stream to read the vertex shader from, or 'Nothing' to skip this shader
     -> Maybe InputStream -- ^ Source stream to read the fragment shader from, or 'Nothing' to skip this shader
-    -> IO (Either ShaderException Shader)
+    -> IO (Either SFException Shader)
 
 shaderFromStream Nothing Nothing
     = fmap (tagErr (exi nullis nullis) . checkNull) $ sfShader_createFromStream nullPtr nullPtr

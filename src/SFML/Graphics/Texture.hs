@@ -2,7 +2,6 @@
 module SFML.Graphics.Texture
 (
     module SFML.Utils
-,   TextureException(..)
 ,   nullTexture
 ,   createTexture
 ,   textureFromFile
@@ -33,6 +32,7 @@ import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.Types
 import SFML.Window.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.InputStream
 import SFML.System.Vector2
@@ -53,11 +53,6 @@ checkNull :: Texture -> Maybe Texture
 checkNull tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
-data TextureException = TextureException String deriving (Show, Typeable)
-
-instance Exception TextureException
-
-
 -- | A null texture.
 nullTexture = Texture nullPtr
 
@@ -66,10 +61,10 @@ nullTexture = Texture nullPtr
 createTexture
     :: Int -- ^ Texture width
     -> Int -- ^ Texture height
-    -> IO (Either TextureException Texture)
+    -> IO (Either SFException Texture)
 
 createTexture w h =
-    let err = TextureException "Failed creating texture"
+    let err = SFException "Failed creating texture"
     in fmap (tagErr err . checkNull) $ sfTexture_create (fromIntegral w) (fromIntegral h)
 
 foreign import ccall unsafe "sfTexture_create"
@@ -84,10 +79,10 @@ foreign import ccall unsafe "sfTexture_create"
 textureFromFile
     :: FilePath -- ^ Path of the image file to load
     -> Maybe IntRect  -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Either TextureException Texture)
+    -> IO (Either SFException Texture)
 
 textureFromFile path rect =
-    let err = TextureException $ "Failed loading texture from file " ++ show path
+    let err = SFException $ "Failed loading texture from file " ++ show path
     in withCAString path $ \cpath ->
        fmap (tagErr err . checkNull) $
            case rect of
@@ -107,10 +102,10 @@ textureFromMemory
     :: Ptr a   -- ^ Pointer to the file data in memory
     -> Int     -- ^ Size of the data to load, in bytes
     -> Maybe IntRect -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Either TextureException Texture)
+    -> IO (Either SFException Texture)
 
 textureFromMemory pixels size rect =
-    let err = TextureException $ "Failed creating texture from memory address " ++ show pixels
+    let err = SFException $ "Failed creating texture from memory address " ++ show pixels
     in fmap (tagErr err . checkNull) $ case rect of
            Nothing -> sfTexture_createFromMemory pixels (fromIntegral size) nullPtr
            Just r  -> with r $ sfTexture_createFromMemory pixels (fromIntegral size)
@@ -127,10 +122,10 @@ foreign import ccall unsafe "sfTexture_createFromMemory"
 textureFromStream
     :: InputStream -- ^ Source stream to read from
     -> Maybe IntRect     -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Either TextureException Texture)
+    -> IO (Either SFException Texture)
 
 textureFromStream stream rect =
-    let err = TextureException $ "Failed creating texture from input stream " ++ show stream
+    let err = SFException $ "Failed creating texture from input stream " ++ show stream
     in fmap (tagErr err . checkNull) $
        with stream $ \streamPtr ->
        case rect of
@@ -149,11 +144,11 @@ foreign import ccall "sfTexture_createFromStream"
 textureFromImage
     :: Image -- ^ Image to upload to the texture
     -> Maybe IntRect -- ^ Area of the source image to load ('Nothing' to load the entire image)
-    -> IO (Either TextureException Texture)
+    -> IO (Either SFException Texture)
 
 textureFromImage image rect =
     let (Image addr) = image
-        err = TextureException $ "Failed creating texture from image " ++ show addr
+        err = SFException $ "Failed creating texture from image " ++ show addr
     in fmap (tagErr err . checkNull) $ case rect of
            Nothing -> sfTexture_createFromImage image nullPtr
            Just r  -> with r $ sfTexture_createFromImage image

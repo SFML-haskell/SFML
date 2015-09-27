@@ -2,7 +2,6 @@
 module SFML.Audio.SoundBufferRecorder
 (
     module SFML.Utils
-,   SoundBufferRecorderException(..)
 ,   createSoundBufferRecorder
 ,   destroy
 ,   startRecording
@@ -16,6 +15,7 @@ where
 import SFML.Audio.SFSampled
 import SFML.Audio.SFSoundRecorder
 import SFML.Audio.Types
+import SFML.SFException
 import SFML.SFResource
 import SFML.Utils
 
@@ -30,15 +30,10 @@ checkNull :: SoundBufferRecorder -> Maybe SoundBufferRecorder
 checkNull sbr@(SoundBufferRecorder ptr) = if ptr == nullPtr then Nothing else Just sbr
 
 
-data SoundBufferRecorderException = SoundBufferRecorderException String deriving (Show, Typeable)
-
-instance Exception SoundBufferRecorderException
-
-
 -- | Create a new sound buffer recorder.
-createSoundBufferRecorder :: IO (Either SoundBufferRecorderException SoundBufferRecorder)
+createSoundBufferRecorder :: IO (Either SFException SoundBufferRecorder)
 createSoundBufferRecorder =
-    let err = SoundBufferRecorderException $ "Failed creating sound buffer recorder"
+    let err = SFException $ "Failed creating sound buffer recorder"
     in fmap (tagErr err . checkNull) sfSoundBufferRecorder_create
 
 foreign import ccall unsafe "sfSoundBufferRecorder_create"

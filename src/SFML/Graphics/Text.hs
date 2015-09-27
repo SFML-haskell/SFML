@@ -2,7 +2,6 @@
 module SFML.Graphics.Text
 (
     module SFML.Utils
-,   TextException(..)
 ,   TextStyle(..)
 ,   createText
 ,   copy
@@ -32,6 +31,7 @@ import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
@@ -76,11 +76,6 @@ instance Enum TextStyle where
     toEnum 8 = TextStrikeThrough
 
 
-data TextException = TextException String deriving (Show, Typeable)
-
-instance Exception TextException
-
-
 checkNull :: Text -> Maybe Text
 checkNull text@(Text ptr) = if ptr == nullPtr then Nothing else Just text
 
@@ -90,9 +85,9 @@ checkNullFont font@(Font ptr) = if ptr == nullPtr then Nothing else Just font
 
 
 -- | Create a new text.
-createText :: IO (Either TextException Text)
+createText :: IO (Either SFException Text)
 createText =
-    let err = TextException "Failed creating text"
+    let err = SFException "Failed creating text"
     in fmap (tagErr err . checkNull) sfText_create
 
 foreign import ccall unsafe "sfText_create"

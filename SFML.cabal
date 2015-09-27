@@ -76,6 +76,7 @@ library
       SFML.Graphics.View
       SFML.SFCopyable
       SFML.SFDisplayable
+      SFML.SFException
       SFML.SFResource
       SFML.System.Clock
       SFML.System.InputStream

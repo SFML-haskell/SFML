@@ -2,7 +2,6 @@
 module SFML.Graphics.Sprite
 (
     module SFML.Utils
-,   SpriteException(..)
 ,   createSprite
 ,   copy
 ,   destroy
@@ -40,6 +39,7 @@ import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
@@ -62,15 +62,10 @@ checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
-data SpriteException = SpriteException String deriving (Show, Typeable)
-
-instance Exception SpriteException
-
-
 -- | Create a new sprite.
-createSprite :: IO (Either SpriteException Sprite)
+createSprite :: IO (Either SFException Sprite)
 createSprite =
-    let err = SpriteException "Failed creating sprite"
+    let err = SFException "Failed creating sprite"
     in fmap (tagErr err . checkNull) sfSprite_create
 
 foreign import ccall unsafe "sfSprite_create"

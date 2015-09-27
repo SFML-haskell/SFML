@@ -2,7 +2,6 @@
 module SFML.Graphics.RectangleShape
 (
     module SFML.Utils
-,   RectangleShapeException(..)
 ,   createRectangleShape
 ,   copy
 ,   destroy
@@ -50,6 +49,7 @@ import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
@@ -72,15 +72,10 @@ checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
-data RectangleShapeException = RectangleShapeException String deriving (Show, Typeable)
-
-instance Exception RectangleShapeException
-
-
 -- | Create a new rectangle shape.
-createRectangleShape :: IO (Either RectangleShapeException RectangleShape)
+createRectangleShape :: IO (Either SFException RectangleShape)
 createRectangleShape =
-    let err = RectangleShapeException "Failed creating rectangle shape"
+    let err = SFException "Failed creating rectangle shape"
     in fmap (tagErr err . checkNull) sfRectangleShape_create
 
 foreign import ccall unsafe "sfRectangleShape_create"

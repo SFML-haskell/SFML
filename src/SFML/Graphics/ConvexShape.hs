@@ -2,7 +2,6 @@
 module SFML.Graphics.ConvexShape
 (
     module SFML.Utils
-,   ConvexShapeException(..)
 ,   createConvexShape
 ,   copy
 ,   destroy
@@ -49,6 +48,7 @@ import SFML.Graphics.Transform
 import SFML.Graphics.Transformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
+import SFML.SFException
 import SFML.SFResource
 import SFML.System.Vector2
 import SFML.Utils
@@ -71,15 +71,10 @@ checkNullTexture :: Texture -> Maybe Texture
 checkNullTexture tex@(Texture ptr) = if ptr == nullPtr then Nothing else Just tex
 
 
-data ConvexShapeException = ConvexShapeException String deriving (Show, Typeable)
-
-instance Exception ConvexShapeException
-
-
 -- | Create a new convex shape.
-createConvexShape :: IO (Either ConvexShapeException ConvexShape)
+createConvexShape :: IO (Either SFException ConvexShape)
 createConvexShape =
-    let err = ConvexShapeException "Failed creating convex shape"
+    let err = SFException "Failed creating convex shape"
     in fmap (tagErr err . checkNull) sfConvexShape_create
 
 foreign import ccall unsafe "sfConvexShape_create"
