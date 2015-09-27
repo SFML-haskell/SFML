@@ -134,13 +134,13 @@ library
   extensions:
       ForeignFunctionInterface
 
-  if flag(OfficialCSFMLForWindows)
+  if os(windows)
       extra-libraries:
-          csfml-window-2,
-          csfml-system-2,
-          csfml-graphics-2,
-          csfml-network-2,
-          csfml-audio-2
+          csfml-window,
+          csfml-system,
+          csfml-graphics,
+          csfml-network,
+          csfml-audio
   else
       extra-libraries:
           csfml-window,
