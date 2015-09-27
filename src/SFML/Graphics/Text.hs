@@ -27,7 +27,7 @@ where
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Transform
-import SFML.Graphics.Transformable
+import SFML.Graphics.SFTransformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFException
@@ -118,7 +118,7 @@ foreign import ccall unsafe "sfText_destroy"
 --CSFML_GRAPHICS_API void sfText_destroy(sfText* text);
 
 
-instance Transformable Text where
+instance SFTransformable Text where
 
     {-# INLINABLE setPosition #-}
     setPosition text pos = with pos $ sfText_setPosition_helper text

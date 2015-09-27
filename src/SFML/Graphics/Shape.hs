@@ -42,7 +42,7 @@ import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
-import SFML.Graphics.Transformable
+import SFML.Graphics.SFTransformable
 import SFML.Graphics.Types
 import SFML.SFResource
 import SFML.System.Vector2
@@ -85,7 +85,7 @@ foreign import ccall unsafe "sfShape_destroy"
 --CSFML_GRAPHICS_API void sfShape_destroy(sfShape* shape);
 
 
-instance Transformable Shape where
+instance SFTransformable Shape where
 
     {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfShape_setPosition_helper c

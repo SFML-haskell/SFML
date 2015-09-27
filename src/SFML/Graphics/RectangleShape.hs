@@ -45,7 +45,7 @@ import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
-import SFML.Graphics.Transformable
+import SFML.Graphics.SFTransformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFException
@@ -105,7 +105,7 @@ foreign import ccall unsafe "sfRectangleShape_destroy"
 
 --CSFML_GRAPHICS_API void sfRectangleShape_destroy(sfRectangleShape* shape);
 
-instance Transformable RectangleShape where
+instance SFTransformable RectangleShape where
 
     {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfRectangleShape_setPosition_helper c

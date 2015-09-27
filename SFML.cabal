@@ -63,6 +63,7 @@ library
       SFML.Graphics.SFShapeResizable
       SFML.Graphics.SFSmoothTexture
       SFML.Graphics.SFTexturable
+      SFML.Graphics.SFTransformable
       SFML.Graphics.SFViewable
       SFML.Graphics.Shader
       SFML.Graphics.Shape
@@ -70,7 +71,7 @@ library
       SFML.Graphics.Text
       SFML.Graphics.Texture
       SFML.Graphics.Transform
-      SFML.Graphics.Transformable SFML.Graphics.Types
+      SFML.Graphics.Types
       SFML.Graphics.Vertex
       SFML.Graphics.VertexArray
       SFML.Graphics.View

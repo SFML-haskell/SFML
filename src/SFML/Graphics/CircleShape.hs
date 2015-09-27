@@ -45,7 +45,7 @@ import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
-import SFML.Graphics.Transformable
+import SFML.Graphics.SFTransformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFException
@@ -106,7 +106,7 @@ foreign import ccall unsafe "sfCircleShape_destroy"
 --CSFML_GRAPHICS_API void sfCircleShape_destroy(sfCircleShape* shape);
 
 
-instance Transformable CircleShape where
+instance SFTransformable CircleShape where
 
     {-# INLINABLE setPosition #-}
     setPosition c p = with p $ sfCircleShape_setPosition_helper c

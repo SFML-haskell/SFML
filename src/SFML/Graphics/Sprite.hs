@@ -35,7 +35,7 @@ import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.SFTexturable
 import SFML.Graphics.Transform
-import SFML.Graphics.Transformable
+import SFML.Graphics.SFTransformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
 import SFML.SFException
@@ -96,7 +96,7 @@ foreign import ccall unsafe "sfSprite_destroy"
 --CSFML_GRAPHICS_API void sfSprite_destroy(sfSprite* sprite);
 
 
-instance Transformable Sprite where
+instance SFTransformable Sprite where
 
     {-# INLINABLE setPosition #-}
     setPosition sprite pos = with pos $ sfSprite_setPosition_helper sprite

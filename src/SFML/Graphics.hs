@@ -22,6 +22,7 @@ module SFML.Graphics
 ,   module SFML.Graphics.SFShapeResizable
 ,   module SFML.Graphics.SFSmoothTexture
 ,   module SFML.Graphics.SFTexturable
+,   module SFML.Graphics.SFTransformable
 ,   module SFML.Graphics.SFViewable
 ,   module SFML.Graphics.Shader
 ,   module SFML.Graphics.Shape
@@ -29,7 +30,6 @@ module SFML.Graphics
 ,   module SFML.Graphics.Text
 ,   module SFML.Graphics.Texture
 ,   module SFML.Graphics.Transform
-,   module SFML.Graphics.Transformable
 ,   module SFML.Graphics.Types
 ,   module SFML.Graphics.Vertex
 ,   module SFML.Graphics.VertexArray
@@ -60,6 +60,7 @@ import SFML.Graphics.SFShape
 import SFML.Graphics.SFShapeResizable
 import SFML.Graphics.SFSmoothTexture
 import SFML.Graphics.SFTexturable
+import SFML.Graphics.SFTransformable
 import SFML.Graphics.SFViewable
 import SFML.Graphics.Shader
 import SFML.Graphics.Shape
@@ -67,7 +68,6 @@ import SFML.Graphics.Sprite
 import SFML.Graphics.Text
 import SFML.Graphics.Texture
 import SFML.Graphics.Transform
-import SFML.Graphics.Transformable
 import SFML.Graphics.Types
 import SFML.Graphics.Vertex
 import SFML.Graphics.VertexArray
