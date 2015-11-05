@@ -18,8 +18,8 @@ module SFML.Graphics.Text
 ,   getTextStyle
 ,   getTextColor
 ,   findTextCharacterPos
-,   getTextLocalBounds
-,   getTextGlobalBounds
+,   getLocalBounds
+,   getGlobalBounds
 )
 where
 
@@ -27,6 +27,7 @@ where
 import SFML.Graphics.Color
 import SFML.Graphics.Rect
 import SFML.Graphics.Transform
+import SFML.Graphics.SFBounded
 import SFML.Graphics.SFTransformable
 import SFML.Graphics.Types
 import SFML.SFCopyable
@@ -59,13 +60,13 @@ data TextStyle
 
 
 instance Enum TextStyle where
-    
+
     fromEnum TextRegular       = 0
     fromEnum TextBold          = 1
     fromEnum TextItalic        = 2
     fromEnum TextUnderlined    = 4
     fromEnum TextStrikeThrough = 8
-    
+
     toEnum 0 = TextRegular
     toEnum 1 = TextBold
     toEnum 2 = TextItalic
@@ -96,7 +97,7 @@ foreign import ccall unsafe "sfText_create"
 
 
 instance SFCopyable Text where
-    
+
     {-# INLINABLE copy #-}
     copy = sfText_copy
 
@@ -108,7 +109,7 @@ foreign import ccall unsafe "sfText_copy"
 
 
 instance SFResource Text where
-    
+
     {-# INLINABLE destroy #-}
     destroy = sfText_destroy
 
@@ -122,40 +123,40 @@ instance SFTransformable Text where
 
     {-# INLINABLE setPosition #-}
     setPosition text pos = with pos $ sfText_setPosition_helper text
-    
+
     {-# INLINABLE setRotation #-}
     setRotation t r = sfText_setRotation t (realToFrac r)
-    
+
     {-# INLINABLE setScale #-}
     setScale text s = with s $ sfText_setScale_helper text
-    
+
     {-# INLINABLE setOrigin #-}
     setOrigin text o = with o $ sfText_setOrigin_helper text
-    
+
     {-# INLINABLE getPosition #-}
     getPosition text = alloca $ \ptr -> sfText_getPosition_helper text ptr >> peek ptr
-    
+
     {-# INLINABLE getRotation #-}
     getRotation = sfText_getRotation >=> return . realToFrac
-    
+
     {-# INLINABLE getScale #-}
     getScale text = alloca $ \ptr -> sfText_getScale_helper text ptr >> peek ptr
-    
+
     {-# INLINABLE getOrigin #-}
     getOrigin text = alloca $ \ptr -> sfText_getOrigin_helper text ptr >> peek ptr
-    
+
     {-# INLINABLE move #-}
     move text pos = with pos $ sfText_move_helper text
-    
+
     {-# INLINABLE rotate #-}
     rotate t a = sfText_rotate t (realToFrac a)
-    
+
     {-# INLINABLE scale #-}
     scale text s = with s $ sfText_scale_helper text
-    
+
     {-# INLINABLE getTransform #-}
     getTransform text = alloca $ \ptr -> sfText_getTransform_helper text ptr >> peek ptr
-    
+
     {-# INLINABLE getInverseTransform #-}
     getInverseTransform text = alloca $ \ptr -> sfText_getInverseTransform_helper text ptr >> peek ptr
 
@@ -401,36 +402,20 @@ foreign import ccall unsafe "sfText_findCharacterPos_helper"
 --CSFML_GRAPHICS_API sfVector2f sfText_findCharacterPos(const sfText* text, size_t index);
 
 
--- | Get the local bounding rectangle of a text.
---
--- The returned rectangle is in local coordinates, which means
--- that it ignores the transformations (translation, rotation,
--- scale, ...) that are applied to the entity.
---
--- In other words, this function returns the bounds of the
--- entity in the entity's coordinate system.
-getTextLocalBounds :: Text -> IO FloatRect
-getTextLocalBounds text = alloca $ \ptr -> sfText_getLocalBounds_helper text ptr >> peek ptr
+instance SFBounded Text where
+
+    {-# INLINABLE getLocalBounds #-}
+    getLocalBounds text = alloca $ \ptr -> sfText_getLocalBounds_helper text ptr >> peek ptr
+
+    {-# INLINABLE getGlobalBounds #-}
+    getGlobalBounds text = alloca $ \ptr -> sfText_getGlobalBounds_helper text ptr >> peek ptr
 
 foreign import ccall unsafe "sfText_getLocalBounds_helper"
     sfText_getLocalBounds_helper :: Text -> Ptr FloatRect -> IO ()
 
 --CSFML_GRAPHICS_API sfFloatRect sfText_getLocalBounds(const sfText* text);
 
-
--- | Get the global bounding rectangle of a text.
---
--- The returned rectangle is in global coordinates, which means
--- that it takes in account the transformations (translation,
--- rotation, scale, ...) that are applied to the entity.
---
--- In other words, this function returns the bounds of the
--- text in the global 2D world's coordinate system.
-getTextGlobalBounds :: Text -> IO FloatRect
-getTextGlobalBounds text = alloca $ \ptr -> sfText_getGlobalBounds_helper text ptr >> peek ptr
-
 foreign import ccall unsafe "sfText_getGlobalBounds_helper"
     sfText_getGlobalBounds_helper :: Text -> Ptr FloatRect -> IO ()
 
 --CSFML_GRAPHICS_API sfFloatRect sfText_getGlobalBounds(const sfText* text);
-
