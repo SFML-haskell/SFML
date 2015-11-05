@@ -1,5 +1,5 @@
 name:                SFML
-version:             2.3.2
+version:             2.3.2.1
 synopsis:            SFML bindings
 description:
     Low level bindings for SFML 2.3.2.
@@ -15,7 +15,7 @@ cabal-version:       >=1.8
 
 source-repository head
   type:     git
-  location: https://github.com/SFML-haskell
+  location: https://github.com/SFML-haskell/SFML
 
 Flag OfficialCSFMLForWindows
   Description: Use the official CSFML bundle for Windows from http://www.sfml-dev.org/download/csfml/
