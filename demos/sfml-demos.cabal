@@ -2,7 +2,7 @@ name: sfml-demos
 version: 0.1.0.0
 cabal-version: >=1.8
 build-type: Simple
-license: AllRightsReserved
+license: MIT
 license-file: "LICENSE"
 synopsis: SFML demos
 category: Game
@@ -35,6 +35,7 @@ executable sfml-hello
     hs-source-dirs:     hello
     build-depends:      base, SFML
     main-is:            main.hs
+    other-modules:      Paths_sfml_demos
     buildable:          True
     ghc-options:        -debug
 
@@ -42,6 +43,7 @@ executable sfml-events
     hs-source-dirs:     events
     build-depends:      base, SFML
     main-is:            main.hs
+    other-modules:      Paths_sfml_demos
     buildable:          True
     ghc-options:        -debug
 
@@ -49,6 +51,7 @@ executable sfml-unicode
     hs-source-dirs:     unicode
     build-depends:      base, SFML
     main-is:            main.hs
+    other-modules:      Paths_sfml_demos
     buildable:          True
     ghc-options:        -debug
 
