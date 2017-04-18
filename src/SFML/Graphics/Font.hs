@@ -7,6 +7,7 @@ module SFML.Graphics.Font
 ,   copy
 ,   destroy
 ,   getGlyph
+,   getGlyphWithOutline
 ,   getKerning
 ,   getLineSpacing
 ,   getUnderlinePosition
@@ -108,7 +109,7 @@ foreign import ccall unsafe "sfFont_destroy"
 --CSFML_GRAPHICS_API void sfFont_destroy(sfFont* font);
 
 
--- | Get a glyph in a font.
+-- | Get a glyph in a font. Defaults outline to zero.
 getGlyph
     :: Font -- ^ Source font
     -> Int -- ^ Unicode code point of the character to get
@@ -119,11 +120,26 @@ getGlyph
 getGlyph font codePoint size bold =
     alloca $ \glyphPtr -> do
         sfFont_getGlyph_helper
-            font (fromIntegral codePoint) (fromIntegral size) (fromIntegral . fromEnum $ bold) glyphPtr
+            font (fromIntegral codePoint) (fromIntegral size) (fromIntegral . fromEnum $ bold) 0.0 glyphPtr
+        peek glyphPtr
+
+-- | Get a glyph in a font with an outline.
+getGlyphWithOutline
+    :: Font -- ^ Source font
+    -> Int -- ^ Unicode code point of the character to get
+    -> Int -- ^ Character size, in pixels
+    -> Bool -- ^ Retrieve the bold version or the regular one?
+    -> Float -- ^ Outline parameter
+    -> IO Glyph
+
+getGlyphWithOutline font codePoint size bold outline =
+    alloca $ \glyphPtr -> do
+        sfFont_getGlyph_helper
+            font (fromIntegral codePoint) (fromIntegral size) (fromIntegral . fromEnum $ bold) (realToFrac outline) glyphPtr
         peek glyphPtr
 
 foreign import ccall unsafe "sfFont_getGlyph_helper"
-    sfFont_getGlyph_helper :: Font -> Word32 -> CUInt -> CInt -> Ptr Glyph -> IO ()
+    sfFont_getGlyph_helper :: Font -> Word32 -> CUInt -> CInt -> CFloat -> Ptr Glyph -> IO ()
 
 --CSFML_GRAPHICS_API sfGlyph sfFont_getGlyph(sfFont* font, sfUint32 codePoint, unsigned int characterSize, sfBool bold);
 
