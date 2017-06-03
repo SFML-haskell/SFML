@@ -15,9 +15,6 @@ import Foreign.Ptr (Ptr, castPtr)
 #include <SFML/Window/JoystickIdentification.h>
 
 
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
-
-
 -- | Joystick's identification
 data JoystickIdentification = JoystickIdentification
     { name      :: String

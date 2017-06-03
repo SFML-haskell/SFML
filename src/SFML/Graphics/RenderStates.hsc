@@ -19,9 +19,6 @@ import Foreign.Storable
 #include <SFML/Graphics/RenderStates.h>
 
 
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
-
-
 -- | Define the states used for drawing to a RenderTarget.
 data RenderStates = RenderStates
     { blendMode :: BlendMode

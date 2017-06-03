@@ -16,9 +16,6 @@ import Foreign.Storable
 #include <SFML/Window/Window.h>
 
 
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
-
-
 data ContextSettings = ContextSettings
     { depthBits         :: Int -- ^ Bits of the depth buffer
     , stencilBits       :: Int -- ^ Bits of the stencil buffer

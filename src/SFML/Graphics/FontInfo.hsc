@@ -12,9 +12,6 @@ import Foreign.Storable
 #include <SFML/Graphics/FontInfo.h>
 
 
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
-
-
 data FontInfo
     = FontInfo
     { family :: String

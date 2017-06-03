@@ -19,9 +19,6 @@ import Foreign.Storable
 #include <SFML/Graphics/BlendMode.h>
 
 
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
-
-
 -- | Enumeration of the blending factors
 data BlendFactor
     = BlendFactorZero             -- ^ (0, 0, 0, 0)

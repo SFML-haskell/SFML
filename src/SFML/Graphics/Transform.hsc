@@ -300,4 +300,3 @@ transformRect transf (FloatRect l t w h) = FloatRect l' t' w' h'
         b' = max p3y $ max p2y $ max p1y p0y
         w' = r' - l'
         h' = b' - t'
-

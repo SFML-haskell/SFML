@@ -19,9 +19,6 @@ import Foreign.Storable
 #include <SFML/Window/Mouse.h>
 
 
-#let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t(y__); }, y__)
-
-
 data MouseButton
     = MouseLeft
     | MouseRight
@@ -61,4 +58,3 @@ foreign import ccall unsafe "sfMouse_isButtonPressed"
     sfMouse_isButtonPressed :: Int -> IO CChar
 
 --CSFML_WINDOW_API sfBool sfMouse_isButtonPressed(sfMouseButton button);
-
