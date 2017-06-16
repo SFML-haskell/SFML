@@ -55,3 +55,9 @@ executable sfml-unicode
     buildable:          True
     ghc-options:        -debug
 
+executable sfml-fingerpaint
+    hs-source-dirs:     fingerpaint
+    build-depends:      base, SFML
+    main-is:            main.hs
+    buildable:          True
+    ghc-options:        -debug

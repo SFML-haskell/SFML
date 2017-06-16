@@ -91,6 +91,21 @@ data SFEvent
     | SFEvtJoystickDisconnected
     { joystickId :: Int
     }
+    | SFEvtTouchBegan
+    { finger :: Int
+    , x      :: Int
+    , y      :: Int
+    }
+    | SFEvtTouchMoved
+    { finger :: Int
+    , x      :: Int
+    , y      :: Int
+    }
+    | SFEvtTouchEnded
+    { finger :: Int
+    , x      :: Int
+    , y      :: Int
+    }
     deriving (Eq, Show)
 
 
@@ -161,6 +176,18 @@ instance Storable SFEvent where
                    <*> fmap realToFrac (#{peek sfJoystickMoveEvent, position} ptr :: IO CFloat)
                 17 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickConnected
                 18 -> peekByteOff ptr sizeInt >>= return . SFEvtJoystickDisconnected
+                19 -> SFEvtTouchBegan
+                   <$> fmap fromIntegral (#{peek sfTouchEvent, finger} ptr :: IO CUInt)
+                   <*> fmap fromIntegral (#{peek sfTouchEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfTouchEvent, y} ptr :: IO CInt)
+                20 -> SFEvtTouchMoved
+                   <$> fmap fromIntegral (#{peek sfTouchEvent, finger} ptr :: IO CUInt)
+                   <*> fmap fromIntegral (#{peek sfTouchEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfTouchEvent, y} ptr :: IO CInt)
+                21 -> SFEvtTouchEnded
+                   <$> fmap fromIntegral (#{peek sfTouchEvent, finger} ptr :: IO CUInt)
+                   <*> fmap fromIntegral (#{peek sfTouchEvent, x} ptr :: IO CInt)
+                   <*> fmap fromIntegral (#{peek sfTouchEvent, y} ptr :: IO CInt)
 
     poke ptr evt = return ()
 
