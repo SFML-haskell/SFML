@@ -148,7 +148,7 @@ foreign import ccall unsafe "sfFont_getGlyph_helper"
 getKerning
     :: Font -- ^ Source font
     -> Int  -- ^ Unicode code point of the first character
-    -> Int  -- ^ Unicode code point of the second characte.r
+    -> Int  -- ^ Unicode code point of the second character
     -> Int  -- ^ Character size, in pixels
     -> IO Float
 

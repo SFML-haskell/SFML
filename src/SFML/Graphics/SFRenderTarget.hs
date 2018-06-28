@@ -26,35 +26,35 @@ class SFRenderTarget a where
         -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
         -> IO ()
     
-    -- | Draw a sprite to the render-target.
+    -- | Draw a shape to the render-target.
     drawShape
         :: a
         -> Shape -- ^ Shape to draw
         -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
         -> IO ()
     
-    -- | Draw a sprite to the render-target.
+    -- | Draw a circle to the render-target.
     drawCircle
         :: a
         -> CircleShape -- ^ CircleShape to draw
         -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
         -> IO ()
     
-    -- | Draw a sprite to the render-target.
+    -- | Draw a convex shape to the render-target.
     drawConvexShape
         :: a
         -> ConvexShape -- ^ ConvexShape to draw
         -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
         -> IO ()
         
-    -- | Draw a sprite to the render-target.
+    -- | Draw a rectangle to the render-target.
     drawRectangle
         :: a
         -> RectangleShape -- ^ RectangleShape to draw
         -> Maybe RenderStates -- ^ Render states to use for drawing ('Nothing' to use the default states)
         -> IO ()
     
-    -- | Draw a sprite to the render-target.
+    -- | Draw a vertex array to the render-target.
     drawVertexArray
         :: a
         -> VertexArray -- ^ VertexArray to draw
